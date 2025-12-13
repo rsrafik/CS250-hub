@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chapter 3 - Practice Problems</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Rajdhani:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "IBM Plex Mono", monospace;
+        background: linear-gradient(135deg, #2e1a1a 0%, #3e2116 100%);
+        color: #fef3e2;
+        padding: 30px;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: rgba(30, 20, 14, 0.95);
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      }
+
+      h1 {
+        text-align: center;
+        font-family: "Rajdhani", sans-serif;
+        font-size: 3em;
+        color: #ff6b35;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #ff9f1c;
+        margin-bottom: 40px;
+        font-size: 1.3em;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .problem {
+        background: rgba(59, 41, 30, 0.8);
+        border-left: 5px solid #ff6b35;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 25px;
+        position: relative;
+      }
+
+      .problem-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .problem-number {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #ff6b35;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .difficulty {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .easy {
+        background: #10b981;
+        color: white;
+      }
+      .medium {
+        background: hsl(38, 92%, 50%);
+        color: white;
+      }
+      .hard {
+        background: #ef4444;
+        color: white;
+      }
+
+      .problem-text {
+        font-size: 1.05em;
+        margin-bottom: 15px;
+        color: #fef3e2;
+      }
+
+      .given {
+        background: rgba(255, 107, 53, 0.1);
+        border: 1px solid #ff6b35;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+        font-size: 0.95em;
+      }
+
+      .given-title {
+        color: #ff6b35;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .code-given {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid #ff9f1c;
+        border-radius: 5px;
+        padding: 12px;
+        margin: 10px 0;
+        font-family: "IBM Plex Mono", monospace;
+        color: #ff9f1c;
+        white-space: pre;
+        overflow-x: auto;
+      }
+
+      .solution {
+        background: rgba(16, 185, 129, 0.1);
+        border: 2px solid #10b981;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 15px;
+        display: none;
+      }
+
+      .solution.show {
+        display: block;
+      }
+
+      .solution-header {
+        color: #10b981;
+        font-weight: 700;
+        font-size: 1.1em;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .solution-step {
+        margin-bottom: 10px;
+        padding-left: 20px;
+        position: relative;
+        font-size: 0.95em;
+      }
+
+      .solution-step::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: #10b981;
+        font-weight: bold;
+      }
+
+      .code-solution {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid #10b981;
+        border-radius: 5px;
+        padding: 12px;
+        margin: 10px 0;
+        font-family: "IBM Plex Mono", monospace;
+        color: #10b981;
+        white-space: pre;
+        overflow-x: auto;
+      }
+
+      .answer-box {
+        background: rgba(255, 204, 0, 0.2);
+        border: 2px dashed #ffcc00;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+        font-weight: 600;
+        color: #ffcc00;
+        text-align: center;
+        font-size: 1.05em;
+      }
+
+      .toggle-btn {
+        background: linear-gradient(135deg, #ff6b35, #ff9f1c);
+        color: #1a0f0a;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 700;
+        font-size: 0.95em;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+      }
+
+      .toggle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+      }
+
+      .section-header {
+        background: linear-gradient(90deg, #ff6b35, #ff9f1c);
+        color: #1a0f0a;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 35px 0 20px 0;
+        font-size: 1.4em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-align: center;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .hint {
+        background: rgba(255, 0, 110, 0.1);
+        border-left: 3px solid #ff006e;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        font-size: 0.9em;
+        color: #ddd;
+      }
+
+      .register-hint {
+        background: rgba(255, 159, 28, 0.1);
+        border: 1px solid #ff9f1c;
+        padding: 8px;
+        margin: 8px 0;
+        border-radius: 4px;
+        font-size: 0.85em;
+        color: #ff9f1c;
+      }
+
+      code {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "IBM Plex Mono", monospace;
+        color: #ffcc00;
+      }
+
+      @media print {
+        .toggle-btn {
+          display: none;
+        }
+        .solution {
+          display: block !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔥 PRACTICE PROBLEMS 🔥</h1>
+      <div class="subtitle">Chapter 3: Arithmetic for Computers</div>
+
+      <div class="section-header">➕ Section 1: Integer Overflow</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 1</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          Perform the following 8-bit two's complement addition and determine if
+          overflow occurs:
+        </div>
+        <div class="code-given">01101100 (108) + 00110101 (53)</div>
+        <div class="hint">
+          💡 Hint: Check if both operands have the same sign and result has a
+          different sign
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(1)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-1">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">Add the numbers bit by bit</div>
+          <div class="code-solution">
+            01101100 (108 decimal) + 00110101 (53 decimal) ---------- 10100001
+            (-95 in two's complement)
+          </div>
+          <div class="solution-step">
+            Both operands are positive (MSB = 0), but result is negative (MSB =
+            1)
+          </div>
+          <div class="solution-step">Signs don't match! This is overflow.</div>
+          <div class="answer-box">
+            OVERFLOW OCCURRED<br />Expected: 161, Got: -95
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 2</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          For 8-bit two's complement arithmetic, what range of decimal values
+          can cause overflow when added to <code>01011010</code> (90)?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(2)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-2">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            8-bit two's complement range: -128 to +127
+          </div>
+          <div class="solution-step">01011010 = +90 (positive number)</div>
+          <div class="solution-step">
+            Overflow occurs when: adding another positive makes sum > 127
+          </div>
+          <div class="code-solution">
+            90 + x > 127 x > 37 Maximum we can add: 127 - 90 = 37
+          </div>
+          <div class="solution-step">
+            No overflow with negative numbers (different signs can't overflow on
+            addition)
+          </div>
+          <div class="answer-box">
+            Overflow range: 38 to 127<br />No overflow with negative numbers
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">✖️ Section 2: Binary Multiplication</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 3</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Using the sequential multiplication algorithm (Version 1), multiply
+          <code>0101</code> (5) by <code>0011</code> (3). Show the first 3
+          iterations.
+        </div>
+        <div class="given">
+          <div class="given-title">Initial state:</div>
+          Product = 00000000 (8 bits)<br />
+          Multiplicand = 00000101 (in right half)<br />
+          Multiplier = 0011 (4 bits)
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(3)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-3">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Initial:</strong> Multiplicand=00000101, Multiplier=0011,
+            Product=00000000
+          </div>
+          <div class="code-solution">
+            <strong>Iteration 1:</strong> Multiplier₀ = 1 → Add Product =
+            00000000 + 00000101 = 00000101 Shift Multiplicand LEFT: 00001010
+            Shift Multiplier RIGHT: 0001
+
+            <strong>Iteration 2:</strong> Multiplier₀ = 1 → Add Product =
+            00000101 + 00001010 = 00001111 Shift Multiplicand LEFT: 00010100
+            Shift Multiplier RIGHT: 0000
+
+            <strong>Iteration 3:</strong> Multiplier₀ = 0 → Just shift Product =
+            00001111 (no add) Shift Multiplicand LEFT: 00101000 Shift Multiplier
+            RIGHT: 0000
+
+            <strong>Iteration 4:</strong> Multiplier₀ = 0 → Just shift Done
+            (multiplier = 0)
+          </div>
+          <div class="answer-box">Final Product: 00001111 = 15 decimal ✓</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 4</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          A 64-bit multiplication <code>MUL X5, X10, X11</code> produces
+          <code>0xFFFFFFFF80000000</code>. How would you detect if overflow
+          occurred for signed multiplication?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(4)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-4">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            MUL only gives lower 64 bits. To detect overflow, we need SMULH to
+            get upper 64 bits.
+          </div>
+          <div class="code-solution">
+            MUL X5, X10, X11 // Lower 64 bits SMULH X6, X10, X11 // Upper 64
+            bits (signed)
+          </div>
+          <div class="solution-step">
+            Result in X5: 0xFFFFFFFF80000000 (negative, MSB=1)
+          </div>
+          <div class="solution-step">
+            For NO overflow, upper 64 bits must be sign extension of lower 64
+            bits
+          </div>
+          <div class="solution-step">
+            Since lower is negative, upper should be all 1s (0xFFFFFFFFFFFFFFFF)
+          </div>
+          <div class="code-solution">
+            // Check for overflow: ADDS XZR, X6, #1 // If X6 = -1, result is 0
+            B.NE overflow_handler // If not 0, overflow occurred
+          </div>
+          <div class="answer-box">
+            Use SMULH and check if upper 64 bits = sign extension of lower<br />Negative
+            lower → upper should be all 1s
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">➗ Section 3: Binary Division</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 5</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Using the restoring division algorithm, divide <code>0111</code> (7)
+          by <code>0010</code> (2). Show iterations until quotient bit is set to
+          1.
+        </div>
+        <div class="given">
+          <div class="given-title">Initial state:</div>
+          Divisor = 00100000 (in left half of 8-bit)<br />
+          Remainder = 00000111<br />
+          Quotient = 0000
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(5)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-5">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            <strong>Iteration 1:</strong>
+            Remainder = 00000111 - 00100000 = 11100111 (negative!) Restore:
+            Remainder = 00000111 Quotient = 0000 << 1 | 0 = 0000 Divisor >> 1:
+            00010000
+
+            <strong>Iteration 2:</strong>
+            Remainder = 00000111 - 00010000 = 11110111 (negative!) Restore:
+            Remainder = 00000111 Quotient = 0000 << 1 | 0 = 0000 Divisor >> 1:
+            00001000
+
+            <strong>Iteration 3:</strong>
+            Remainder = 00000111 - 00001000 = 11111111 (negative!) Restore:
+            Remainder = 00000111 Quotient = 0000 << 1 | 0 = 0000 Divisor >> 1:
+            00000100
+
+            <strong>Iteration 4:</strong>
+            Remainder = 00000111 - 00000100 = 00000011 (positive!) Don't restore
+            Quotient = 0000 << 1 | 1 = 0001 Divisor >> 1: 00000010
+
+            <strong>Iteration 5:</strong>
+            Remainder = 00000011 - 00000010 = 00000001 (positive!) Quotient =
+            0001 << 1 | 1 = 0011
+          </div>
+          <div class="answer-box">
+            Quotient = 0011 (3), Remainder = 0001 (1)<br />Check: 3×2 + 1 = 7 ✓
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 6</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          For the division <code>-7 ÷ 2</code>, determine the correct quotient
+          and remainder according to IEEE standards.
+        </div>
+        <div class="hint">
+          💡 Hint: Remainder must have same sign as dividend
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(6)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-6">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Two mathematically valid options exist
+          </div>
+          <div class="code-solution">
+            Option 1: Quotient = -4, Remainder = +1 Check: -4 × 2 + 1 = -8 + 1 =
+            -7 ✓ Option 2: Quotient = -3, Remainder = -1 Check: -3 × 2 + (-1) =
+            -6 - 1 = -7 ✓
+          </div>
+          <div class="solution-step">
+            <strong>Rule:</strong> Remainder sign = Dividend sign
+          </div>
+          <div class="solution-step">
+            Dividend = -7 (negative), so Remainder must be negative
+          </div>
+          <div class="answer-box">
+            Quotient = -3, Remainder = -1<br />(Remainder has same sign as
+            dividend)
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">🔢 Section 4: IEEE 754 Conversions</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 7</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Convert the decimal number <code>-118.625</code> to IEEE 754
+          single-precision format.
+        </div>
+        <div class="hint">
+          💡 Hint: Convert to binary, normalize, apply bias of 127, remember
+          hidden bit
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(7)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-7">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Step 1:</strong> Convert to binary
+          </div>
+          <div class="code-solution">
+            Integer: 118 = 1110110 Fraction: 0.625 = 0.101 (5/8) Result:
+            1110110.101
+          </div>
+          <div class="solution-step">
+            <strong>Step 2:</strong> Normalize to 1.xxx × 2^exp
+          </div>
+          <div class="code-solution">1110110.101 = 1.110110101 × 2⁶</div>
+          <div class="solution-step">
+            <strong>Step 3:</strong> Sign = 1 (negative)
+          </div>
+          <div class="solution-step">
+            <strong>Step 4:</strong> Biased exponent = 6 + 127 = 133 = 10000101
+          </div>
+          <div class="solution-step">
+            <strong>Step 5:</strong> Fraction = 11011010100000000000000 (drop
+            leading 1)
+          </div>
+          <div class="answer-box">
+            S=1, E=10000101, F=11011010100000000000000<br /><br />1 10000101
+            11011010100000000000000
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 8</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          What decimal number is represented by this IEEE 754 single-precision
+          value?
+        </div>
+        <div class="code-given">0 10000010 01100000000000000000000</div>
+        <button class="toggle-btn" onclick="toggleSolution(8)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-8">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Parse fields:</strong> S=0, E=10000010,
+            F=01100000000000000000000
+          </div>
+          <div class="code-solution">
+            Exponent = 10000010₂ = 130₁₀ Actual exponent = 130 - 127 = 3
+          </div>
+          <div class="solution-step">
+            <strong>Reconstruct significand</strong> (add hidden 1)
+          </div>
+          <div class="code-solution">
+            Significand = 1.011₂ = 1 + 0×2⁻¹ + 1×2⁻² + 1×2⁻³ = 1 + 0 + 0.25 +
+            0.125 = 1.375
+          </div>
+          <div class="solution-step">
+            <strong>Apply formula:</strong> (-1)^S × Significand × 2^exp
+          </div>
+          <div class="code-solution">
+            = (-1)⁰ × 1.375 × 2³ = 1 × 1.375 × 8 = 11.0
+          </div>
+          <div class="answer-box">Decimal value: 11.0</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 9</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Determine the largest and smallest positive normalized numbers in IEEE
+          754 single precision.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(9)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-9">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Largest normalized:</strong> Max exponent, max fraction
+          </div>
+          <div class="code-solution">
+            S = 0 E = 11111110 (254, not 255 which is reserved) F =
+            11111111111111111111111 Actual exponent = 254 - 127 = 127
+            Significand ≈ 2.0 (as fraction approaches 1) Value = 2.0 × 2¹²⁷ ≈
+            3.4 × 10³⁸
+          </div>
+          <div class="solution-step">
+            <strong>Smallest normalized:</strong> Min exponent, min fraction
+          </div>
+          <div class="code-solution">
+            S = 0 E = 00000001 (1, not 0 which is reserved) F =
+            00000000000000000000000 Actual exponent = 1 - 127 = -126 Significand
+            = 1.0 Value = 1.0 × 2⁻¹²⁶ ≈ 1.2 × 10⁻³⁸
+          </div>
+          <div class="answer-box">
+            Largest: ≈ 3.4 × 10³⁸<br />Smallest: ≈ 1.2 × 10⁻³⁸
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">✨ Section 5: Special FP Values</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 10</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          Write the IEEE 754 single-precision bit patterns for: (a) +0, (b) -∞,
+          (c) NaN
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(10)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-10">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            <strong>(a) Positive zero (+0):</strong>
+            S = 0, E = 00000000, F = 00000000000000000000000 Bit pattern: 0
+            00000000 00000000000000000000000
+
+            <strong>(b) Negative infinity (-∞):</strong>
+            S = 1, E = 11111111, F = 00000000000000000000000 Bit pattern: 1
+            11111111 00000000000000000000000
+
+            <strong>(c) Not a Number (NaN):</strong>
+            S = 0 or 1, E = 11111111, F ≠ 0 Bit pattern: 0 11111111
+            10000000000000000000000 (or any with E=all 1s and F≠0)
+          </div>
+          <div class="answer-box">
+            +0: All zeros<br />-∞: S=1, E=all 1s, F=0<br />NaN: E=all 1s, F≠0
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 11</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          What is a denormalized number? Give an example and explain when it's
+          used.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(11)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-11">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Definition:</strong> E=0 but F≠0, NO hidden 1 bit
+          </div>
+          <div class="code-solution">
+            Formula: (-1)^S × (0 + Fraction) × 2^(1-Bias) For single: (-1)^S ×
+            (0.fraction) × 2⁻¹²⁶
+          </div>
+          <div class="solution-step">
+            <strong>When used:</strong> Gradual underflow to zero
+          </div>
+          <div class="solution-step">
+            Fills gap between 0 and smallest normalized number
+          </div>
+          <div class="code-solution">
+            <strong>Example:</strong> S = 0, E = 00000000, F =
+            10000000000000000000000 Value = 0.1₂ × 2⁻¹²⁶ = 2⁻¹ × 2⁻¹²⁶ = 2⁻¹²⁷
+          </div>
+          <div class="answer-box">
+            Denormalized: E=0, F≠0, no hidden 1<br />Purpose: Gradual underflow,
+            reduce noise
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">➕ Section 6: FP Addition</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 12</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Perform floating-point addition: <code>1.0 × 10²</code> +
+          <code>-9.9 × 10¹</code> using 3 significant decimal digits.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(12)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-12">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Step 1: Align exponents</strong> (shift smaller)
+          </div>
+          <div class="code-solution">
+            1.0 × 10² has larger exponent -9.9 × 10¹ = -0.99 × 10²
+          </div>
+          <div class="solution-step">
+            <strong>Step 2: Add significands</strong>
+          </div>
+          <div class="code-solution">1.00 + (-0.99) -------- 0.01</div>
+          <div class="solution-step">
+            <strong>Step 3: Normalize</strong>
+          </div>
+          <div class="code-solution">0.01 × 10² = 1.0 × 10⁰</div>
+          <div class="solution-step">
+            <strong>Step 4: Round</strong> (already fits 3 digits)
+          </div>
+          <div class="solution-step">
+            <strong>Step 5: Check overflow/underflow</strong> (none)
+          </div>
+          <div class="answer-box">Result: 1.0 × 10⁰ = 1.0</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 13</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Why do we need guard and round bits in floating-point addition?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(13)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-13">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Guard & Round bits keep precision during intermediate calculations
+          </div>
+          <div class="code-solution">
+            <strong>Without guard bits:</strong>
+            Add: 1.000 × 10⁰ + 0.005 × 10⁰ (3 digit precision) = 1.005 →
+            truncate to 1.00 Lost the 0.005!
+
+            <strong>With 2 guard bits:</strong>
+            Compute with 5 digits: 1.0000 + 0.0050 = 1.0050 Round to 3 digits:
+            1.01 × 10⁰ Much more accurate!
+          </div>
+          <div class="solution-step">
+            IEEE 754 uses Guard and Round bits (2 extra bits)
+          </div>
+          <div class="answer-box">
+            Guard & Round bits preserve precision<br />Improve rounding accuracy
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">✖️ Section 7: FP Multiplication</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 14</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Multiply <code>1.5 × 10¹</code> by <code>2.0 × 10²</code> showing all
+          steps.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(14)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-14">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            <strong>Step 1: Add exponents</strong>
+            Exp₁ = 1, Exp₂ = 2 Sum = 1 + 2 = 3
+
+            <strong>Step 2: Multiply significands</strong>
+            1.5 × 2.0 = 3.0
+
+            <strong>Step 3: Normalize</strong>
+            3.0 × 10³ (already normalized)
+
+            <strong>Step 4: Determine sign</strong>
+            Both positive → result positive
+
+            <strong>Step 5: Round</strong>
+            3.0 (already rounded)
+
+            <strong>Step 6: Check overflow/underflow</strong>
+            None
+          </div>
+          <div class="answer-box">Result: 3.0 × 10³ = 3000</div>
+        </div>
+      </div>
+
+      <div class="section-header">🎯 Section 8: Rounding & Accuracy</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 15</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          List the four IEEE 754 rounding modes and explain which is default and
+          why.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(15)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-15">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            <strong>1. Round to nearest (even):</strong>
+            Round to closest value; tie → round to even LSB
+
+            <strong>2. Round toward +∞:</strong>
+            Always round up (toward positive infinity)
+
+            <strong>3. Round toward -∞:</strong>
+            Always round down (toward negative infinity)
+
+            <strong>4. Round toward 0:</strong>
+            Truncate (chop off bits), reduces magnitude
+          </div>
+          <div class="solution-step">
+            <strong>Default: Round to nearest</strong>
+          </div>
+          <div class="solution-step">
+            Why? Most accurate on average, unbiased (doesn't drift), even
+            tie-breaker prevents systematic bias
+          </div>
+          <div class="answer-box">
+            Default: Round to nearest (even)<br />Most accurate, unbiased
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 16</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          If a result is "off by 2 ulp," what does this mean? Give an example
+          with a 4-bit significand.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(16)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-16">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>ulp = Units in the Last Place</strong>
+          </div>
+          <div class="solution-step">
+            Measures error in least significant bits of significand
+          </div>
+          <div class="code-solution">
+            <strong>Example with 4-bit significand:</strong> True value: 1.0110
+            × 2³ Computed value: 1.1000 × 2³ LSB difference: 1000₂ - 0110₂ =
+            0010₂ = 2₁₀ Error = 2 ulp
+          </div>
+          <div class="solution-step">
+            IEEE 754 guarantee: ≤ 0.5 ulp (best possible rounding)
+          </div>
+          <div class="answer-box">
+            2 ulp = error of 2 in LSB positions<br />IEEE guarantees ≤ 0.5 ulp
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">🚀 Section 9: SIMD Parallelism</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 17</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          How many 16-bit operations can be performed in parallel using a
+          128-bit ARMv8 SIMD register? Write the instruction.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(17)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-17">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            Register width = 128 bits Data width = 16 bits Operations = 128 ÷ 16
+            = 8
+          </div>
+          <div class="solution-step">
+            <strong>Instruction:</strong> ADD V0.8H, V1.8H, V2.8H
+          </div>
+          <div class="code-solution">
+            • V0, V1, V2 = 128-bit SIMD registers • .8H = eight 16-bit halfwords
+            • Performs 8 parallel additions V0[0] = V1[0] + V2[0] V0[1] = V1[1]
+            + V2[1] ... V0[7] = V1[7] + V2[7]
+          </div>
+          <div class="answer-box">
+            8 operations in parallel<br />ADD V0.8H, V1.8H, V2.8H
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 18</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Explain why SIMD is useful for graphics. Give RGB pixel example.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(18)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-18">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            SIMD performs same operation on many independent data elements
+          </div>
+          <div class="code-solution">
+            <strong>Task:</strong> Brighten 4 pixels by adding 20 to each RGB
+            Pixel format: [R G B A] (8-bit each) 4 pixels = 16 bytes = 128 bits
+
+            <strong>Without SIMD (scalar):</strong>
+            For each of 4 pixels: R = R + 20 G = G + 20 B = B + 20 Total: 12
+            operations
+
+            <strong>With SIMD:</strong>
+            Load 4 pixels into V1.16B Load constant +20 into V2.16B ADD V0.16B,
+            V1.16B, V2.16B Total: 1 operation (16 additions in parallel!)
+          </div>
+          <div class="answer-box">
+            SIMD: 1 instruction = 16 additions<br />Speedup: ~16× for this
+            operation
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">🎯 Section 10: Integrated Problems</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 19</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Write LEGv8 code to detect signed multiplication overflow without
+          conditional branches.
+        </div>
+        <div class="hint">
+          💡 Hint: Use SMULH and check if upper 64 bits are sign extension of
+          lower
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(19)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-19">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            // X10, X11 = operands // X12 = result (lower 64) // X13 = overflow
+            flag (0=no, 1=yes) MUL X12, X10, X11 // Lower 64 bits SMULH X9, X10,
+            X11 // Upper 64 bits // Create sign extension of lower bits ASR X20,
+            X12, #63 // All 0s or 1s (sign) // Compare upper with sign extension
+            SUBS XZR, X9, X20 // Set flags CSET X13, NE // X13=1 if Not Equal
+          </div>
+          <div class="solution-step">
+            ASR #63 copies sign bit to all positions
+          </div>
+          <div class="solution-step">
+            If X9 ≠ X20 → overflow! CSET sets flag without branches
+          </div>
+          <div class="answer-box">
+            Key: SMULH + sign extension + CSET<br />Branch-free overflow
+            detection
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 20</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Why can positive IEEE 754 numbers be compared as unsigned integers?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(20)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-20">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            IEEE 754 bit layout: S(1) E(8) F(23) from MSB to LSB
+          </div>
+          <div class="code-solution">
+            <strong>1. Sign bit first (MSB):</strong>
+            Positive=0, Negative=1 0 < 1 unsigned → positive > negative ✓
+
+            <strong>2. Exponent next:</strong>
+            Larger exponent → larger number Compared correctly as unsigned ✓
+
+            <strong>3. Fraction last:</strong>
+            If exponents equal, larger fraction → larger Tie-breaker works as
+            unsigned ✓
+          </div>
+          <div class="solution-step">
+            <strong>Example:</strong>
+          </div>
+          <div class="code-solution">
+            6.0: 0 10000010 01000... 3.5: 0 10000001 11000... As unsigned: 6.0
+            has larger exponent field 6.0 > 3.5 ✓
+          </div>
+          <div class="answer-box">
+            IEEE 754 designed for unsigned comparison<br />Sign-Exponent-Fraction
+            order enables this
+          </div>
+        </div>
+      </div>
+
+      <!-- Study Tips Section -->
+      <div
+        style="
+          background: rgba(255, 0, 110, 0.1);
+          border: 3px solid #ff6b35;
+          border-radius: 12px;
+          padding: 30px;
+          margin-top: 40px;
+        "
+      >
+        <div
+          style="
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.8em;
+            color: #ff6b35;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 700;
+          "
+        >
+          🎯 COMPREHENSIVE STUDY TIPS
+        </div>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            font-size: 0.95em;
+            line-height: 2;
+          "
+        >
+          <div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Overflow rules</strong> - Same signs → different result
+              sign = overflow
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>2's complement</strong> - Invert bits + 1 to negate
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Product size</strong> - n-bit × m-bit = (n+m)-bit result
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Multiply hardware</strong> - Shift multiplicand LEFT,
+              shift multiplier RIGHT
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Division rule</strong> - Remainder sign = Dividend sign
+              (always!)
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Restoring division</strong> - Add back if result
+              negative
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>IEEE 754 formula</strong> - (-1)^S × (1+F) × 2^(E-Bias)
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Hidden bit</strong> - Leading 1 not stored, gives 24/53
+              bits
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Single bias</strong> - 127 for 8-bit exponent
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Double bias</strong> - 1023 for 11-bit exponent
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Special: ±0</strong> - E=0, F=0
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Special: ±∞</strong> - E=all 1s, F=0
+            </div>
+          </div>
+          <div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Special: NaN</strong> - E=all 1s, F≠0
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Denormalized</strong> - E=0, F≠0, no hidden 1, gradual
+              underflow
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>FP addition</strong> - Align → Add → Normalize → Round →
+              Check
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>FP multiply</strong> - Add exps (subtract bias!),
+              multiply sigs
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Guard & Round</strong> - 2 extra bits improve rounding
+              accuracy
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Rounding modes</strong> - To nearest (default), ±∞,
+              toward 0
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>IEEE accuracy</strong> - Guarantees within 0.5 ulp
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>ulp measure</strong> - Units in Last Place, bits in
+              error
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>SIMD concept</strong> - Same operation on multiple
+              subwords
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>ARMv8 SIMD</strong> - V0-V31 registers, .B .H .S .D
+              suffixes
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Saturation</strong> - Overflow → max/min (media apps)
+            </div>
+            <div style="margin-bottom: 10px">
+              ✓ <strong>Fast multiply</strong> - Parallel adders, tree: log₂(64)
+              = 6 steps
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function toggleSolution(num) {
+        const solution = document.getElementById("solution-" + num);
+        const btn = solution.previousElementSibling;
+
+        if (solution.classList.contains("show")) {
+          solution.classList.remove("show");
+          btn.textContent = "Show Solution";
+        } else {
+          solution.classList.add("show");
+          btn.textContent = "Hide Solution";
+        }
+      }
+    </script>
+  </body>
+</html>

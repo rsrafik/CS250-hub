@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chapter 6 - Parallel Processors Practice Problems</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Space Grotesk", sans-serif;
+        background: linear-gradient(135deg, #0d1b2a 0%, #0a1628 100%);
+        color: #e0f7fa;
+        padding: 30px;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: rgba(13, 27, 42, 0.9);
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 3em;
+        color: #00d9ff;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #80deea;
+        margin-bottom: 40px;
+        font-size: 1.2em;
+      }
+
+      .problem {
+        background: rgba(15, 30, 45, 0.7);
+        border-left: 5px solid #00d9ff;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 25px;
+        position: relative;
+      }
+
+      .problem-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .problem-number {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #00d9ff;
+      }
+
+      .difficulty {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .easy {
+        background: #10b981;
+        color: white;
+      }
+      .medium {
+        background: #00b8d4;
+        color: white;
+      }
+      .hard {
+        background: #7c4dff;
+        color: white;
+      }
+
+      .problem-text {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        color: #e0f7fa;
+      }
+
+      .given {
+        background: rgba(0, 217, 255, 0.1);
+        border: 1px solid #00d9ff;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.95em;
+      }
+
+      .given-title {
+        color: #00d9ff;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .solution {
+        background: rgba(16, 185, 129, 0.1);
+        border: 2px solid #10b981;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 15px;
+        display: none;
+      }
+
+      .solution.show {
+        display: block;
+      }
+
+      .solution-header {
+        color: #10b981;
+        font-weight: 700;
+        font-size: 1.1em;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+      }
+
+      .solution-step {
+        margin-bottom: 12px;
+        padding-left: 20px;
+        position: relative;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.95em;
+      }
+
+      .solution-step::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: #10b981;
+        font-weight: bold;
+      }
+
+      .answer-box {
+        background: rgba(124, 77, 255, 0.2);
+        border: 2px dashed #7c4dff;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+        font-weight: 600;
+        color: #7c4dff;
+        text-align: center;
+        font-size: 1.1em;
+      }
+
+      .toggle-btn {
+        background: linear-gradient(135deg, #00d9ff, #00b8d4);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 600;
+        font-size: 0.95em;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .toggle-btn:hover {
+        background: linear-gradient(135deg, #00b8d4, #7c4dff);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 217, 255, 0.4);
+      }
+
+      .section-header {
+        background: linear-gradient(90deg, #00d9ff, #7c4dff);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 30px 0 20px 0;
+        font-size: 1.3em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-align: center;
+      }
+
+      .hint {
+        background: rgba(0, 229, 255, 0.1);
+        border-left: 3px solid #00e5ff;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        font-size: 0.9em;
+        color: #80deea;
+      }
+
+      code {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "JetBrains Mono", monospace;
+        color: #7c4dff;
+      }
+
+      @media print {
+        .toggle-btn {
+          display: none;
+        }
+        .solution {
+          display: block !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>⚡ Practice Problems ⚡</h1>
+      <div class="subtitle">Chapter 6: Parallel Processors</div>
+
+      <div class="section-header">💫 Section 1: Amdahl's Law & Speedup</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 1</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          A program has 20% of its execution time in code that cannot be
+          parallelized. What is the maximum possible speedup with an infinite
+          number of processors?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(1)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-1">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Amdahl's Law: Maximum Speedup = 1 / Serial Fraction
+          </div>
+          <div class="solution-step">Serial fraction = 20% = 0.20</div>
+          <div class="solution-step">Max Speedup = 1 / 0.20 = 5</div>
+          <div class="answer-box">
+            Maximum speedup = 5× (even with ∞ processors!)
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 2</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A parallel program runs in 100 seconds on 1 processor. 80% of the code
+          is parallelizable. Calculate the execution time and speedup when using
+          8 processors.
+        </div>
+        <div class="hint">
+          💡 Hint: Use Amdahl's Law. Serial time stays constant, parallel time
+          is divided by P
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(2)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-2">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Serial portion = 20% of 100s = 20 seconds (stays same)
+          </div>
+          <div class="solution-step">
+            Parallel portion = 80% of 100s = 80 seconds (can be parallelized)
+          </div>
+          <div class="solution-step">
+            Time with 8 processors = Serial + (Parallel / 8) = 20 + (80 / 8) =
+            20 + 10 = 30 seconds
+          </div>
+          <div class="solution-step">
+            Speedup = Time(1) / Time(8) = 100 / 30 = 3.33×
+          </div>
+          <div class="answer-box">
+            Execution time = 30 seconds, Speedup = 3.33×
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 3</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          You want to achieve a speedup of 80× on a 100-processor system. What
+          percentage of the program must be parallelizable?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(3)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-3">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Amdahl's Law: Speedup = 1 / (S + P/N), where S = serial fraction, P
+            = parallel fraction
+          </div>
+          <div class="solution-step">
+            We want Speedup = 80, with N = 100 processors
+          </div>
+          <div class="solution-step">80 = 1 / (S + (1-S)/100)</div>
+          <div class="solution-step">S + (1-S)/100 = 1/80 = 0.0125</div>
+          <div class="solution-step">Multiply by 100: 100S + (1-S) = 1.25</div>
+          <div class="solution-step">
+            100S + 1 - S = 1.25 → 99S = 0.25 → S = 0.00253 = 0.253%
+          </div>
+          <div class="solution-step">
+            Parallelizable portion = 1 - 0.00253 = 0.99747 = 99.747%
+          </div>
+          <div class="answer-box">
+            Must be 99.75% parallelizable (only 0.25% serial!)
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">🌊 Section 2: SIMD & Vector Processing</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 4</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          A vector processor has 32 vector registers, each containing 64 64-bit
+          elements. How much total vector register storage is in the processor?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(4)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-4">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Storage per register = 64 elements × 64 bits = 4,096 bits = 512
+            bytes
+          </div>
+          <div class="solution-step">
+            Total storage = 32 registers × 512 bytes = 16,384 bytes = 16 KiB
+          </div>
+          <div class="answer-box">16 KiB of vector register storage</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 5</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Compare the instruction bandwidth for adding two 64-element vectors.
+          Calculate instructions executed for: (a) Scalar LEGv8, (b) Vector
+          processor with one vector add instruction.
+        </div>
+        <div class="given">
+          <div class="given-title">Given:</div>
+          • Vectors A and B, result in C<br />
+          • Each element is 64 bits<br />
+          • Ignore loop overhead for scalar version
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(5)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-5">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>(a) Scalar LEGv8:</strong> Must do 64 separate additions
+          </div>
+          <div class="solution-step">
+            For each element: Load A[i], Load B[i], Add, Store C[i] = ~4
+            instructions
+          </div>
+          <div class="solution-step">
+            Total: 64 elements × 4 instructions = 256 instructions (minimum)
+          </div>
+          <div class="solution-step">
+            <strong>(b) Vector processor:</strong> One vector add instruction
+          </div>
+          <div class="solution-step">
+            VADD V3, V1, V2 (assuming vectors already loaded)
+          </div>
+          <div class="solution-step">
+            Instruction bandwidth reduction = 256 / 1 = 256× fewer instructions!
+          </div>
+          <div class="answer-box">
+            Scalar: ~256 instructions, Vector: 1 instruction (256× reduction)
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 6</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A vector processor has 4 lanes. Each lane can complete one 64-bit
+          floating-point add per cycle. The clock rate is 2 GHz. What is the
+          peak floating-point performance in GFLOPs/sec?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(6)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-6">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            FLOPs per cycle = 4 lanes × 1 FLOP/lane = 4 FLOPs/cycle
+          </div>
+          <div class="solution-step">
+            Clock rate = 2 GHz = 2 billion cycles/second
+          </div>
+          <div class="solution-step">
+            Peak performance = 4 FLOPs/cycle × 2 × 10⁹ cycles/sec
+          </div>
+          <div class="solution-step">= 8 × 10⁹ FLOPs/sec = 8 GFLOPs/sec</div>
+          <div class="answer-box">Peak performance = 8 GFLOPs/sec</div>
+        </div>
+      </div>
+
+      <div class="section-header">🧵 Section 3: Multithreading</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 7</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          Compare fine-grained multithreading, coarse-grained multithreading,
+          and SMT. Which is best for: (a) hiding long memory latencies, (b)
+          minimizing slowdown of individual threads?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(7)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-7">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>(a) Hiding long memory latencies:</strong>
+          </div>
+          <div class="solution-step">
+            Fine-grained MT - Switches every cycle, can hide ALL stalls ✓ BEST
+          </div>
+          <div class="solution-step">
+            Coarse-grained MT - Only switches on long stalls, good for this ✓
+          </div>
+          <div class="solution-step">
+            SMT - Executes multiple threads simultaneously, excellent ✓
+          </div>
+          <div class="solution-step">
+            <strong>(b) Minimizing slowdown of individual threads:</strong>
+          </div>
+          <div class="solution-step">
+            Fine-grained MT - Slows each thread (switches every cycle) ✗
+          </div>
+          <div class="solution-step">
+            Coarse-grained MT - Minimal slowdown ✓ BEST
+          </div>
+          <div class="solution-step">
+            SMT - Some slowdown due to resource sharing
+          </div>
+          <div class="answer-box">
+            (a) Fine-grained or SMT best, (b) Coarse-grained best
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 8</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A 4-way superscalar processor (can issue 4 instructions per cycle)
+          supports SMT with 2 threads. If each thread can only find 2
+          instructions per cycle to issue, what is the processor utilization
+          with and without SMT?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(8)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-8">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Without SMT:</strong> Only 1 thread executes
+          </div>
+          <div class="solution-step">
+            Thread issues 2 instructions/cycle, but processor can handle 4
+          </div>
+          <div class="solution-step">Utilization = 2/4 = 50%</div>
+          <div class="solution-step">
+            <strong>With SMT:</strong> 2 threads execute simultaneously
+          </div>
+          <div class="solution-step">
+            Thread 1: 2 instructions/cycle + Thread 2: 2 instructions/cycle = 4
+            total
+          </div>
+          <div class="solution-step">Utilization = 4/4 = 100%</div>
+          <div class="answer-box">
+            Without SMT: 50%, With SMT: 100% (2× better!)
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">🎮 Section 4: GPU Architecture</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 9</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          What is the primary difference in how CPUs and GPUs handle memory
+          latency?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(9)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-9">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>CPU approach:</strong> Use multilevel caches to reduce
+            latency
+          </div>
+          <div class="solution-step">• Large L1, L2, L3 caches</div>
+          <div class="solution-step">• Try to contain working set in cache</div>
+          <div class="solution-step">• Focus on minimizing latency</div>
+          <div class="solution-step">
+            <strong>GPU approach:</strong> Use massive multithreading to hide
+            latency
+          </div>
+          <div class="solution-step">• Small streaming caches</div>
+          <div class="solution-step">• Execute 100s-1000s of threads</div>
+          <div class="solution-step">
+            • While one thread waits, others execute
+          </div>
+          <div class="solution-step">• Focus on maximizing bandwidth</div>
+          <div class="answer-box">
+            CPU: Minimize latency with caches, GPU: Hide latency with
+            multithreading
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 10</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A GPU has 32 SIMD processors, each with 8 lanes. The clock rate is 1.5
+          GHz. What is the peak throughput in operations per second if each lane
+          performs one operation per cycle?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(10)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-10">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Operations per processor = 8 lanes × 1 op/lane = 8 ops/cycle
+          </div>
+          <div class="solution-step">
+            Total operations per cycle = 32 processors × 8 ops = 256 ops/cycle
+          </div>
+          <div class="solution-step">
+            Clock rate = 1.5 GHz = 1.5 × 10⁹ cycles/sec
+          </div>
+          <div class="solution-step">
+            Peak throughput = 256 ops/cycle × 1.5 × 10⁹ cycles/sec
+          </div>
+          <div class="solution-step">
+            = 384 × 10⁹ ops/sec = 384 billion ops/sec
+          </div>
+          <div class="answer-box">
+            Peak throughput = 384 GOP/s (Giga-operations per second)
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">🌐 Section 5: Network Topologies</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 11</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          A ring network has 16 nodes, and each link has a bandwidth of 10 GB/s.
+          Calculate the total network bandwidth and bisection bandwidth.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(11)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-11">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            In a ring, each node connects to 2 neighbors → 16 bidirectional
+            links total
+          </div>
+          <div class="solution-step">
+            Total network bandwidth = 16 links × 10 GB/s = 160 GB/s
+          </div>
+          <div class="solution-step">
+            For bisection bandwidth, split ring in half
+          </div>
+          <div class="solution-step">
+            Only 2 links cross the bisection (one on each side)
+          </div>
+          <div class="solution-step">
+            Bisection bandwidth = 2 links × 10 GB/s = 20 GB/s
+          </div>
+          <div class="answer-box">
+            Total BW = 160 GB/s, Bisection BW = 20 GB/s
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 12</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Compare the number of switches needed for an 8-node system using: (a)
+          a crossbar network, (b) an Omega network.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(12)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-12">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>(a) Crossbar network:</strong>
+          </div>
+          <div class="solution-step">
+            Needs n² switches for n nodes (assuming 1×1 switches)
+          </div>
+          <div class="solution-step">Or n² crosspoints in an n×n crossbar</div>
+          <div class="solution-step">
+            For 8 nodes: 8² = 64 switches/crosspoints
+          </div>
+          <div class="solution-step">
+            <strong>(b) Omega network:</strong>
+          </div>
+          <div class="solution-step">Uses 2×2 switches in multiple stages</div>
+          <div class="solution-step">Formula: 2n × log₂(n) switches</div>
+          <div class="solution-step">
+            For 8 nodes: 2 × 8 × log₂(8) = 16 × 3 = 48 switches (2×2 switches)
+          </div>
+          <div class="solution-step">
+            Or: (n/2) × log₂(n) = 4 × 3 = 12 switch boxes (each with 4 2×2
+            switches)
+          </div>
+          <div class="answer-box">
+            Crossbar: 64, Omega: 48 (25% fewer switches)
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">📈 Section 6: Roofline Model</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 13</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A processor has peak performance of 64 GFLOPs/sec and peak memory
+          bandwidth of 32 GB/s. What is the ridge point (arithmetic intensity
+          where both roofs meet)?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(13)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-13">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Ridge point = where memory roof meets compute roof
+          </div>
+          <div class="solution-step">
+            At ridge: Peak FLOPS = Peak BW × Arithmetic Intensity
+          </div>
+          <div class="solution-step">
+            64 GFLOPs/sec = 32 GB/s × Arithmetic Intensity
+          </div>
+          <div class="solution-step">
+            Arithmetic Intensity = 64 / 32 = 2 FLOPs/Byte
+          </div>
+          <div class="solution-step">Programs with AI < 2 are memory-bound</div>
+          <div class="solution-step">
+            Programs with AI > 2 are compute-bound
+          </div>
+          <div class="answer-box">Ridge point = 2 FLOPs/Byte</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 14</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          A kernel performs 1000 FLOPs and accesses 200 bytes from DRAM. On a
+          system with peak performance 100 GFLOPs/sec and peak bandwidth 50
+          GB/s, what limits performance? Calculate the attainable performance.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(14)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-14">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Step 1: Calculate arithmetic intensity
+          </div>
+          <div class="solution-step">
+            AI = 1000 FLOPs / 200 Bytes = 5 FLOPs/Byte
+          </div>
+          <div class="solution-step">Step 2: Find ridge point</div>
+          <div class="solution-step">
+            Ridge = Peak FLOPS / Peak BW = 100 / 50 = 2 FLOPs/Byte
+          </div>
+          <div class="solution-step">Step 3: Compare AI to ridge</div>
+          <div class="solution-step">AI = 5 > Ridge = 2 → COMPUTE-BOUND</div>
+          <div class="solution-step">
+            Step 4: Calculate attainable performance
+          </div>
+          <div class="solution-step">
+            Attainable = Min(Peak FLOPS, Peak BW × AI)
+          </div>
+          <div class="solution-step">
+            = Min(100, 50 × 5) = Min(100, 250) = 100 GFLOPs/sec
+          </div>
+          <div class="answer-box">
+            Compute-bound, Attainable = 100 GFLOPs/sec (hits peak!)
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">🔄 Section 7: Cache Coherence</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 15</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          What are the three requirements for cache coherence in a
+          multiprocessor system?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(15)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-15">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Requirement 1:</strong> Program order preservation
+          </div>
+          <div class="solution-step">
+            A read by processor P after a write by P returns the written value
+          </div>
+          <div class="solution-step">(assuming no other writes in between)</div>
+          <div class="solution-step">
+            <strong>Requirement 2:</strong> Write propagation
+          </div>
+          <div class="solution-step">
+            A read by any processor eventually sees writes by other processors
+          </div>
+          <div class="solution-step">
+            (if sufficiently separated in time and no intervening writes)
+          </div>
+          <div class="solution-step">
+            <strong>Requirement 3:</strong> Write serialization
+          </div>
+          <div class="solution-step">
+            All processors see writes to same location in the same order
+          </div>
+          <div class="answer-box">
+            1. Program order, 2. Write propagation, 3. Write serialization
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 16</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Explain false sharing and why it hurts performance. Give an example.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(16)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-16">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>False Sharing:</strong> Two processors access DIFFERENT
+            variables
+          </div>
+          <div class="solution-step">
+            BUT those variables happen to be in the SAME cache block
+          </div>
+          <div class="solution-step">
+            <strong>Example:</strong> Cache block size = 64 bytes
+          </div>
+          <div class="solution-step">
+            int array[16]; // Each int = 4 bytes, all fit in one block
+          </div>
+          <div class="solution-step">
+            CPU 0 writes array[0], CPU 1 writes array[8]
+          </div>
+          <div class="solution-step">
+            Even though they access different variables, coherence protocol
+            invalidates!
+          </div>
+          <div class="solution-step">
+            <strong>Performance impact:</strong>
+          </div>
+          <div class="solution-step">• Unnecessary cache misses</div>
+          <div class="solution-step">• Excessive coherence traffic</div>
+          <div class="solution-step">
+            • Serialization of independent operations
+          </div>
+          <div class="solution-step">
+            <strong>Solution:</strong> Pad data structures to separate cache
+            lines
+          </div>
+          <div class="answer-box">
+            Different vars, same block → unnecessary coherence traffic
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">⚙️ Section 8: Parallel Programming</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 17</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Compare shared memory (SMP) and message passing programming models.
+          List two advantages of each.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(17)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-17">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Shared Memory (SMP) Advantages:</strong>
+          </div>
+          <div class="solution-step">
+            1. Easier to program - implicit communication via shared variables
+          </div>
+          <div class="solution-step">
+            2. Lower latency communication - just read/write memory
+          </div>
+          <div class="solution-step">3. Better for fine-grained sharing</div>
+          <div class="solution-step">
+            <strong>Message Passing Advantages:</strong>
+          </div>
+          <div class="solution-step">
+            1. Better scalability - network can scale to 1000s of nodes
+          </div>
+          <div class="solution-step">
+            2. Better isolation/reliability - processor failure doesn't crash
+            others
+          </div>
+          <div class="solution-step">
+            3. Explicit communication makes data movement clear
+          </div>
+          <div class="solution-step">
+            4. Works with commodity hardware/networks
+          </div>
+          <div class="answer-box">
+            SMP: easier programming, low latency; MP: scalability, isolation
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 18</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          A server runs 8 independent jobs. Job performance analysis shows:
+          I/O-bound jobs (30% time), CPU-bound jobs (70% time). With 4
+          processors, which jobs should you prioritize? Why might this be better
+          than trying to parallelize a single CPU-bound job?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(18)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-18">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Analysis:</strong>
+          </div>
+          <div class="solution-step">
+            With 8 independent jobs and 4 processors → task-level parallelism
+          </div>
+          <div class="solution-step">Can run 4 jobs simultaneously</div>
+          <div class="solution-step">
+            <strong>Strategy:</strong> Mix I/O-bound and CPU-bound jobs
+          </div>
+          <div class="solution-step">
+            • Run 2 I/O-bound + 2 CPU-bound simultaneously
+          </div>
+          <div class="solution-step">
+            • When I/O jobs wait, CPU jobs utilize processors
+          </div>
+          <div class="solution-step">• Better resource utilization!</div>
+          <div class="solution-step">
+            <strong>Why better than parallelizing one job?</strong>
+          </div>
+          <div class="solution-step">
+            1. No Amdahl's Law limitation - jobs are fully independent
+          </div>
+          <div class="solution-step">2. No synchronization overhead</div>
+          <div class="solution-step">3. No communication overhead</div>
+          <div class="solution-step">
+            4. Easier to program - no parallel algorithms needed
+          </div>
+          <div class="solution-step">
+            5. Achieves near-linear speedup (4× with 4 processors)
+          </div>
+          <div class="answer-box">
+            Task-level parallelism beats data parallelism when jobs are
+            independent!
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">💡 Section 9: Advanced Concepts</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 19</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          A warehouse-scale computer has 50,000 servers. Each server costs $1000
+          and uses 200W. Electricity costs $0.10 per kWh. Calculate: (a) Initial
+          hardware cost, (b) Annual electricity cost, (c) Total cost over 10
+          years assuming no failures.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(19)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-19">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>(a) Initial hardware cost:</strong>
+          </div>
+          <div class="solution-step">
+            50,000 servers × $1,000/server = $50,000,000 = $50 million
+          </div>
+          <div class="solution-step">
+            <strong>(b) Annual electricity cost:</strong>
+          </div>
+          <div class="solution-step">Power per server = 200W = 0.2 kW</div>
+          <div class="solution-step">
+            Total power = 50,000 × 0.2 kW = 10,000 kW = 10 MW
+          </div>
+          <div class="solution-step">
+            Hours per year = 365 × 24 = 8,760 hours
+          </div>
+          <div class="solution-step">
+            Energy per year = 10,000 kW × 8,760 hr = 87,600,000 kWh
+          </div>
+          <div class="solution-step">
+            Cost per year = 87,600,000 kWh × $0.10/kWh = $8,760,000 = $8.76
+            million
+          </div>
+          <div class="solution-step">
+            <strong>(c) Total 10-year cost:</strong>
+          </div>
+          <div class="solution-step">
+            Hardware: $50M + Electricity (10 years): $87.6M = $137.6 million
+          </div>
+          <div class="solution-step">
+            Note: Electricity is 63.7% of total cost! This is why energy
+            efficiency matters!
+          </div>
+          <div class="answer-box">
+            (a) $50M, (b) $8.76M/year, (c) $137.6M total
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 20</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Compare strong scaling vs weak scaling. A program achieves 60× speedup
+          on 64 processors with strong scaling. Predict the speedup if we use
+          weak scaling (problem size scales with P). What serial fraction does
+          this imply?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(20)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-20">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Strong scaling:</strong> Speedup = 60× with P = 64
+          </div>
+          <div class="solution-step">
+            Using Amdahl's Law: 60 = 1 / (S + (1-S)/64)
+          </div>
+          <div class="solution-step">S + (1-S)/64 = 1/60 = 0.01667</div>
+          <div class="solution-step">
+            64S + (1-S) = 1.067 → 63S = 0.067 → S ≈ 0.00106 ≈ 0.106%
+          </div>
+          <div class="solution-step">
+            <strong>Weak scaling:</strong> Problem size grows with P
+          </div>
+          <div class="solution-step">
+            If original problem: Serial = 0.00106, Parallel = 0.99894
+          </div>
+          <div class="solution-step">
+            Scaled problem (64× larger): Serial = 0.00106, Parallel = 64 ×
+            0.99894 = 63.93
+          </div>
+          <div class="solution-step">
+            Execution time on 64 procs = 0.00106 + 63.93/64 = 0.00106 + 0.9989 ≈
+            1.0
+          </div>
+          <div class="solution-step">
+            Speedup ≈ 64× (serial part becomes negligible!)
+          </div>
+          <div class="solution-step">
+            Efficiency = 64/64 = 100% vs 60/64 = 93.75% for strong scaling
+          </div>
+          <div class="answer-box">
+            Serial fraction ≈ 0.1%, Weak scaling → ~64× (better than 60×)
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          text-align: center;
+          margin-top: 50px;
+          padding: 25px;
+          background: rgba(0, 217, 255, 0.1);
+          border-radius: 10px;
+          border: 2px solid #00d9ff;
+        "
+      >
+        <h2
+          style="
+            color: #00d9ff;
+            margin-bottom: 20px;
+            font-family: 'Rajdhani', sans-serif;
+          "
+        >
+          🎯 COMPREHENSIVE STUDY TIPS
+        </h2>
+        <div
+          style="
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 2;
+            column-count: 2;
+            column-gap: 30px;
+          "
+        >
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Amdahl's Law</strong> - Max speedup = 1/Serial
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Flynn's Taxonomy</strong> - SISD, SIMD, MIMD
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Strong scaling</strong> - Fixed problem size
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Weak scaling</strong> - Problem grows with P
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>SIMD advantages</strong> - Less bandwidth, energy
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Vector vs multimedia</strong> - Variable vs fixed width
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Vector lanes</strong> - Parallel functional units
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Fine-grained MT</strong> - Switch every cycle
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Coarse-grained MT</strong> - Switch on stalls
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>SMT</strong> - Issue from multiple threads
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Thread vs Process</strong> - Lightweight vs heavy
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>GPU key diff</strong> - Bandwidth not latency
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>GPU memory</strong> - Hide latency with threads
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>SMP</strong> - Shared memory multiprocessor
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>UMA</strong> - Uniform memory access
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>NUMA</strong> - Non-uniform access
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Message passing</strong> - Private memories
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Cluster</strong> - Networked computers
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>WSC</strong> - Warehouse-scale computer
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Synchronization</strong> - Locks, barriers
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Cache coherence</strong> - 3 requirements
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Snooping</strong> - All caches watch bus
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Directory</strong> - Central tracking
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Write-invalidate</strong> - Invalidate copies
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>False sharing</strong> - Different vars, same block
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Network BW</strong> - Link BW × # links
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Bisection BW</strong> - Split in half
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Crossbar</strong> - n² switches
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Omega network</strong> - 2n log₂n switches
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Arithmetic intensity</strong> - FLOPs/Byte
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Roofline ridge</strong> - Peak FLOPS / Peak BW
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Memory-bound</strong> - AI < ridge
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Compute-bound</strong> - AI > ridge
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>OpenMP</strong> - Shared memory API
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>PCIe</strong> - Serial lanes (4 wires)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>DMA</strong> - Device to memory direct
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Interrupt</strong> - Device signals CPU
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Polling</strong> - CPU checks device
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Task parallelism</strong> - Independent jobs
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Data parallelism</strong> - Same op, different data
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Speedup</strong> - Time(1) / Time(P)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Efficiency</strong> - Speedup / P
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Linear speedup</strong> - P× faster (ideal)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Sublinear speedup</strong> - < P× (common)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>SPMD</strong> - Single program, multiple data
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>SaaS</strong> - Software as a service
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Cloud computing</strong> - Rent WSC resources
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Linpack</strong> - Top500 benchmark
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>PARSEC</strong> - Modern parallel apps
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function toggleSolution(num) {
+        const solution = document.getElementById("solution-" + num);
+        solution.classList.toggle("show");
+      }
+    </script>
+  </body>
+</html>

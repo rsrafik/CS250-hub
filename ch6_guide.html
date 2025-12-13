@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chapter 6 - Parallel Processors Study Guide</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Rajdhani:wght@400;600;700&family=Audiowide&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-bg: #0a1628;
+        --color-terminal: #0d1b2a;
+        --color-primary: #00d9ff;
+        --color-secondary: #00b8d4;
+        --color-accent: #7c4dff;
+        --color-warning: #00e5ff;
+        --color-error: #ff1744;
+        --color-text: #e0f7fa;
+        --color-text-dim: #80deea;
+      }
+
+      body {
+        font-family: "IBM Plex Mono", monospace;
+        background: var(--color-bg);
+        color: var(--color-text);
+        padding: 20px;
+        line-height: 1.4;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: var(--color-terminal);
+        border: 3px solid var(--color-primary);
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 0 50px rgba(0, 217, 255, 0.3);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid var(--color-primary);
+        position: relative;
+      }
+
+      .header::before {
+        content: "⚡";
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        color: var(--color-primary);
+        font-size: 2em;
+        animation: glow 2s infinite;
+      }
+
+      @keyframes glow {
+        0%,
+        100% {
+          opacity: 1;
+          text-shadow: 0 0 10px var(--color-primary);
+        }
+        50% {
+          opacity: 0.5;
+          text-shadow: 0 0 20px var(--color-primary);
+        }
+      }
+
+      .header h1 {
+        font-family: "Audiowide", sans-serif;
+        font-size: 2.5em;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        text-shadow: 0 0 20px rgba(0, 217, 255, 0.8);
+        margin-bottom: 8px;
+      }
+
+      .header .subtitle {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.3em;
+        color: var(--color-secondary);
+        letter-spacing: 2px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .section {
+        background: rgba(0, 0, 0, 0.5);
+        border: 2px solid var(--color-secondary);
+        border-radius: 6px;
+        padding: 15px;
+        position: relative;
+      }
+
+      .section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, var(--color-primary), transparent);
+      }
+
+      .section-title {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.1em;
+        color: var(--color-warning);
+        margin-bottom: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid rgba(0, 184, 212, 0.3);
+        padding-bottom: 5px;
+      }
+
+      .parallel-type {
+        font-size: 0.85em;
+        margin: 5px 0;
+        padding-left: 15px;
+        position: relative;
+        color: var(--color-text-dim);
+      }
+
+      .parallel-type::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: var(--color-primary);
+      }
+
+      .parallel-type strong {
+        color: var(--color-text);
+      }
+
+      .formula-box {
+        background: rgba(0, 217, 255, 0.05);
+        border: 1px solid var(--color-primary);
+        border-radius: 4px;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 0.85em;
+        color: var(--color-primary);
+        text-align: center;
+      }
+
+      .formula-label {
+        font-size: 0.75em;
+        color: var(--color-accent);
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .key-point {
+        background: rgba(124, 77, 255, 0.1);
+        border-left: 3px solid var(--color-accent);
+        padding: 8px;
+        margin: 8px 0;
+        font-size: 0.85em;
+        border-radius: 4px;
+      }
+
+      ul.compact {
+        list-style: none;
+        margin-left: 0;
+      }
+
+      ul.compact li {
+        font-size: 0.8em;
+        margin-bottom: 4px;
+        padding-left: 12px;
+        position: relative;
+      }
+
+      ul.compact li::before {
+        content: "●";
+        position: absolute;
+        left: 0;
+        color: var(--color-primary);
+      }
+
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        font-size: 0.85em;
+      }
+
+      .metric {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .metric-name {
+        color: var(--color-accent);
+        font-weight: 600;
+        font-size: 0.9em;
+      }
+
+      .highlight {
+        color: var(--color-warning);
+        font-weight: 600;
+      }
+
+      .red-highlight {
+        color: var(--color-error);
+        font-weight: 600;
+      }
+
+      .wide-section {
+        grid-column: span 2;
+      }
+
+      .full-section {
+        grid-column: span 3;
+      }
+
+      .arch-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .arch-box {
+        background: rgba(0, 229, 255, 0.1);
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid var(--color-warning);
+        font-size: 0.75em;
+      }
+
+      .arch-name {
+        color: var(--color-primary);
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+
+      .footer-formulas {
+        margin-top: 20px;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 8px;
+        border: 2px solid var(--color-secondary);
+      }
+
+      .formula-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .mini-formula {
+        background: rgba(0, 217, 255, 0.1);
+        border: 1px solid var(--color-primary);
+        padding: 8px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        color: var(--color-text);
+        text-align: center;
+      }
+
+      @media (max-width: 1200px) {
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>Chapter 6</h1>
+        <div class="subtitle">Parallel Processors</div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="grid">
+        <!-- Flynn's Taxonomy -->
+        <div class="section">
+          <div class="section-title">⚡ Flynn's Taxonomy</div>
+          <div class="parallel-type"><strong>SISD</strong> - Uniprocessor</div>
+          <div class="parallel-type">Single instruction, single data</div>
+          <div class="parallel-type"><strong>SIMD</strong> - Vector/GPU</div>
+          <div class="parallel-type">Single instruction, multiple data</div>
+          <div class="parallel-type">
+            <strong>MIMD</strong> - Multiprocessor
+          </div>
+          <div class="parallel-type">Multiple instr., multiple data</div>
+          <div class="key-point">
+            <strong>SPMD:</strong> Single Program, Multiple Data<br />
+            Most common MIMD model
+          </div>
+        </div>
+
+        <!-- Multiprocessor Basics -->
+        <div class="section">
+          <div class="section-title">🔗 Multiprocessor Types</div>
+          <div class="key-point">
+            <strong>Shared Memory (SMP):</strong><br />
+            Single physical address space
+          </div>
+          <div class="key-point">
+            <strong>Message Passing:</strong><br />
+            Private memories, explicit comm.
+          </div>
+          <ul class="compact">
+            <li>UMA: Uniform memory access</li>
+            <li>NUMA: Non-uniform access</li>
+            <li>Cluster: Networked computers</li>
+            <li>Multicore: Cores on one chip</li>
+          </ul>
+        </div>
+
+        <!-- Parallelism Types -->
+        <div class="section">
+          <div class="section-title">💫 Parallelism Types</div>
+          <div class="key-point">
+            <strong>Task-Level:</strong> Independent programs<br />
+            Different tasks run simultaneously
+          </div>
+          <div class="key-point">
+            <strong>Data-Level:</strong> Same operation<br />
+            Applied to multiple data items
+          </div>
+          <ul class="compact">
+            <li>ILP: Instruction-level</li>
+            <li>TLP: Thread-level</li>
+            <li>DLP: Data-level</li>
+            <li>RLP: Request-level</li>
+          </ul>
+        </div>
+
+        <!-- Amdahl's Law -->
+        <div class="section wide-section">
+          <div class="section-title">🎯 Amdahl's Law</div>
+          <div class="formula-box">
+            <div class="formula-label">SPEEDUP</div>
+            Speedup = 1 / (Serial + Parallel/N)
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">MAXIMUM SPEEDUP</div>
+            Max Speedup = 1 / Serial Fraction
+          </div>
+          <div class="key-point">
+            Even small serial portions limit speedup!<br />
+            If 10% serial → Max 10× speedup
+          </div>
+          <div class="two-col">
+            <div class="metric">
+              <div class="metric-name">Strong Scaling</div>
+              Fixed problem size<br />
+              <span class="highlight">Harder to achieve</span>
+            </div>
+            <div class="metric">
+              <div class="metric-name">Weak Scaling</div>
+              Problem size grows with P<br />
+              <span class="highlight">Easier scaling</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIMD Details -->
+        <div class="section">
+          <div class="section-title">🌊 SIMD Architecture</div>
+          <div class="key-point">
+            One instruction → Many data items<br />
+            Perfect for arrays & loops
+          </div>
+          <ul class="compact">
+            <li>Vector processors (traditional)</li>
+            <li>Multimedia extensions (SSE, AVX)</li>
+            <li>GPU SIMD lanes</li>
+            <li>All execute in lockstep</li>
+          </ul>
+          <div class="key-point">
+            <strong>Advantages:</strong><br />
+            • Less instruction bandwidth<br />
+            • Single control unit<br />
+            • Energy efficient
+          </div>
+        </div>
+
+        <!-- Vector vs SIMD -->
+        <div class="section">
+          <div class="section-title">📊 Vector vs Multimedia</div>
+          <div class="key-point">
+            <strong>Vector Processors:</strong><br />
+            • Variable length (register)<br />
+            • Strided & indexed access<br />
+            • Gather-scatter ops
+          </div>
+          <div class="key-point">
+            <strong>Multimedia Extensions:</strong><br />
+            • Fixed width (in opcode)<br />
+            • Contiguous only<br />
+            • New ISA per width
+          </div>
+        </div>
+
+        <!-- Multithreading -->
+        <div class="section full-section">
+          <div class="section-title">🧵 Hardware Multithreading</div>
+          <div class="arch-grid">
+            <div class="arch-box">
+              <div class="arch-name">Fine-Grained MT</div>
+              Switch every cycle<br />
+              Round-robin scheduling<br />
+              <span class="highlight">Hides all stalls</span><br />
+              <span class="red-highlight">Slows each thread</span>
+            </div>
+            <div class="arch-box">
+              <div class="arch-name">Coarse-Grained MT</div>
+              Switch on long stalls<br />
+              Pipeline drain/refill<br />
+              <span class="highlight">Less slowdown</span><br />
+              <span class="red-highlight">Only hides long stalls</span>
+            </div>
+            <div class="arch-box">
+              <div class="arch-name">Simultaneous MT (SMT)</div>
+              Issue from multiple threads<br />
+              Uses superscalar slots<br />
+              <span class="highlight">Best utilization</span><br />
+              <span class="highlight">Exploits ILP + TLP</span>
+            </div>
+            <div class="arch-box">
+              <div class="arch-name">Thread Switch Cost</div>
+              Fine-grained: 0 cycles<br />
+              Coarse-grained: ~100s cycles<br />
+              SMT: 0 (simultaneous)<br />
+              Process switch: ~1000s cycles
+            </div>
+          </div>
+          <div class="key-point">
+            <strong>Thread vs Process:</strong> Thread = PC + registers + stack
+            (shares address space)<br />
+            Process = Thread(s) + address space + OS state (isolated)
+          </div>
+        </div>
+
+        <!-- Synchronization -->
+        <div class="section">
+          <div class="section-title">🔒 Synchronization</div>
+          <div class="key-point">
+            Coordinate multiple processors<br />
+            Protect shared data
+          </div>
+          <ul class="compact">
+            <li><strong>Lock:</strong> Mutual exclusion</li>
+            <li><strong>Barrier:</strong> Wait for all</li>
+            <li><strong>Atomic ops:</strong> Uninterruptible</li>
+            <li>LDXR/STXR (ARMv8)</li>
+            <li>Test-and-set, Compare-and-swap</li>
+          </ul>
+        </div>
+
+        <!-- GPU Architecture -->
+        <div class="section wide-section">
+          <div class="section-title">🎮 GPU Architecture</div>
+          <div class="key-point">
+            Graphics Processing Unit = SIMD + MIMD + Multithreading
+          </div>
+          <div class="two-col">
+            <div>
+              <ul class="compact">
+                <li>Many SIMD processors</li>
+                <li>Massive multithreading</li>
+                <li>Hides memory latency</li>
+                <li>High bandwidth GDDR memory</li>
+                <li>Streaming caches (small)</li>
+              </ul>
+            </div>
+            <div>
+              <ul class="compact">
+                <li>Thousands of threads</li>
+                <li>SIMT execution model</li>
+                <li>Local memory per block</li>
+                <li>No demand paging</li>
+                <li>Coprocessor to CPU</li>
+              </ul>
+            </div>
+          </div>
+          <div class="key-point">
+            <strong>Key Difference from CPU:</strong> Optimized for bandwidth,
+            not latency!<br />
+            Use multithreading instead of caches to hide latency
+          </div>
+        </div>
+
+        <!-- OpenMP -->
+        <div class="section">
+          <div class="section-title">🛠️ OpenMP</div>
+          <div class="key-point">
+            API for shared memory<br />
+            C/C++/Fortran directives
+          </div>
+          <ul class="compact">
+            <li>#pragma omp parallel</li>
+            <li>#pragma omp for</li>
+            <li>Compiler directives</li>
+            <li>Runtime library</li>
+            <li>Easy parallelization</li>
+          </ul>
+        </div>
+
+        <!-- Message Passing -->
+        <div class="section">
+          <div class="section-title">📨 Message Passing</div>
+          <div class="key-point">
+            Private memories<br />
+            Explicit send/receive
+          </div>
+          <ul class="compact">
+            <li>Send() & Receive() routines</li>
+            <li>No shared address space</li>
+            <li>Network between nodes</li>
+            <li>Clusters use this model</li>
+            <li>Better isolation/reliability</li>
+          </ul>
+        </div>
+
+        <!-- Clusters & WSC -->
+        <div class="section wide-section">
+          <div class="section-title">☁️ Clusters & WSC</div>
+          <div class="key-point">
+            <strong>Cluster:</strong> Networked computers as one system
+          </div>
+          <div class="key-point">
+            <strong>Warehouse-Scale Computer (WSC):</strong> Entire datacenter
+            as one machine
+          </div>
+          <div class="two-col">
+            <div>
+              <strong class="highlight">Advantages:</strong>
+              <ul class="compact">
+                <li>Lower cost (commodity HW)</li>
+                <li>Incremental expansion</li>
+                <li>Better availability</li>
+                <li>Easy replacement</li>
+                <li>Independent scaling</li>
+              </ul>
+            </div>
+            <div>
+              <strong class="highlight">WSC Characteristics:</strong>
+              <ul class="compact">
+                <li>Ample parallelism (SaaS)</li>
+                <li>Operational costs matter</li>
+                <li>Power/cooling critical</li>
+                <li>Economy of scale</li>
+                <li>Failure is normal</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Network Topologies -->
+        <div class="section full-section">
+          <div class="section-title">🌐 Network Topologies</div>
+          <div class="formula-box">
+            <div class="formula-label">NETWORK BANDWIDTH</div>
+            Total BW = Link BW × Number of Links
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">BISECTION BANDWIDTH</div>
+            Min BW when machine split in half
+          </div>
+          <div class="arch-grid">
+            <div class="arch-box">
+              <div class="arch-name">Bus</div>
+              Shared medium<br />
+              Bisection BW = 1× link<br />
+              Simple but limited
+            </div>
+            <div class="arch-box">
+              <div class="arch-name">Ring</div>
+              Sequential connections<br />
+              Bisection BW = 2× link<br />
+              Total BW = P× link
+            </div>
+            <div class="arch-box">
+              <div class="arch-name">Fully Connected</div>
+              Every node to every node<br />
+              Bisection BW = (P/2)²<br />
+              Expensive but fast
+            </div>
+            <div class="arch-box">
+              <div class="arch-name">Crossbar</div>
+              Full connectivity via switches<br />
+              n² switches needed<br />
+              No contention
+            </div>
+            <div class="arch-box">
+              <div class="arch-name">Omega Network</div>
+              Multistage switching<br />
+              2n log₂n switches<br />
+              Self-routing, cheaper
+            </div>
+            <div class="arch-box">
+              <div class="arch-name">Mesh/Torus</div>
+              2D/3D grid<br />
+              Short links<br />
+              Good for chips
+            </div>
+          </div>
+        </div>
+
+        <!-- Roofline Model -->
+        <div class="section wide-section">
+          <div class="section-title">📈 Roofline Model</div>
+          <div class="formula-box">
+            <div class="formula-label">ARITHMETIC INTENSITY</div>
+            FLOPs / Bytes from DRAM
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">ATTAINABLE PERFORMANCE</div>
+            Min(Peak FLOPS, Peak BW × Intensity)
+          </div>
+          <div class="key-point">
+            <strong>Two roofs:</strong><br />
+            1. Flat roof = Peak computational performance<br />
+            2. Slanted roof = Peak memory bandwidth
+          </div>
+          <ul class="compact">
+            <li>Left of ridge → Memory-bound</li>
+            <li>Right of ridge → Compute-bound</li>
+            <li>Identify optimization target</li>
+            <li>Ceilings show missed optimizations</li>
+          </ul>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="section">
+          <div class="section-title">⚙️ Performance Metrics</div>
+          <div class="formula-box">
+            <div class="formula-label">SPEEDUP</div>
+            Time₁ / Time_P
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">EFFICIENCY</div>
+            Speedup / P
+          </div>
+          <ul class="compact">
+            <li>Linear speedup: P× faster</li>
+            <li>Superlinear: > P× (rare!)</li>
+            <li>Sublinear: < P× (common)</li>
+            <li>Ideal efficiency = 100%</li>
+          </ul>
+        </div>
+
+        <!-- Benchmarks -->
+        <div class="section">
+          <div class="section-title">🏁 Benchmarks</div>
+          <ul class="compact">
+            <li><strong>Linpack:</strong> Linear algebra</li>
+            <li><strong>SPECrate:</strong> Task parallelism</li>
+            <li><strong>SPLASH:</strong> Scientific apps</li>
+            <li><strong>PARSEC:</strong> Multithreaded</li>
+            <li><strong>NAS:</strong> NASA CFD</li>
+            <li><strong>YCSB:</strong> Cloud databases</li>
+          </ul>
+          <div class="key-point">
+            13 design patterns (Berkeley)<br />
+            Better than fixed benchmarks
+          </div>
+        </div>
+
+        <!-- I/O & Networking -->
+        <div class="section wide-section">
+          <div class="section-title">🔌 I/O & Networking</div>
+          <div class="key-point">
+            <strong>PCIe:</strong> Peripheral Component Interconnect Express
+          </div>
+          <ul class="compact">
+            <li>Serial lanes (4 wires each: 2 TX, 2 RX)</li>
+            <li>1-32 lanes per device</li>
+            <li>PCIe 1.1: 2 Gb/s per lane</li>
+            <li>High-speed CPU-device link</li>
+          </ul>
+          <div class="two-col">
+            <div class="metric">
+              <div class="metric-name">Memory-Mapped I/O</div>
+              Addresses map to devices<br />
+              CPU uses normal R/W ops
+            </div>
+            <div class="metric">
+              <div class="metric-name">DMA</div>
+              Direct Memory Access<br />
+              Device → Memory (no CPU)
+            </div>
+          </div>
+          <div class="key-point">
+            <strong>Interrupt vs Polling:</strong> Interrupt = device signals
+            CPU<br />
+            Polling = CPU constantly checks device
+          </div>
+        </div>
+
+        <!-- Cache Coherence -->
+        <div class="section full-section">
+          <div class="section-title">🔄 Cache Coherence</div>
+          <div class="key-point">
+            <strong>Problem:</strong> Multiple caches, one shared memory → data
+            consistency!
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">COHERENCE REQUIREMENTS</div>
+            1. Read after write returns written value<br />
+            2. Writes eventually visible to all<br />
+            3. Writes to same location serialized
+          </div>
+          <div class="two-col">
+            <div>
+              <strong class="highlight">Snooping Protocol:</strong>
+              <ul class="compact">
+                <li>All caches watch bus</li>
+                <li>Broadcast-based</li>
+                <li>Write-invalidate common</li>
+                <li>Scales to ~32 cores</li>
+                <li>Simple implementation</li>
+              </ul>
+            </div>
+            <div>
+              <strong class="highlight">Directory Protocol:</strong>
+              <ul class="compact">
+                <li>Central directory tracks state</li>
+                <li>Point-to-point messages</li>
+                <li>Scales to 1000s cores</li>
+                <li>More complex</li>
+                <li>Less traffic overhead</li>
+              </ul>
+            </div>
+          </div>
+          <div class="key-point">
+            <strong class="red-highlight">False Sharing:</strong> Different
+            variables in same cache block<br />
+            → Unnecessary coherence traffic even though no actual sharing!
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Reference Formulas -->
+      <div class="footer-formulas">
+        <div
+          class="section-title"
+          style="text-align: center; margin-bottom: 10px"
+        >
+          ⚡ QUICK FORMULA REFERENCE ⚡
+        </div>
+        <div class="formula-grid">
+          <div class="mini-formula">Speedup = 1 / (Serial + Parallel/P)</div>
+          <div class="mini-formula">Max Speedup = 1 / Serial Fraction</div>
+          <div class="mini-formula">Efficiency = Speedup / P</div>
+          <div class="mini-formula">Arithmetic Intensity = FLOPs / Bytes</div>
+          <div class="mini-formula">Network BW = Link BW × # Links</div>
+          <div class="mini-formula">
+            Bisection BW = Min BW when split in half
+          </div>
+          <div class="mini-formula">
+            Attainable = Min(Peak FLOPS, BW × Intensity)
+          </div>
+          <div class="mini-formula">Speedup(P) = Time(1) / Time(P)</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

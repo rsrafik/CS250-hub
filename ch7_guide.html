@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CS250 Study Hub • Chapter 7 Guide</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* ===== Chapter 7 PINK scheme: HOT PINK + ROSE + ICE (no purple) ===== */
+      :root {
+        --bg: #0b0710;
+        --terminal: #120815;
+
+        --primary: #ff2ea6; /* hot pink */
+        --secondary: #ff77c8; /* rose pink */
+        --accent: #66e7ff; /* ice/cyan highlight (accent only) */
+
+        --soft: #ffe2f3; /* pale pink */
+        --error: #fb7185;
+
+        --text: #f2f2f5;
+        --text-dim: #b8b8c2;
+        --card: rgba(0, 0, 0, 0.45);
+      }
+
+      body {
+        font-family: "IBM Plex Mono", monospace;
+        color: var(--text);
+        padding: 20px;
+        line-height: 1.5;
+        background: radial-gradient(
+            1200px 650px at 20% 0%,
+            rgba(255, 46, 166, 0.16),
+            transparent 55%
+          ),
+          radial-gradient(
+            900px 520px at 85% 15%,
+            rgba(255, 119, 200, 0.14),
+            transparent 55%
+          ),
+          radial-gradient(
+            900px 520px at 55% 100%,
+            rgba(102, 231, 255, 0.1),
+            transparent 55%
+          ),
+          var(--bg);
+      }
+
+      .container {
+        max-width: 1450px;
+        margin: 0 auto;
+        background: linear-gradient(
+          180deg,
+          rgba(18, 8, 21, 0.98),
+          rgba(10, 6, 16, 0.98)
+        );
+        border: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 0 42px rgba(255, 46, 166, 0.22),
+          0 0 60px rgba(255, 119, 200, 0.14);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* scanlines */
+      .container::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.03) 1px,
+          transparent 1px,
+          transparent 5px
+        );
+        pointer-events: none;
+        opacity: 0.18;
+        mix-blend-mode: overlay;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 18px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid rgba(255, 46, 166, 0.75);
+        position: relative;
+        z-index: 1;
+      }
+      .header::before {
+        content: ">";
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        color: var(--accent);
+        font-size: 2em;
+        animation: blink 1s infinite;
+        text-shadow: 0 0 14px rgba(102, 231, 255, 0.55);
+      }
+      @keyframes blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .header h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 2.35em;
+        color: var(--primary);
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        text-shadow: 0 0 18px rgba(255, 46, 166, 0.55),
+          0 0 28px rgba(255, 119, 200, 0.25);
+        margin-bottom: 6px;
+      }
+
+      .subtitle {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.15em;
+        color: var(--secondary);
+        letter-spacing: 2px;
+        text-shadow: 0 0 14px rgba(255, 119, 200, 0.35);
+      }
+
+      .meta {
+        margin-top: 10px;
+        font-size: 0.92em;
+        color: rgba(242, 242, 245, 0.85);
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .pill {
+        border: 1px solid rgba(255, 119, 200, 0.45);
+        border-radius: 999px;
+        padding: 6px 10px;
+        background: rgba(0, 0, 0, 0.35);
+        color: rgba(242, 242, 245, 0.95);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-top: 18px;
+        margin-bottom: 18px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .section {
+        background: var(--card);
+        border: 2px solid rgba(102, 231, 255, 0.3);
+        border-radius: 12px;
+        padding: 15px;
+        position: relative;
+        backdrop-filter: blur(6px);
+      }
+      .section::before {
+        content: "//";
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        color: var(--text-dim);
+        font-size: 0.8em;
+        opacity: 0.75;
+      }
+
+      .wide {
+        grid-column: span 2;
+      }
+      .full {
+        grid-column: span 3;
+      }
+
+      .title {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.12em;
+        color: var(--soft);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-weight: 900;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .emoji {
+        font-size: 1.1em;
+        filter: drop-shadow(0 0 8px rgba(255, 46, 166, 0.22));
+      }
+
+      .line {
+        font-size: 0.88em;
+        color: var(--text-dim);
+        margin: 7px 0;
+        padding-left: 16px;
+        position: relative;
+      }
+      .line::before {
+        content: "›";
+        position: absolute;
+        left: 0;
+        color: var(--primary);
+        font-weight: 900;
+        text-shadow: 0 0 10px rgba(255, 46, 166, 0.35);
+      }
+      .line strong {
+        color: var(--text);
+      }
+
+      .key {
+        background: rgba(255, 46, 166, 0.1);
+        border-left: 3px solid rgba(255, 46, 166, 0.85);
+        padding: 10px;
+        border-radius: 10px;
+        margin: 10px 0;
+        font-size: 0.88em;
+        color: rgba(242, 242, 245, 0.95);
+      }
+
+      .warn {
+        background: rgba(102, 231, 255, 0.1);
+        border-left: 3px solid rgba(102, 231, 255, 0.85);
+        padding: 10px;
+        border-radius: 10px;
+        margin: 10px 0;
+        font-size: 0.88em;
+        color: rgba(242, 242, 245, 0.95);
+      }
+
+      .code {
+        background: rgba(0, 0, 0, 0.62);
+        border: 1px solid rgba(255, 119, 200, 0.55);
+        border-radius: 12px;
+        padding: 12px;
+        color: var(--accent);
+        font-size: 0.85em;
+        overflow-x: auto;
+        margin: 10px 0;
+        white-space: pre;
+        box-shadow: inset 0 0 0 1px rgba(255, 46, 166, 0.1);
+      }
+
+      code {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 6px;
+        color: var(--soft);
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      .tag {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(102, 231, 255, 0.4);
+        background: rgba(0, 0, 0, 0.35);
+        color: rgba(242, 242, 245, 0.9);
+        font-size: 0.8em;
+        margin-left: 6px;
+        vertical-align: middle;
+      }
+
+      .accent-card {
+        background: rgba(255, 119, 200, 0.1);
+        border: 2px solid rgba(255, 119, 200, 0.75);
+        border-radius: 12px;
+        padding: 14px;
+        margin-top: 12px;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 0 24px rgba(255, 119, 200, 0.15);
+      }
+
+      .accent-card h3 {
+        font-family: "Orbitron", sans-serif;
+        color: var(--secondary);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 1.05em;
+        margin-bottom: 10px;
+        text-align: center;
+        text-shadow: 0 0 14px rgba(255, 119, 200, 0.35);
+      }
+
+      .ref-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .ref-item {
+        background: rgba(0, 0, 0, 0.52);
+        border: 1px solid rgba(255, 46, 166, 0.5);
+        border-radius: 12px;
+        padding: 10px;
+        font-size: 0.78em;
+      }
+      .ref-label {
+        color: var(--accent);
+        font-weight: 900;
+        margin-bottom: 4px;
+        letter-spacing: 0.5px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 0.85em;
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(102, 231, 255, 0.28);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      th,
+      td {
+        padding: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        vertical-align: top;
+      }
+      th {
+        text-align: left;
+        color: var(--soft);
+        font-family: "Rajdhani", sans-serif;
+        letter-spacing: 1px;
+        font-weight: 900;
+        background: rgba(255, 46, 166, 0.1);
+      }
+      td {
+        color: rgba(242, 242, 245, 0.88);
+      }
+
+      .cols {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 8px;
+      }
+
+      @media (max-width: 1100px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .wide,
+        .full {
+          grid-column: span 1;
+        }
+        .ref-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .cols {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        body {
+          background: white;
+          color: black;
+        }
+        .container {
+          border: 2px solid black;
+          box-shadow: none;
+          background: white;
+        }
+        .container::after {
+          display: none;
+        }
+        .section {
+          background: white;
+        }
+        .code {
+          color: black;
+          border: 1px solid black;
+          box-shadow: none;
+        }
+        .header::before,
+        .section::before {
+          display: none;
+        }
+        .pill,
+        .tag {
+          border: 1px solid black;
+          background: white;
+          color: black;
+        }
+        table {
+          border: 1px solid black;
+        }
+        th {
+          background: #eee;
+          color: black;
+        }
+        td {
+          color: black;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>CHAPTER 7 GUIDE</h1>
+        <div class="subtitle">
+          Logic Blocks • ALU/Adders • Sequential Timing • Memory • FSM
+        </div>
+        <div class="meta">
+          <span class="pill">🧠 Concise + comprehensive</span>
+          <span class="pill">⚙️ Includes all Ch.7 topics</span>
+          <span class="pill">🕒 Timing + state</span>
+          <span class="pill">💾 SRAM/DRAM + ECC</span>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- 🧩 Signals / combinational vs sequential / truth tables -->
+        <div class="section">
+          <div class="title">
+            <span class="emoji">🧩</span>Signals & Logic Types
+          </div>
+          <div class="line">
+            <strong>Asserted</strong> = 1 (true) • <strong>Deasserted</strong> =
+            0 (false)
+          </div>
+          <div class="line">
+            <strong>Combinational</strong>: no memory → same output for same
+            input
+          </div>
+          <div class="line">
+            <strong>Sequential</strong>: contains memory → depends on input +
+            stored state
+          </div>
+          <div class="key">
+            Truth table rows for <code>n</code> inputs:
+            <code>2<sup>n</sup></code
+            >.
+          </div>
+        </div>
+
+        <!-- 🔣 Boolean / NAND NOR / DeMorgan / SOP -->
+        <div class="section">
+          <div class="title">
+            <span class="emoji">🔣</span>Boolean + Universal Gates
+          </div>
+          <div class="line">
+            <strong>NAND</strong> = NOT(AND) • <strong>NOR</strong> = NOT(OR)
+          </div>
+          <div class="line">
+            <strong>Universal</strong>: any logic function can be built using
+            NAND-only (or NOR-only)
+          </div>
+          <div class="key">
+            DeMorgan’s:<br />
+            <code>~(a + b) = (~a · ~b)</code><br />
+            <code>~(a · b) = (~a + ~b)</code>
+          </div>
+          <div class="line">
+            <strong>Sum of products</strong> = OR of AND product terms
+            (minterms)
+          </div>
+        </div>
+
+        <!-- 🧰 Decoder/Encoder/MUX/Bus -->
+        <div class="section">
+          <div class="title">
+            <span class="emoji">🧰</span>Decoder • Encoder • MUX
+          </div>
+          <div class="line">
+            <strong>Decoder</strong>: <code>n</code>-bit input →
+            <code>2<sup>n</sup></code> outputs; exactly one asserted
+          </div>
+          <div class="line"><strong>Encoder</strong>: opposite of decoder</div>
+          <div class="line">
+            <strong>MUX</strong>: output is one selected input
+          </div>
+          <div class="key">
+            Selector bits for <code>n</code> inputs:
+            <code>⌈log<sub>2</sub>(n)⌉</code>.
+          </div>
+          <div class="line">
+            <strong>Bus</strong>: grouped lines treated as one signal (ex:
+            64-bit)
+          </div>
+        </div>
+
+        <!-- 🧾 PLA / ROM / PROM / Don't cares / K-maps -->
+        <div class="section wide">
+          <div class="title">
+            <span class="emoji">🧾</span>PLA • ROM • Don’t Cares
+          </div>
+          <div class="line">
+            <strong>Minterm</strong> = product term (AND of inputs / inverted
+            inputs)
+          </div>
+          <div class="line">
+            <strong>PLA</strong>: AND-plane builds product terms; OR-plane sums
+            them → sum-of-products
+          </div>
+          <div class="line">
+            PLA efficiency: only truth-table entries that matter; reuse product
+            terms across outputs
+          </div>
+          <div class="line">
+            <strong>ROM</strong>: fully decoded output word for every input
+            combo (height × width)
+          </div>
+          <div class="line"><strong>PROM</strong>: programmable ROM</div>
+          <div class="key">
+            <strong>Don’t cares</strong>: output irrelevant for some inputs
+            (helps logic minimization). <strong>K-maps</strong>: hand
+            minimization tool (useful but impractical at scale).
+          </div>
+        </div>
+
+        <!-- 🚌 Tri-state -->
+        <div class="section">
+          <div class="title"><span class="emoji">🚌</span>3-State Buffers</div>
+          <div class="line">
+            Outputs: 0, 1, or <strong>high-Z</strong> (electrically
+            disconnected)
+          </div>
+          <div class="line">
+            Used to share a common bus line between multiple sources
+          </div>
+          <div class="warn">
+            At most <strong>one</strong> 3-state buffer may drive the bus at a
+            time (avoid contention).
+          </div>
+        </div>
+
+        <!-- ➕ Adders + equations + subtraction -->
+        <div class="section wide">
+          <div class="title">
+            <span class="emoji">➕</span>Full Adder + Subtraction
+          </div>
+          <div class="line">
+            <strong>Full adder</strong>: inputs <code>a, b, CarryIn</code> →
+            outputs Sum + CarryOut
+          </div>
+          <div class="code">
+            CarryOut = (b·CarryIn) + (a·CarryIn) + (a·b) Sum = (a·~b·~CarryIn) +
+            (~a·b·~CarryIn) + (~a·~b·CarryIn) + (a·b·CarryIn)
+          </div>
+          <div class="key">
+            Two’s complement negate: invert bits then add 1.<br />
+            Subtraction with an adder: <code>a + (~b) + 1 = a − b</code>
+          </div>
+        </div>
+
+        <!-- 🚀 Carry lookahead -->
+        <div class="section">
+          <div class="title"><span class="emoji">🚀</span>Carry-Lookahead</div>
+          <div class="line">
+            <span class="tag">generate</span>
+            <code>g<sub>i</sub> = a<sub>i</sub>·b<sub>i</sub></code>
+          </div>
+          <div class="line">
+            <span class="tag">propagate</span>
+            <code>p<sub>i</sub> = a<sub>i</sub> + b<sub>i</sub></code>
+          </div>
+          <div class="key">
+            Carry:
+            <code
+              >c<sub>i+1</sub> = g<sub>i</sub> + p<sub>i</sub>·c<sub
+                >i</sub
+              ></code
+            >
+          </div>
+          <div class="line">Ripple: carry moves bit-by-bit (slow)</div>
+          <div class="line">
+            Lookahead: compute carries with fewer logic levels (fast)
+          </div>
+        </div>
+
+        <!-- 🧮 ALU (64-bit LEGv8) -->
+        <div class="section wide">
+          <div class="title">
+            <span class="emoji">🧮</span>LEGv8 ALU (1-bit → 64-bit)
+          </div>
+          <div class="line">
+            <strong>ALU</strong>: performs arithmetic (add/sub) + logic
+            (AND/OR/etc.)
+          </div>
+          <div class="line">
+            LEGv8 word = <strong>64 bits</strong> → need a 64-bit ALU
+          </div>
+
+          <div class="cols">
+            <div class="key">
+              <strong>SLT (set on less than)</strong><br />
+              Do <code>a − b</code>. MSB indicates sign (<code>a&lt;b</code>).
+              That <em>Set</em> bit feeds LSB “Less” so output becomes
+              <code>...0001</code> if <code>a&lt;b</code>.
+            </div>
+            <div class="key">
+              <strong>Signed overflow</strong><br />
+              Overflow if +/+ → − or −/− → + (sign comes from MSB).
+            </div>
+          </div>
+
+          <div class="key">
+            <strong>Equality + conditional branches</strong><br />
+            Subtract then test for zero.<br />
+            <code
+              >Zero = ~(Result<sub>63</sub> + Result<sub>62</sub> + ... +
+              Result<sub>0</sub>)</code
+            >
+          </div>
+
+          <div class="line">
+            <strong>NOR</strong> identity: <code>~(a + b) = (~a · ~b)</code>
+          </div>
+        </div>
+
+        <!-- 🎛️ ALU control -->
+        <div class="section">
+          <div class="title">
+            <span class="emoji">🎛️</span>ALU Control (Idea)
+          </div>
+          <div class="line">
+            Small combinational control maps instruction fields → ALU control
+            lines
+          </div>
+          <div class="line">
+            Control lines choose: invert inputs? AND/OR/add/sub/SLT?
+          </div>
+          <div class="warn">
+            Exam pattern: “decode → control lines → ALU does operation.”
+          </div>
+        </div>
+
+        <!-- 🕒 Clocking + setup/hold -->
+        <div class="section wide">
+          <div class="title">
+            <span class="emoji">🕒</span>Clocking + Setup/Hold
+          </div>
+          <div class="line">
+            <strong>Clock</strong>: periodic signal; frequency = 1 / period
+          </div>
+          <div class="line">
+            <strong>Edge-triggered</strong>: state updates only on active edge
+          </div>
+          <div class="line">
+            <strong>Synchronous</strong>: write new state only when signals
+            stable at edge
+          </div>
+          <div class="key">
+            <strong>Setup time</strong> <code>t<sub>setup</sub></code
+            >: input valid before edge.<br />
+            <strong>Hold time</strong> <code>t<sub>hold</sub></code
+            >: input stays valid after edge.
+          </div>
+        </div>
+
+        <!-- 🧷 Latches/Flip-flops + master-slave + JK -->
+        <div class="section wide">
+          <div class="title">
+            <span class="emoji">🧷</span>Latches • Flip-Flops • Glitches
+          </div>
+          <div class="line">
+            <strong>Latch</strong>: level-sensitive; transparent while enabled
+          </div>
+          <div class="line">
+            <strong>Flip-flop</strong>: edge-sensitive; captures only on clock
+            edge
+          </div>
+          <div class="key">
+            <strong>D latch</strong>: when enabled → <code>Q = D</code>; when
+            disabled → holds last Q. “Transparent” = output follows input
+            immediately.
+          </div>
+          <div class="warn">
+            <strong>Master–slave</strong>: master active while CLK high, slave
+            active while CLK low → edge-like behavior. Glitches may appear at
+            master; slave output filters them.
+          </div>
+          <div class="line">
+            <strong>JK race-around</strong>: with J=K=1 and level-triggering,
+            output can toggle repeatedly if clock pulse is too long
+          </div>
+        </div>
+
+        <!-- 🧾 Verilog -->
+        <div class="section">
+          <div class="title">
+            <span class="emoji">🧾</span>Verilog (Seq vs Comb)
+          </div>
+          <div class="line">
+            Clock in testbench: use delay <code>#n</code> then toggle
+          </div>
+          <div class="line">
+            Edge-triggered storage: <code>always @(posedge clk)</code> or
+            <code>negedge</code>
+          </div>
+          <div class="code">
+            // Sequential write (edge-triggered) always @(posedge clk) begin q
+            <= d; end
+          </div>
+          <div class="line">
+            Continuous assignments behave like combinational logic (reads update
+            immediately)
+          </div>
+        </div>
+
+        <!-- 🗃️ Register file -->
+        <div class="section wide">
+          <div class="title"><span class="emoji">🗃️</span>Register File</div>
+          <div class="line">
+            State element containing multiple registers addressed by register
+            number
+          </div>
+          <div class="line">
+            <strong>Reads</strong>: typically combinational (MUX-based)
+          </div>
+          <div class="line">
+            <strong>Writes</strong>: sequential (decoder + write enable + clock)
+          </div>
+          <div class="key">
+            “Reading does not change state.” Writes must satisfy setup/hold on
+            address/data/control.
+          </div>
+        </div>
+
+        <!-- 💾 SRAM / DRAM -->
+        <div class="section full">
+          <div class="title">
+            <span class="emoji">💾</span>SRAM vs DRAM (must-know details)
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Memory</th>
+                <th>Used for</th>
+                <th>Traits</th>
+                <th>Signals / mechanics</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>SRAM</strong></td>
+                <td>Cache</td>
+                <td>Fast • expensive • low density</td>
+                <td>
+                  <div>Chip select must be active to access.</div>
+                  <div>Read uses Output Enable to drive outputs.</div>
+                  <div>
+                    Writes use Write Enable (pulse; has min width) + setup/hold
+                    for addr/data.
+                  </div>
+                  <div>
+                    Uses word lines + bit lines + 3-state drivers; large SRAM
+                    uses block/two-level decode.
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>DRAM</strong></td>
+                <td>Main memory</td>
+                <td>Dense • cheap • needs refresh</td>
+                <td>
+                  <div>1T1C cell: charge on capacitor represents bit.</div>
+                  <div>Destructive read → must rewrite/refresh.</div>
+                  <div>
+                    Row access then column access; same address lines reused
+                    (RAS/CAS).
+                  </div>
+                  <div>
+                    Bit line precharge to mid voltage; sense amp detects tiny
+                    change.
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="key">
+            Terms: <strong>bit line</strong>, <strong>word line</strong>,
+            <strong>precharge</strong>, <strong>sense amplifier</strong>,
+            <strong>refresh</strong>.
+          </div>
+        </div>
+
+        <!-- 🛡️ ECC -->
+        <div class="section wide">
+          <div class="title">
+            <span class="emoji">🛡️</span>Parity + Hamming (ECC)
+          </div>
+          <div class="line">
+            <strong>Parity bit</strong>: counts 1s (odd/even). Mismatch on read
+            ⇒ error detected
+          </div>
+          <div class="line">
+            1-bit parity detects 1-bit errors; may miss 2-bit errors
+          </div>
+          <div class="key">
+            <strong>Distance-3 code</strong>: any legal codewords differ by ≥ 3
+            bits → correct 1-bit errors and detect 2-bit errors (Hamming-style).
+          </div>
+        </div>
+
+        <!-- 🗺️ FSM -->
+        <div class="section wide">
+          <div class="title">
+            <span class="emoji">🗺️</span>Finite-State Machines (FSM)
+          </div>
+          <div class="line">
+            <strong>FSM</strong> = state register + next-state function + output
+            function
+          </div>
+          <div class="line">
+            If state storage has <code>n</code> bits →
+            <code>2<sup>n</sup></code> states
+          </div>
+          <div class="line">
+            <strong>Next-state</strong> is combinational: (state, inputs) → next
+            state
+          </div>
+          <div class="line">
+            <strong>Outputs</strong> come from state (and maybe inputs)
+          </div>
+
+          <div class="key">
+            <strong>Moore</strong>: outputs depend only on state (often
+            faster).<br />
+            <strong>Mealy</strong>: outputs depend on state + inputs (often
+            fewer states).
+          </div>
+
+          <div class="code">
+            NextState = f(CurrentState, Inputs) Outputs = g(CurrentState) //
+            Moore Outputs = g(CurrentState, Inputs) // Mealy
+          </div>
+
+          <div class="warn">
+            Implementation: state register holds CurrentState; combinational
+            logic computes NextState + outputs each cycle.
+          </div>
+        </div>
+      </div>
+      <!-- /grid -->
+
+      <!-- ✅ QUICK REFERENCE MUST BE AT THE BOTTOM (like your other guides) -->
+      <div class="accent-card" style="margin-top: 18px">
+        <h3>Quick Reference</h3>
+        <div class="ref-grid">
+          <div class="ref-item">
+            <div class="ref-label">Truth table</div>
+            <div>
+              <code>2<sup>n</sup></code> rows
+            </div>
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Decoder</div>
+            <div>
+              <code>2<sup>n</sup></code> outputs
+            </div>
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">MUX select</div>
+            <div><code>⌈log<sub>2</sub>(n)⌉</code></div>
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Tri-state</div>
+            <div>0 / 1 / High-Z</div>
+          </div>
+
+          <div class="ref-item">
+            <div class="ref-label">Subtract</div>
+            <div><code>a + (~b) + 1</code></div>
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">CLA carry</div>
+            <div>
+              <code
+                >c<sub>i+1</sub> = g<sub>i</sub> + p<sub>i</sub>·c<sub
+                  >i</sub
+                ></code
+              >
+            </div>
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Zero flag</div>
+            <div><code>~(OR Result bits)</code></div>
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Overflow</div>
+            <div>+/+→− or −/−→+</div>
+          </div>
+
+          <div class="ref-item">
+            <div class="ref-label">Setup/Hold</div>
+            <div>
+              <code>t<sub>setup</sub></code
+              >, <code>t<sub>hold</sub></code>
+            </div>
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Latch vs FF</div>
+            <div>level vs edge</div>
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">SRAM vs DRAM</div>
+            <div>static/fast vs refresh/dense</div>
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">FSM</div>
+            <div>Moore vs Mealy</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /container -->
+  </body>
+</html>

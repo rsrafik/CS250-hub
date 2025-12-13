@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Computer Architecture - Chapter 1 Study Guide</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Archivo+Black&family=Work+Sans:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-bg: #0a0e27;
+        --color-primary: #00d9ff;
+        --color-secondary: #ff006e;
+        --color-accent: #ffbe0b;
+        --color-green: #06ffa5;
+        --color-purple: #b185ff;
+        --color-text: #e0e6f0;
+        --color-text-dim: #8892b0;
+      }
+
+      body {
+        font-family: "Work Sans", sans-serif;
+        background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        color: var(--color-text);
+        padding: 20px;
+        line-height: 1.4;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: rgba(26, 31, 58, 0.7);
+        border: 2px solid var(--color-primary);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 0 40px rgba(0, 217, 255, 0.2);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 15px;
+        border-bottom: 3px solid var(--color-primary);
+      }
+
+      .header h1 {
+        font-family: "Archivo Black", sans-serif;
+        font-size: 2.8em;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        margin-bottom: 5px;
+      }
+
+      .header .subtitle {
+        font-size: 1.2em;
+        color: var(--color-accent);
+        font-weight: 600;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+
+      .section {
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 8px;
+        padding: 15px;
+        border-left: 4px solid var(--color-secondary);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--color-primary),
+          transparent
+        );
+        opacity: 0.5;
+      }
+
+      .section-title {
+        font-family: "Archivo Black", sans-serif;
+        font-size: 1.1em;
+        color: var(--color-accent);
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .idea-list {
+        list-style: none;
+      }
+
+      .idea-list li {
+        font-size: 0.85em;
+        margin-bottom: 6px;
+        padding-left: 18px;
+        position: relative;
+        color: var(--color-text-dim);
+      }
+
+      .idea-list li::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: var(--color-green);
+        font-weight: bold;
+      }
+
+      .idea-list li strong {
+        color: var(--color-text);
+      }
+
+      .formula-box {
+        background: rgba(0, 217, 255, 0.05);
+        border: 1px solid var(--color-primary);
+        border-radius: 6px;
+        padding: 10px;
+        margin: 8px 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.85em;
+        color: var(--color-primary);
+        text-align: center;
+      }
+
+      .formula-label {
+        font-size: 0.75em;
+        color: var(--color-accent);
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .key-point {
+        background: rgba(255, 190, 11, 0.1);
+        border-left: 3px solid var(--color-accent);
+        padding: 8px;
+        margin: 8px 0;
+        font-size: 0.85em;
+        border-radius: 4px;
+      }
+
+      .performance-section {
+        grid-column: span 2;
+        border-left-color: var(--color-primary);
+      }
+
+      .power-section {
+        border-left-color: var(--color-green);
+      }
+
+      .benchmark-section {
+        grid-column: span 2;
+        border-left-color: var(--color-purple);
+      }
+
+      .fallacy-section {
+        border-left-color: var(--color-secondary);
+      }
+
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        font-size: 0.85em;
+      }
+
+      .metric {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .metric-name {
+        color: var(--color-accent);
+        font-weight: 600;
+        font-size: 0.9em;
+      }
+
+      .highlight {
+        color: var(--color-green);
+        font-weight: 600;
+      }
+
+      .red-highlight {
+        color: var(--color-secondary);
+        font-weight: 600;
+      }
+
+      ul.compact {
+        list-style: none;
+        margin-left: 0;
+      }
+
+      ul.compact li {
+        font-size: 0.8em;
+        margin-bottom: 4px;
+        padding-left: 12px;
+        position: relative;
+      }
+
+      ul.compact li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: var(--color-primary);
+      }
+
+      .benchmark-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .bench-item {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 6px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        border: 1px solid rgba(177, 133, 255, 0.3);
+      }
+
+      .footer-formulas {
+        background: rgba(255, 0, 110, 0.1);
+        border: 2px dashed var(--color-secondary);
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 15px;
+      }
+
+      .formula-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .mini-formula {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75em;
+        color: var(--color-text);
+        background: rgba(0, 0, 0, 0.4);
+        padding: 6px;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 0, 110, 0.3);
+      }
+
+      @media print {
+        body {
+          background: white;
+          padding: 10px;
+        }
+        .container {
+          border: 2px solid black;
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>⚡ CHAPTER 1 ⚡</h1>
+        <div class="subtitle">Performance • Power • Benchmarks</div>
+      </div>
+
+      <div class="grid">
+        <!-- Eight Great Ideas -->
+        <div class="section">
+          <div class="section-title">🎯 8 Great Ideas</div>
+          <ul class="idea-list">
+            <li><strong>Moore's Law:</strong> IC doubles every 18-24mo</li>
+            <li><strong>Abstraction:</strong> Hide complexity</li>
+            <li><strong>Common Case Fast:</strong> Optimize frequent</li>
+            <li><strong>Parallelism:</strong> Do multiple ops at once</li>
+            <li><strong>Pipelining:</strong> Flow through stages</li>
+            <li><strong>Prediction:</strong> Guess & start early</li>
+            <li>
+              <strong>Memory Hierarchy:</strong> Fast→Small→Expensive at top
+            </li>
+            <li><strong>Redundancy:</strong> Backup for reliability</li>
+          </ul>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="section performance-section">
+          <div class="section-title">📊 Performance Metrics</div>
+          <div class="two-col">
+            <div class="metric">
+              <div class="metric-name">Response Time</div>
+              Time to complete task<br />
+              <span class="red-highlight">↓ Lower = Better</span>
+            </div>
+            <div class="metric">
+              <div class="metric-name">Throughput</div>
+              Tasks per unit time<br />
+              <span class="highlight">↑ Higher = Better</span>
+            </div>
+          </div>
+
+          <div class="key-point">
+            <strong>Speedup:</strong> X is n times faster than Y<br />
+            <span
+              style="font-family: 'JetBrains Mono', monospace; font-size: 0.9em"
+            >
+              Performance<sub>X</sub> / Performance<sub>Y</sub> = Exec<sub
+                >Y</sub
+              >
+              / Exec<sub>X</sub> = n
+            </span>
+          </div>
+
+          <div class="formula-box">
+            <div class="formula-label">🎯 MASTER EQUATION</div>
+            CPU Time = IC × CPI × Clock Cycle Time
+            <div style="margin-top: 5px; font-size: 0.9em">
+              = (IC × CPI) / Clock Rate
+            </div>
+          </div>
+
+          <ul class="compact">
+            <li><strong>IC:</strong> Instruction Count (# instructions)</li>
+            <li><strong>CPI:</strong> Cycles Per Instruction (avg)</li>
+            <li><strong>Clock Cycle Time:</strong> 1 / Clock Rate</li>
+          </ul>
+        </div>
+
+        <!-- Power Wall -->
+        <div class="section power-section">
+          <div class="section-title">⚡ Power Wall</div>
+
+          <div class="key-point">
+            CMOS = primary energy consumer<br />
+            Dynamic energy from switching 0↔1
+          </div>
+
+          <div class="formula-box">
+            <div class="formula-label">ENERGY</div>
+            E ∝ C<sub>load</sub> × V²
+          </div>
+
+          <div class="formula-box">
+            <div class="formula-label">POWER</div>
+            P ∝ ½ × C<sub>load</sub> × V² × f
+          </div>
+
+          <div class="key-point">
+            <strong>Problem:</strong> Can't lower V more<br />
+            → Transistors leak (~40% power!)<br />
+            <strong>Result:</strong> Hit power wall 🧱
+          </div>
+
+          <ul class="compact">
+            <li>Power = energy over time</li>
+            <li>Must bring power IN & remove heat OUT</li>
+            <li>Server chips: 100W+ to cool</li>
+          </ul>
+        </div>
+
+        <!-- CPI Details -->
+        <div class="section">
+          <div class="section-title">🔄 CPI Breakdown</div>
+
+          <div class="formula-box">
+            <div class="formula-label">CLOCK CYCLES</div>
+            CPU cycles = IC × CPI<sub>avg</sub>
+          </div>
+
+          <div class="formula-box" style="font-size: 0.75em">
+            CPI = Σ(CPI<sub>i</sub> × C<sub>i</sub>) / IC
+          </div>
+
+          <div class="key-point">
+            <strong>Instruction Mix:</strong> Dynamic frequency of instructions
+            across programs
+          </div>
+
+          <ul class="compact">
+            <li>CPI varies by instruction type</li>
+            <li>Compare BOTH IC & CPI</li>
+            <li>Even if clock rates equal!</li>
+          </ul>
+
+          <div class="metric">
+            <div class="metric-name">Performance Depends On:</div>
+            Algorithm → Language → Compiler → Architecture → Hardware
+          </div>
+        </div>
+
+        <!-- Amdahl's Law -->
+        <div class="section">
+          <div class="section-title">🎯 Amdahl's Law</div>
+
+          <div class="key-point">
+            <strong>Law of Diminishing Returns</strong><br />
+            Speedup limited by improved portion's usage
+          </div>
+
+          <div class="formula-box" style="font-size: 0.75em">
+            <div class="formula-label">AMDAHL'S LAW</div>
+            Exec<sub>new</sub> = Exec<sub>affected</sub> / Speedup<br />
+            + Exec<sub>unaffected</sub>
+          </div>
+
+          <div class="key-point">
+            If feature = x% of time,<br />
+            Max speedup = 1 / x
+          </div>
+
+          <ul class="compact">
+            <li>80% of time on feature X</li>
+            <li>Max possible speedup = 1/0.8 = 1.25×</li>
+            <li><strong>Can't get 5× faster!</strong></li>
+          </ul>
+        </div>
+
+        <!-- Benchmarking -->
+        <div class="section benchmark-section">
+          <div class="section-title">📈 Benchmarking (SPEC)</div>
+
+          <div class="two-col">
+            <div>
+              <strong class="highlight">SPEC CPU2006</strong>
+              <ul class="compact">
+                <li>CINT2006: 12 int benchmarks</li>
+                <li>CFP2006: 17 FP benchmarks</li>
+              </ul>
+            </div>
+            <div>
+              <strong class="highlight">SPEC Power</strong>
+              <ul class="compact">
+                <li>Power at 0-100% load (10% steps)</li>
+                <li>Java business apps (JBB2005)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="formula-box">
+            <div class="formula-label">SPECratio</div>
+            Time<sub>reference</sub> / Time<sub>measured</sub>
+          </div>
+
+          <div class="formula-box" style="font-size: 0.75em">
+            <div class="formula-label">GEOMETRIC MEAN</div>
+            ⁿ√(∏ Ratio<sub>i</sub>) = (R₁×R₂×...×Rₙ)^(1/n)
+          </div>
+
+          <div class="formula-box" style="font-size: 0.75em">
+            <div class="formula-label">POWER EFFICIENCY</div>
+            ssj_ops/watt = Σ(ssj_ops) / Σ(power)
+          </div>
+
+          <div class="key-point">
+            <strong>Why Geometric Mean?</strong> Same answer regardless of
+            reference computer!
+          </div>
+        </div>
+
+        <!-- Fallacies & Pitfalls -->
+        <div class="section fallacy-section">
+          <div class="section-title">⚠️ Fallacies & Pitfalls</div>
+
+          <div class="key-point">
+            <strong class="red-highlight">PITFALL 1:</strong> Expecting
+            proportional improvement → Use Amdahl's Law!
+          </div>
+
+          <div class="key-point">
+            <strong class="red-highlight">PITFALL 2:</strong> Using partial
+            performance equation → Need IC × CPI × Time, not just one!
+          </div>
+
+          <ul class="compact">
+            <li>↑ Clock → may ↑ CPI (deeper pipeline)</li>
+            <li>↓ Instructions → may ↑ CPI (complex)</li>
+            <li>↓ CPI → may ↑ Instructions (simpler)</li>
+          </ul>
+
+          <div class="key-point">
+            <strong class="red-highlight">FALLACY 1:</strong> Low utilization =
+            low power<br />
+            <span class="highlight">FALSE!</span> Idle ≈ 50-60% peak power
+          </div>
+
+          <div class="key-point">
+            <strong class="red-highlight">FALLACY 2:</strong> Performance ≠
+            Energy efficiency<br />
+            <span class="highlight">FALSE!</span> Faster = less time = less
+            energy
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Reference Formulas -->
+      <div class="footer-formulas">
+        <div
+          class="section-title"
+          style="text-align: center; margin-bottom: 10px"
+        >
+          ⚡ QUICK FORMULA REFERENCE ⚡
+        </div>
+        <div class="formula-grid">
+          <div class="mini-formula">CPU Time = IC × CPI × Cycle Time</div>
+          <div class="mini-formula">CPU Time = (IC × CPI) / Clock Rate</div>
+          <div class="mini-formula">CPU Cycles = IC × CPI<sub>avg</sub></div>
+          <div class="mini-formula">
+            CPI = Σ(CPI<sub>i</sub> × C<sub>i</sub>) / IC
+          </div>
+          <div class="mini-formula">Energy ∝ C<sub>load</sub> × V²</div>
+          <div class="mini-formula">Power ∝ ½ × C<sub>load</sub> × V² × f</div>
+          <div class="mini-formula">
+            SPECratio = Time<sub>ref</sub> / Time<sub>measured</sub>
+          </div>
+          <div class="mini-formula">Geo Mean = ⁿ√(∏ Ratio<sub>i</sub>)</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

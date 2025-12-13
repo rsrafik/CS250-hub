@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chapter 5 - Memory Hierarchy Practice Problems</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Space Grotesk", sans-serif;
+        background: linear-gradient(135deg, #1a0e14 0%, #0f0a0d 100%);
+        color: #f8e9f1;
+        padding: 30px;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: rgba(26, 14, 20, 0.9);
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 3em;
+        color: #ff0844;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        text-shadow: 0 0 20px rgba(255, 8, 68, 0.5);
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #c9a8c0;
+        margin-bottom: 40px;
+        font-size: 1.2em;
+      }
+
+      .problem {
+        background: rgba(30, 20, 15, 0.7);
+        border-left: 5px solid #ff0844;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 25px;
+        position: relative;
+      }
+
+      .problem-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .problem-number {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #ff0844;
+      }
+
+      .difficulty {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .easy {
+        background: #10b981;
+        color: white;
+      }
+      .medium {
+        background: #ff2e63;
+        color: white;
+      }
+      .hard {
+        background: #dc0073;
+        color: white;
+      }
+
+      .problem-text {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        color: #f8e9f1;
+      }
+
+      .given {
+        background: rgba(255, 8, 68, 0.1);
+        border: 1px solid #ff0844;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.95em;
+      }
+
+      .given-title {
+        color: #ff0844;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .solution {
+        background: rgba(16, 185, 129, 0.1);
+        border: 2px solid #10b981;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 15px;
+        display: none;
+      }
+
+      .solution.show {
+        display: block;
+      }
+
+      .solution-header {
+        color: #10b981;
+        font-weight: 700;
+        font-size: 1.1em;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+      }
+
+      .solution-step {
+        margin-bottom: 12px;
+        padding-left: 20px;
+        position: relative;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.95em;
+      }
+
+      .solution-step::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: #10b981;
+        font-weight: bold;
+      }
+
+      .answer-box {
+        background: rgba(8, 255, 200, 0.2);
+        border: 2px dashed #08ffc8;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+        font-weight: 600;
+        color: #08ffc8;
+        text-align: center;
+        font-size: 1.1em;
+      }
+
+      .toggle-btn {
+        background: linear-gradient(135deg, #ff0844, #ff2e63);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 600;
+        font-size: 0.95em;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .toggle-btn:hover {
+        background: linear-gradient(135deg, #ff2e63, #dc0073);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 8, 68, 0.4);
+      }
+
+      .section-header {
+        background: linear-gradient(90deg, #ff0844, #ff2e63);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 30px 0 20px 0;
+        font-size: 1.3em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-align: center;
+      }
+
+      .hint {
+        background: rgba(255, 186, 8, 0.1);
+        border-left: 3px solid #ffba08;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        font-size: 0.9em;
+        color: #c9a8c0;
+      }
+
+      code {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "JetBrains Mono", monospace;
+        color: #08ffc8;
+      }
+
+      @media print {
+        .toggle-btn {
+          display: none;
+        }
+        .solution {
+          display: block !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔥 Practice Problems 🔥</h1>
+      <div class="subtitle">Chapter 5: Memory Hierarchy</div>
+
+      <div class="section-header">💾 Section 1: Cache Basics</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 1</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          A direct-mapped cache has 8 blocks. What cache block does byte address
+          45 map to if the block size is 4 bytes?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(1)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-1">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Block address = Byte address / Block size = 45 / 4 = 11 (integer
+            division)
+          </div>
+          <div class="solution-step">
+            Cache block = Block address mod Number of blocks = 11 mod 8 = 3
+          </div>
+          <div class="answer-box">Byte address 45 maps to cache block 3</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 2</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          How many total bits are required for a direct-mapped cache with 16 KiB
+          of data and 4-word blocks, assuming a 64-bit address?
+        </div>
+        <div class="hint">
+          💡 Hint: 16 KiB = 4096 words. Each word is 32 bits. Calculate: data
+          bits + tag bits + valid bits
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(2)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-2">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            16 KiB = 4096 words = 2<sup>12</sup> words
+          </div>
+          <div class="solution-step">
+            Block size = 4 words = 2<sup>2</sup> words → Number of blocks =
+            2<sup>12</sup> / 2<sup>2</sup> = 2<sup>10</sup> = 1024 blocks
+          </div>
+          <div class="solution-step">
+            Index bits = 10 (for 1024 blocks), Offset bits = 2 (for 4 words) + 2
+            (for bytes) = 4
+          </div>
+          <div class="solution-step">Tag bits = 64 - 10 - 4 = 50 bits</div>
+          <div class="solution-step">
+            Total per block = (4 words × 32 bits) + 50 tag bits + 1 valid bit =
+            128 + 50 + 1 = 179 bits
+          </div>
+          <div class="solution-step">
+            Total cache size = 1024 blocks × 179 bits = 183,296 bits = 179
+            Kibibits
+          </div>
+          <div class="answer-box">179 Kibibits</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 3</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A 4-way set-associative cache has 256 total blocks with a block size
+          of 32 bytes. For a 64-bit address, how many bits are used for the tag,
+          index, and offset fields?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(3)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-3">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Total blocks = 256, 4-way means 4 blocks per set
+          </div>
+          <div class="solution-step">
+            Number of sets = 256 / 4 = 64 sets = 2<sup>6</sup>
+          </div>
+          <div class="solution-step">
+            Index bits = 6 (to select among 64 sets)
+          </div>
+          <div class="solution-step">
+            Offset bits = log<sub>2</sub>(32) = 5 bits (for byte within block)
+          </div>
+          <div class="solution-step">Tag bits = 64 - 6 - 5 = 53 bits</div>
+          <div class="answer-box">
+            Tag = 53 bits, Index = 6 bits, Offset = 5 bits
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">⚡ Section 2: Cache Performance</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 4</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          A cache has a hit time of 1 cycle, a miss rate of 5%, and a miss
+          penalty of 100 cycles. What is the Average Memory Access Time (AMAT)?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(4)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-4">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            AMAT = Hit time + (Miss rate × Miss penalty)
+          </div>
+          <div class="solution-step">AMAT = 1 + (0.05 × 100)</div>
+          <div class="solution-step">AMAT = 1 + 5 = 6 cycles</div>
+          <div class="answer-box">AMAT = 6 cycles</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 5</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A program executes 1 million instructions with a base CPI of 2. The
+          instruction cache has a 2% miss rate and the data cache has a 4% miss
+          rate. 30% of instructions are loads/stores. The miss penalty is 50
+          cycles. Calculate the total CPI.
+        </div>
+        <div class="given">
+          <div class="given-title">Given:</div>
+          • Base CPI = 2<br />
+          • Instruction miss rate = 2% = 0.02<br />
+          • Data miss rate = 4% = 0.04<br />
+          • Load/store percentage = 30% = 0.30<br />
+          • Miss penalty = 50 cycles
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(5)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-5">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Instruction stalls per instruction = I-miss rate × Miss penalty =
+            0.02 × 50 = 1.0 cycles
+          </div>
+          <div class="solution-step">
+            Data stalls per instruction = % loads/stores × D-miss rate × Miss
+            penalty
+          </div>
+          <div class="solution-step">
+            Data stalls = 0.30 × 0.04 × 50 = 0.6 cycles
+          </div>
+          <div class="solution-step">
+            Total CPI = Base CPI + I-stalls + D-stalls = 2 + 1.0 + 0.6 = 3.6
+          </div>
+          <div class="answer-box">Total CPI = 3.6 cycles per instruction</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 6</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          A processor has a 2 GHz clock. A program runs with a base CPI of 1.5
+          and makes 200 million memory accesses. The L1 cache has a 3% miss rate
+          and 1 cycle hit time. The L2 cache has a 40% miss rate and 10 cycle
+          hit time. Main memory access takes 100 cycles. Calculate the effective
+          CPI.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(6)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-6">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            L1 miss rate = 0.03, L2 local miss rate = 0.40
+          </div>
+          <div class="solution-step">L1 hits: 97% → 1 cycle</div>
+          <div class="solution-step">
+            L1 miss, L2 hit: 3% × 60% = 1.8% → (1 + 10) = 11 cycles
+          </div>
+          <div class="solution-step">
+            L1 miss, L2 miss: 3% × 40% = 1.2% → (1 + 10 + 100) = 111 cycles
+          </div>
+          <div class="solution-step">
+            Average memory access = (0.97 × 1) + (0.018 × 11) + (0.012 × 111)
+          </div>
+          <div class="solution-step">
+            = 0.97 + 0.198 + 1.332 = 2.5 cycles per memory access
+          </div>
+          <div class="solution-step">
+            Memory stalls per instruction = (200M / total instructions) × 2.5
+          </div>
+          <div class="solution-step">
+            Assuming 400M instructions: stalls = 0.5 × 2.5 = 1.25
+          </div>
+          <div class="solution-step">Effective CPI = 1.5 + 1.25 = 2.75</div>
+          <div class="answer-box">Effective CPI ≈ 2.75</div>
+        </div>
+      </div>
+
+      <div class="section-header">🗺️ Section 3: Virtual Memory</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 7</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          A virtual memory system uses 4 KiB pages with 48-bit virtual addresses
+          and 40-bit physical addresses. How many bits are used for the virtual
+          page number, physical page number, and page offset?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(7)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-7">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Page size = 4 KiB = 2<sup>12</sup> bytes → Page offset = 12 bits
+          </div>
+          <div class="solution-step">
+            Virtual page number = 48 - 12 = 36 bits
+          </div>
+          <div class="solution-step">
+            Physical page number = 40 - 12 = 28 bits
+          </div>
+          <div class="answer-box">
+            VPN = 36 bits, PPN = 28 bits, Offset = 12 bits
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 8</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A TLB has 64 entries and is 4-way set-associative. A virtual address
+          is 40 bits with 16 KiB pages. How many bits are used for the TLB tag
+          and TLB index?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(8)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-8">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Page size = 16 KiB = 2<sup>14</sup> bytes → Page offset = 14 bits
+            (not used in TLB)
+          </div>
+          <div class="solution-step">
+            Virtual page number = 40 - 14 = 26 bits
+          </div>
+          <div class="solution-step">
+            Total TLB entries = 64, 4-way → Number of sets = 64 / 4 = 16 sets =
+            2<sup>4</sup>
+          </div>
+          <div class="solution-step">
+            TLB index = 4 bits (to select among 16 sets)
+          </div>
+          <div class="solution-step">TLB tag = 26 - 4 = 22 bits</div>
+          <div class="answer-box">TLB Tag = 22 bits, TLB Index = 4 bits</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 9</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          A system has a TLB hit rate of 99%, a page table in memory, and a
+          cache hit rate of 95%. TLB access takes 1 cycle, cache access takes 1
+          cycle, and memory access takes 100 cycles. What is the average memory
+          access time including address translation?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(9)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-9">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            TLB hit (99%): No extra memory access needed → 1 cycle for cache
+          </div>
+          <div class="solution-step">
+            TLB miss (1%): Must access page table in memory
+          </div>
+          <div class="solution-step">
+            For TLB miss, page table access: 5% miss → 100 cycles, 95% hit → 1
+            cycle
+          </div>
+          <div class="solution-step">
+            Page table access time = 0.95 × 1 + 0.05 × 100 = 0.95 + 5 = 5.95
+            cycles
+          </div>
+          <div class="solution-step">
+            Then data access: 0.95 × 1 + 0.05 × 100 = 5.95 cycles
+          </div>
+          <div class="solution-step">
+            TLB miss total = 5.95 (page table) + 5.95 (data) = 11.9 cycles
+          </div>
+          <div class="solution-step">
+            Average = 0.99 × 5.95 + 0.01 × 11.9 = 5.89 + 0.119 = 6.01 cycles
+          </div>
+          <div class="answer-box">Average access time ≈ 6 cycles</div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        🛡️ Section 4: Error Correction & Reliability
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 10</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          How many parity bits are needed for Hamming SEC (Single Error
+          Correction) with 32 data bits?
+        </div>
+        <div class="hint">
+          💡 Hint: Use the formula 2<sup>p</sup> ≥ p + d + 1
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(10)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-10">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Formula: 2<sup>p</sup> ≥ p + d + 1, where d = 32 data bits
+          </div>
+          <div class="solution-step">
+            Try p = 5: 2<sup>5</sup> = 32 ≥ 5 + 32 + 1 = 38? NO (32 &lt; 38)
+          </div>
+          <div class="solution-step">
+            Try p = 6: 2<sup>6</sup> = 64 ≥ 6 + 32 + 1 = 39? YES (64 ≥ 39)
+          </div>
+          <div class="answer-box">6 parity bits needed</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 11</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A disk has an MTTF of 1,000,000 hours. Calculate the Annual Failure
+          Rate (AFR). If a data center has 50,000 such disks, how many failures
+          per day should they expect on average?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(11)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-11">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Hours per year = 365 × 24 = 8,760 hours
+          </div>
+          <div class="solution-step">
+            AFR = Hours per year / MTTF = 8,760 / 1,000,000 = 0.00876 = 0.876%
+          </div>
+          <div class="solution-step">
+            Expected failures per year = 50,000 × 0.00876 = 438 disks
+          </div>
+          <div class="solution-step">
+            Failures per day = 438 / 365 ≈ 1.2 disks per day
+          </div>
+          <div class="answer-box">
+            AFR = 0.876%, Expected failures ≈ 1.2 disks/day
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 12</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A system has MTTF = 10,000 hours and MTTR = 2 hours. Calculate the
+          availability. How many "nines" of availability is this?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(12)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-12">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">Availability = MTTF / (MTTF + MTTR)</div>
+          <div class="solution-step">
+            Availability = 10,000 / (10,000 + 2) = 10,000 / 10,002 = 0.9998
+          </div>
+          <div class="solution-step">
+            Convert to percentage: 0.9998 = 99.98%
+          </div>
+          <div class="solution-step">
+            This is between "three nines" (99.9%) and "four nines" (99.99%)
+          </div>
+          <div class="answer-box">
+            Availability = 99.98% (approximately four nines)
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">💽 Section 5: RAID & Disk Systems</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 13</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          You need to store 8 TB of data with RAID 1 (mirroring). How much total
+          disk capacity do you need to purchase?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(13)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-13">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            RAID 1 = Complete mirroring → 100% redundancy
+          </div>
+          <div class="solution-step">Total capacity needed = 2 × Data size</div>
+          <div class="solution-step">Total capacity = 2 × 8 TB = 16 TB</div>
+          <div class="answer-box">16 TB of total disk capacity needed</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 14</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A RAID 5 system uses 5 disks total. If each disk is 2 TB, how much
+          usable data storage is available?
+        </div>
+        <div class="hint">
+          💡 Hint: RAID 5 uses distributed parity - one disk's worth of capacity
+          is used for parity
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(14)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-14">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            RAID 5 with N disks: (N-1) disks for data, 1 disk equivalent for
+            parity
+          </div>
+          <div class="solution-step">Total capacity = 5 × 2 TB = 10 TB</div>
+          <div class="solution-step">Parity overhead = 1 disk = 2 TB</div>
+          <div class="solution-step">Usable capacity = 10 TB - 2 TB = 8 TB</div>
+          <div class="solution-step">
+            Or: (N-1) × disk size = (5-1) × 2 TB = 8 TB
+          </div>
+          <div class="answer-box">8 TB of usable storage</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 15</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          A disk has an average seek time of 5 ms, rotational latency of 3 ms
+          (half rotation), and transfer rate of 100 MB/s. Calculate the total
+          time to read a 4 KB block. If you need to read 1000 random 4 KB
+          blocks, what is the total time?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(15)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-15">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Transfer time = Block size / Transfer rate = 4 KB / 100 MB/s
+          </div>
+          <div class="solution-step">
+            = 4,096 bytes / (100 × 10<sup>6</sup> bytes/s) = 0.00004096 s =
+            0.04096 ms ≈ 0.041 ms
+          </div>
+          <div class="solution-step">
+            Time per block = Seek + Rotational latency + Transfer
+          </div>
+          <div class="solution-step">= 5 ms + 3 ms + 0.041 ms = 8.041 ms</div>
+          <div class="solution-step">
+            For 1000 random blocks: 1000 × 8.041 ms = 8,041 ms = 8.041 seconds
+          </div>
+          <div class="answer-box">
+            Single block: 8.04 ms, 1000 blocks: 8.04 seconds
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">🔄 Section 6: Advanced Topics</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 16</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A 2-way set-associative cache has a miss rate of 8%. If we increase it
+          to 4-way set-associative (keeping total size same), the miss rate
+          drops to 6%. If we double the cache size but keep it 2-way, the miss
+          rate drops to 5%. Which option gives better AMAT if the miss penalty
+          is 100 cycles and hit time increases by 0.2 cycles for 4-way?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(16)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-16">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Original (2-way): AMAT = 1 + (0.08 × 100) = 1 + 8 = 9 cycles
+          </div>
+          <div class="solution-step">
+            Option 1 (4-way): AMAT = 1.2 + (0.06 × 100) = 1.2 + 6 = 7.2 cycles
+          </div>
+          <div class="solution-step">
+            Option 2 (2× size, 2-way): AMAT = 1 + (0.05 × 100) = 1 + 5 = 6
+            cycles
+          </div>
+          <div class="solution-step">
+            Comparison: 6 cycles &lt; 7.2 cycles &lt; 9 cycles
+          </div>
+          <div class="answer-box">
+            Doubling cache size (2-way) is best: AMAT = 6 cycles
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 17</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          A multiprocessor system has 4 cores each with a 32 KB L1 cache
+          (write-back, write-allocate) using a snooping coherence protocol.
+          Initially, all caches are empty. CPU0 writes to address X, then CPU1
+          reads X, then CPU2 writes to X. Describe the cache coherence actions
+          and final state.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(17)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-17">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Step 1:</strong> CPU0 writes X - Miss in CPU0 cache → fetch
+            block from memory - CPU0 cache: X (Modified/Dirty state, exclusive
+            owner) - Broadcast invalidate (none affected)
+          </div>
+          <div class="solution-step">
+            <strong>Step 2:</strong> CPU1 reads X - Miss in CPU1 cache - CPU0
+            must supply data (has dirty copy) - CPU0 writes back to memory and
+            downgrades to Shared - CPU1 gets copy in Shared state - CPU0 cache:
+            X (Shared), CPU1 cache: X (Shared)
+          </div>
+          <div class="solution-step">
+            <strong>Step 3:</strong> CPU2 writes X - Miss in CPU2 cache → fetch
+            from memory - CPU2 broadcasts invalidate - CPU0 and CPU1 invalidate
+            their copies - CPU2 cache: X (Modified), CPU0: Invalid, CPU1:
+            Invalid
+          </div>
+          <div class="answer-box">
+            Final: CPU2 has exclusive modified copy, CPU0 & CPU1 invalidated
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 18</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          You have a program that executes 100M instructions in 50 seconds on a
+          system with no I/O time. The CPU time is 45 seconds and 5 seconds are
+          memory stalls. If you quadruple the processor speed, but memory system
+          stays the same, how long does the program take? What percentage of
+          time is now I/O-related memory stalls?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(18)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-18">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Original: CPU execution = 45s, Memory stalls = 5s, Total = 50s
+          </div>
+          <div class="solution-step">
+            With 4× faster processor: - CPU execution = 45s / 4 = 11.25s -
+            Memory stalls = 5s (unchanged - memory not faster)
+          </div>
+          <div class="solution-step">New total time = 11.25s + 5s = 16.25s</div>
+          <div class="solution-step">
+            Speedup = 50s / 16.25s = 3.08× (not 4× due to Amdahl's Law!)
+          </div>
+          <div class="solution-step">
+            Memory stall percentage = 5s / 16.25s = 0.308 = 30.8%
+          </div>
+          <div class="answer-box">
+            New time: 16.25s, Memory stalls now 30.8% (was 10%)
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 19</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Classify each of the following cache misses as compulsory, capacity,
+          or conflict for a direct-mapped cache with 4 blocks and block size of
+          1 word: Access sequence: 0, 4, 0, 8, 0, 4, 12, 0
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(19)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-19">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Block mapping: Address mod 4 0→Block 0, 4→Block 0, 8→Block 0,
+            12→Block 0 (all map to same block!)
+          </div>
+          <div class="solution-step">
+            Access 0: MISS (Compulsory - first time)
+          </div>
+          <div class="solution-step">
+            Access 4: MISS (Conflict - evicts 0 from block 0)
+          </div>
+          <div class="solution-step">
+            Access 0: MISS (Conflict - evicts 4 from block 0)
+          </div>
+          <div class="solution-step">
+            Access 8: MISS (Conflict - evicts 0 from block 0)
+          </div>
+          <div class="solution-step">Access 0: MISS (Conflict - evicts 8)</div>
+          <div class="solution-step">Access 4: MISS (Conflict - evicts 0)</div>
+          <div class="solution-step">
+            Access 12: MISS (Compulsory first time, but also Conflict)
+          </div>
+          <div class="solution-step">Access 0: MISS (Conflict)</div>
+          <div class="answer-box">
+            1 Compulsory (first 0), 7 Conflict, 0 Capacity
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 20</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Given a 64-bit address space with 4 KB pages, calculate the size of a
+          single-level page table if each page table entry is 8 bytes. Is this
+          practical? If not, propose a better solution.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(20)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-20">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Page size = 4 KB = 2<sup>12</sup> bytes → Page offset = 12 bits
+          </div>
+          <div class="solution-step">
+            Virtual page number = 64 - 12 = 52 bits
+          </div>
+          <div class="solution-step">
+            Number of pages = 2<sup>52</sup> = 4,503,599,627,370,496 pages
+          </div>
+          <div class="solution-step">
+            Page table size = 2<sup>52</sup> × 8 bytes = 2<sup>52</sup> × 2<sup
+              >3</sup
+            >
+            = 2<sup>55</sup> bytes
+          </div>
+          <div class="solution-step">= 32 PiB (petabytes) per process!</div>
+          <div class="solution-step">
+            <strong>Not practical!</strong> Solution: Multi-level page tables
+            (e.g., ARMv8 uses 4 levels)
+          </div>
+          <div class="solution-step">
+            With 4 levels: Only allocate tables for used memory regions
+          </div>
+          <div class="answer-box">
+            Single-level: 32 PiB (impractical) → Use multi-level page tables
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          text-align: center;
+          margin-top: 50px;
+          padding: 25px;
+          background: rgba(255, 8, 68, 0.1);
+          border-radius: 10px;
+          border: 2px solid #ff0844;
+        "
+      >
+        <h2
+          style="
+            color: #ff0844;
+            margin-bottom: 20px;
+            font-family: 'Rajdhani', sans-serif;
+          "
+        >
+          🎯 COMPREHENSIVE STUDY TIPS
+        </h2>
+        <div
+          style="
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 2;
+            column-count: 2;
+            column-gap: 30px;
+          "
+        >
+          <p style="margin-bottom: 12px">
+            ✓ <strong>AMAT formula</strong> - Hit time + (Miss rate × Penalty)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Direct-mapped</strong> - (Block addr) mod (# blocks)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Set-associative</strong> - (Block addr) mod (# sets)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Fully associative</strong> - Block goes anywhere
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Address fields</strong> - Tag | Index | Offset
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>The Three Cs</strong> - Compulsory, Capacity, Conflict
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Compulsory miss</strong> - First access to block
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Capacity miss</strong> - Cache too small
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Conflict miss</strong> - Multiple blocks → same set
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Write-through</strong> - Write cache + memory (simpler)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Write-back</strong> - Write cache only (faster)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Write buffer</strong> - Queue for write-through
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Dirty bit</strong> - Tracks modified blocks
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Valid bit</strong> - Indicates valid data
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Tag</strong> - Upper address bits for matching
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Index</strong> - Selects cache set/block
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Offset</strong> - Byte within block
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Temporal locality</strong> - Reuse soon
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Spatial locality</strong> - Nearby accessed soon
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Block size ↑</strong> - Exploits spatial, reduces
+            compulsory
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Associativity ↑</strong> - Reduces conflicts, slower hit
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>L1 cache goal</strong> - Minimize hit time
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>L2 cache goal</strong> - Minimize miss rate
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Global miss rate</strong> - Miss in all levels
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Local miss rate</strong> - Miss in one level
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Virtual memory</strong> - Main memory as disk cache
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Page</strong> - VM block (typically 4-64 KiB)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Page fault</strong> - Page not in memory
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Page table</strong> - Virtual → physical mapping
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>TLB</strong> - Cache for page table entries
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>VM placement</strong> - Always fully associative
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>VM write policy</strong> - Always write-back
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Page offset</strong> - Not translated (stays same)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Reference bit</strong> - For LRU replacement
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Swap space</strong> - Disk storage for pages
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Hamming SEC</strong> - 2<sup>p</sup> ≥ p + d + 1
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Parity bits</strong> - At positions 1,2,4,8,16...
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>MTTF</strong> - Mean Time To Failure
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>MTTR</strong> - Mean Time To Repair
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>AFR</strong> - Annual Failure Rate = 8760/MTTF
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Availability</strong> - MTTF / (MTTF + MTTR)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Five nines</strong> - 99.999% = 5.26 min/year down
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>RAID 0</strong> - Striping, no redundancy
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>RAID 1</strong> - Mirroring, 2× capacity needed
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>RAID 5</strong> - Distributed parity, (N-1) usable
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>RAID 6</strong> - P+Q redundancy, survives 2 fails
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Parity</strong> - XOR of all data blocks
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Seek time</strong> - Move head to track
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Rotational latency</strong> - Wait for sector (½ rotation)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Transfer time</strong> - Read/write the data
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Cache coherence</strong> - Keep caches consistent
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Snooping protocol</strong> - All caches watch bus
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Write-invalidate</strong> - Invalidate other copies
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>False sharing</strong> - Different vars, same block
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>SRAM</strong> - 6-8 transistors, fast, cache
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>DRAM</strong> - 1 transistor, slower, main memory
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Flash</strong> - Nonvolatile, wear leveling
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>LRU</strong> - Least Recently Used replacement
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function toggleSolution(num) {
+        const solution = document.getElementById("solution-" + num);
+        solution.classList.toggle("show");
+      }
+    </script>
+  </body>
+</html>

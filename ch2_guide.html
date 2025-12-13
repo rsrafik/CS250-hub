@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chapter 2 - LEGv8 Assembly Study Guide</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-bg: #0d1117;
+        --color-terminal: #0e1e1e;
+        --color-primary: #00ff41;
+        --color-secondary: #00d4ff;
+        --color-accent: #ff00de;
+        --color-warning: #ffcc00;
+        --color-error: #ff3366;
+        --color-text: #c9d1d9;
+        --color-text-dim: #8b949e;
+      }
+
+      body {
+        font-family: "IBM Plex Mono", monospace;
+        background: var(--color-bg);
+        color: var(--color-text);
+        padding: 20px;
+        line-height: 1.4;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: var(--color-terminal);
+        border: 3px solid var(--color-primary);
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 0 50px rgba(0, 255, 65, 0.3);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid var(--color-primary);
+        position: relative;
+      }
+
+      .header::before {
+        content: ">";
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        color: var(--color-primary);
+        font-size: 2em;
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .header h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 2.5em;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        text-shadow: 0 0 20px rgba(0, 255, 65, 0.8);
+        margin-bottom: 8px;
+      }
+
+      .header .subtitle {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.3em;
+        color: var(--color-secondary);
+        letter-spacing: 2px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .section {
+        background: rgba(0, 0, 0, 0.5);
+        border: 2px solid var(--color-secondary);
+        border-radius: 6px;
+        padding: 15px;
+        position: relative;
+      }
+
+      .section::before {
+        content: "//";
+        position: absolute;
+        top: 5px;
+        right: 8px;
+        color: var(--color-text-dim);
+        font-size: 0.8em;
+      }
+
+      .section-title {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.2em;
+        color: var(--color-warning);
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-weight: 700;
+      }
+
+      .terminal-line {
+        font-size: 0.85em;
+        margin: 5px 0;
+        padding-left: 15px;
+        position: relative;
+        color: var(--color-text-dim);
+      }
+
+      .terminal-line::before {
+        content: "$";
+        position: absolute;
+        left: 0;
+        color: var(--color-primary);
+      }
+
+      .terminal-line strong {
+        color: var(--color-text);
+      }
+
+      .code-block {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid var(--color-primary);
+        border-radius: 4px;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 0.85em;
+        color: var(--color-primary);
+        overflow-x: auto;
+      }
+
+      .instruction-format {
+        background: rgba(0, 212, 255, 0.05);
+        border: 1px solid var(--color-secondary);
+        padding: 8px;
+        margin: 8px 0;
+        font-size: 0.8em;
+        border-radius: 4px;
+      }
+
+      .format-name {
+        color: var(--color-secondary);
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .bit-field {
+        display: inline-block;
+        background: rgba(255, 0, 222, 0.2);
+        border: 1px solid var(--color-accent);
+        padding: 2px 6px;
+        margin: 2px;
+        font-size: 0.75em;
+        border-radius: 3px;
+        color: var(--color-accent);
+      }
+
+      .register-table {
+        font-size: 0.75em;
+        line-height: 1.6;
+      }
+
+      .register-row {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 8px;
+        margin: 4px 0;
+        padding: 3px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .reg-name {
+        color: var(--color-warning);
+        font-weight: 600;
+      }
+
+      .reg-desc {
+        color: var(--color-text-dim);
+      }
+
+      .key-point {
+        background: rgba(255, 204, 0, 0.1);
+        border-left: 3px solid var(--color-warning);
+        padding: 8px;
+        margin: 8px 0;
+        font-size: 0.85em;
+        border-radius: 3px;
+      }
+
+      .wide-section {
+        grid-column: span 2;
+      }
+
+      .full-width {
+        grid-column: span 3;
+      }
+
+      .addressing-mode {
+        background: rgba(0, 0, 0, 0.4);
+        padding: 6px;
+        margin: 5px 0;
+        border-left: 2px solid var(--color-secondary);
+        font-size: 0.8em;
+      }
+
+      .formula {
+        color: var(--color-secondary);
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 600;
+        padding: 4px 0;
+      }
+
+      .quick-ref {
+        background: rgba(255, 0, 222, 0.1);
+        border: 2px solid var(--color-accent);
+        border-radius: 6px;
+        padding: 15px;
+        margin-top: 20px;
+      }
+
+      .quick-ref-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.3em;
+        color: var(--color-accent);
+        text-align: center;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .ref-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      .ref-item {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 8px;
+        border: 1px solid var(--color-accent);
+        border-radius: 4px;
+        font-size: 0.75em;
+      }
+
+      .ref-label {
+        color: var(--color-warning);
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+
+      .highlight-green {
+        color: var(--color-primary);
+        font-weight: 600;
+      }
+      .highlight-blue {
+        color: var(--color-secondary);
+        font-weight: 600;
+      }
+      .highlight-pink {
+        color: var(--color-accent);
+        font-weight: 600;
+      }
+      .highlight-yellow {
+        color: var(--color-warning);
+        font-weight: 600;
+      }
+
+      @media print {
+        body {
+          background: white;
+        }
+        .container {
+          border: 2px solid black;
+          box-shadow: none;
+        }
+        .section::before {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>CHAPTER 2</h1>
+        <div class="subtitle">LEGv8 Instruction Set & Assembly Language</div>
+      </div>
+
+      <!-- ARM History Section -->
+      <div
+        style="
+          background: rgba(0, 212, 255, 0.1);
+          border: 2px solid var(--color-secondary);
+          border-radius: 8px;
+          padding: 20px;
+          margin-bottom: 25px;
+        "
+      >
+        <div
+          style="
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.4em;
+            color: var(--color-secondary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+          "
+        >
+          📜 ARM HISTORY & EVOLUTION
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px">
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.4);
+              padding: 12px;
+              border-radius: 6px;
+              border-left: 3px solid var(--color-primary);
+            "
+          >
+            <div
+              style="
+                color: var(--color-primary);
+                font-weight: 600;
+                margin-bottom: 8px;
+              "
+            >
+              Timeline
+            </div>
+            <div style="font-size: 0.85em; line-height: 1.8">
+              <strong>1985:</strong> ARMv1 & MIPS released (32-bit)<br />
+              <strong>2005:</strong> ARMv7 (final 32-bit ARM)<br />
+              <strong>2011:</strong> ARMv8 announced<br />
+              <strong>2013:</strong> ARMv8 revealed (64-bit)<br />
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                padding: 8px;
+                background: rgba(255, 204, 0, 0.1);
+                border-radius: 4px;
+                font-size: 0.8em;
+              "
+            >
+              <strong style="color: var(--color-warning)">ARM:</strong>
+              Originally "Acorn RISC Machine", later "Advanced RISC Machine"
+            </div>
+          </div>
+
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.4);
+              padding: 12px;
+              border-radius: 6px;
+              border-left: 3px solid var(--color-accent);
+            "
+          >
+            <div
+              style="
+                color: var(--color-accent);
+                font-weight: 600;
+                margin-bottom: 8px;
+              "
+            >
+              ARMv8 Revolution
+            </div>
+            <div style="font-size: 0.85em; line-height: 1.7">
+              • Complete overhaul (not just 32→64 bit)<br />
+              • Much closer to MIPS than ARMv7<br />
+              • Solved address space problem<br />
+              • 16-bit addresses → obsolete (e.g., MOS 6502)
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                padding: 6px;
+                background: rgba(255, 0, 222, 0.1);
+                border-radius: 4px;
+                font-size: 0.75em;
+                color: var(--color-accent);
+              "
+            >
+              Most impossible problem: Too small memory address
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARMv7 vs ARMv8 Comparison -->
+      <div
+        style="
+          background: rgba(255, 0, 222, 0.1);
+          border: 2px solid var(--color-accent);
+          border-radius: 8px;
+          padding: 20px;
+          margin-bottom: 25px;
+        "
+      >
+        <div
+          style="
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.3em;
+            color: var(--color-accent);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+          "
+        >
+          ⚔️ ARMv7 vs ARMv8 COMPARISON
+        </div>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+          "
+        >
+          <div
+            style="
+              background: rgba(16, 185, 129, 0.1);
+              padding: 12px;
+              border-radius: 6px;
+              border: 1px solid var(--color-primary);
+            "
+          >
+            <div
+              style="
+                color: var(--color-primary);
+                font-weight: 600;
+                margin-bottom: 8px;
+                text-align: center;
+              "
+            >
+              ✓ SIMILARITIES
+            </div>
+            <div style="font-size: 0.8em; line-height: 1.8">
+              • All instructions are 32 bits wide<br />
+              • Memory access only via load/store<br />
+              • RISC architecture philosophy
+            </div>
+          </div>
+
+          <div
+            style="
+              background: rgba(239, 68, 68, 0.1);
+              padding: 12px;
+              border-radius: 6px;
+              border: 1px solid var(--color-error);
+            "
+          >
+            <div
+              style="
+                color: var(--color-error);
+                font-weight: 600;
+                margin-bottom: 8px;
+                text-align: center;
+              "
+            >
+              ✗ KEY DIFFERENCES
+            </div>
+            <div style="font-size: 0.8em; line-height: 1.8">
+              • <strong>Registers:</strong> ARMv7 = 15 GPRs, ARMv8 = 31 GPRs<br />
+              • <strong>PC:</strong> ARMv7 = reg, ARMv8 = separate<br />
+              • <strong>XZR:</strong> ARMv7 = none, ARMv8 = X31<br />
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+          "
+        >
+          <div style="font-size: 0.85em; line-height: 2">
+            <div style="margin-bottom: 8px">
+              <strong style="color: var(--color-warning)"
+                >ARMv7 Issues Fixed in ARMv8:</strong
+              >
+            </div>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                font-size: 0.9em;
+              "
+            >
+              <div>
+                ❌ PC is a register (weird branches)<br />
+                ❌ No zero register<br />
+                ❌ Only 15 general-purpose registers<br />
+                ❌ Inconsistent addressing modes
+              </div>
+              <div>
+                ❌ Load/Store Multiple instructions<br />
+                ❌ 4-bit conditional field on every instruction<br />
+                ❌ Complex immediate encoding<br />
+                ❌ Optional divide instruction
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="
+            margin-top: 12px;
+            padding: 10px;
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 3px solid var(--color-secondary);
+            border-radius: 4px;
+            font-size: 0.85em;
+          "
+        >
+          <strong style="color: var(--color-secondary)">Bottom Line:</strong>
+          ARMv8 is a radical redesign that's closer to MIPS than to ARMv7!
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- Architecture Overview -->
+        <div class="section">
+          <div class="section-title">🖥️ Architecture</div>
+          <div class="terminal-line"><strong>Word:</strong> 32 bits</div>
+          <div class="terminal-line"><strong>Doubleword:</strong> 64 bits</div>
+          <div class="terminal-line">
+            <strong>Registers:</strong> 32 total (X0-X31)
+          </div>
+          <div class="terminal-line">
+            <strong>Register Size:</strong> 64 bits
+          </div>
+          <div class="key-point">
+            Stored-program concept: Instructions are numbers stored in memory
+          </div>
+          <div class="terminal-line">
+            <strong>Instruction Size:</strong> 32 bits (fixed)
+          </div>
+          <div class="terminal-line">
+            <strong>Memory:</strong> Byte-addressed
+          </div>
+          <div class="terminal-line">
+            <strong>Alignment:</strong> Doubleword = 8 bytes apart
+          </div>
+        </div>
+
+        <!-- Key Registers -->
+        <div class="section">
+          <div class="section-title">📋 Key Registers</div>
+          <div class="register-table">
+            <div class="register-row">
+              <div class="reg-name">X0-X7</div>
+              <div class="reg-desc">Arguments/results</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">X8</div>
+              <div class="reg-desc">Return via pointer</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">X9-X17</div>
+              <div class="reg-desc">Temporary (caller-saved)</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">X19-X28</div>
+              <div class="reg-desc">Saved (callee-saved)</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">X28 (SP)</div>
+              <div class="reg-desc">Stack pointer</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">X29 (FP)</div>
+              <div class="reg-desc">Frame pointer</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">X30 (LR)</div>
+              <div class="reg-desc">Link register (return)</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">X31 (XZR)</div>
+              <div class="reg-desc">Always zero</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Instruction Formats -->
+        <div class="section">
+          <div class="section-title">📝 Instruction Formats</div>
+          <div class="instruction-format">
+            <div class="format-name">R-Format (Register)</div>
+            <div>
+              <span class="bit-field">opcode(11)</span>
+              <span class="bit-field">Rm(5)</span>
+              <span class="bit-field">shamt(6)</span>
+              <span class="bit-field">Rn(5)</span>
+              <span class="bit-field">Rd(5)</span>
+            </div>
+            <div style="margin-top: 4px; font-size: 0.9em">
+              ADD, SUB, AND, ORR, EOR
+            </div>
+          </div>
+          <div class="instruction-format">
+            <div class="format-name">D-Format (Data Transfer)</div>
+            <div>
+              <span class="bit-field">opcode(11)</span>
+              <span class="bit-field">address(9)</span>
+              <span class="bit-field">op2(2)</span>
+              <span class="bit-field">Rn(5)</span>
+              <span class="bit-field">Rt(5)</span>
+            </div>
+            <div style="margin-top: 4px; font-size: 0.9em">
+              LDUR, STUR (±256 bytes)
+            </div>
+          </div>
+          <div class="instruction-format">
+            <div class="format-name">I-Format (Immediate)</div>
+            <div>
+              <span class="bit-field">opcode(10)</span>
+              <span class="bit-field">immediate(12)</span>
+              <span class="bit-field">Rn(5)</span>
+              <span class="bit-field">Rd(5)</span>
+            </div>
+            <div style="margin-top: 4px; font-size: 0.9em">
+              ADDI, SUBI (zero-extended)
+            </div>
+          </div>
+        </div>
+
+        <!-- Arithmetic Instructions -->
+        <div class="section">
+          <div class="section-title">➕ Arithmetic</div>
+          <div class="code-block">
+            ADD Rd, Rn, Rm ; Rd = Rn + Rm<br />SUB Rd, Rn, Rm ; Rd = Rn - Rm<br />ADDI
+            Rd, Rn, #imm ; Rd = Rn + imm<br />SUBI Rd, Rn, #imm ; Rd = Rn - imm
+          </div>
+          <div class="key-point">
+            <strong>With 'S':</strong> Sets condition codes<br />
+            ADDS, SUBS, ADDIS, SUBIS, ANDS, ANDIS
+          </div>
+          <div class="terminal-line"><strong>Overflow:</strong> V flag = 1</div>
+          <div class="terminal-line"><strong>Zero:</strong> Z flag = 1</div>
+          <div class="terminal-line"><strong>Negative:</strong> N flag = 1</div>
+          <div class="terminal-line"><strong>Carry:</strong> C flag = 1</div>
+        </div>
+
+        <!-- Logical Instructions -->
+        <div class="section">
+          <div class="section-title">🔀 Logical & Shift</div>
+          <div class="code-block">
+            AND Rd, Rn, Rm ; Bitwise AND<br />ORR Rd, Rn, Rm ; Bitwise OR<br />EOR
+            Rd, Rn, Rm ; Bitwise XOR<br />LSL Rd, Rn, #shamt ; Left shift<br />LSR
+            Rd, Rn, #shamt ; Right shift
+          </div>
+          <div class="key-point">
+            <strong>AND:</strong> Mask bits (force 0s)<br />
+            <strong>ORR:</strong> Set bits (force 1s)<br />
+            <strong>EOR:</strong> Toggle/NOT (XOR with 1s)
+          </div>
+          <div class="terminal-line">
+            Left shift by i = multiply by 2<sup>i</sup>
+          </div>
+          <div class="terminal-line">
+            Right shift by i = divide by 2<sup>i</sup>
+          </div>
+        </div>
+
+        <!-- Memory Operations -->
+        <div class="section wide-section">
+          <div class="section-title">💾 Memory Operations</div>
+          <div class="code-block">
+            LDUR Rt, [Rn, #offset] ; Load doubleword<br />STUR Rt, [Rn, #offset]
+            ; Store doubleword<br />LDURB Rt, [Rn, #offset] ; Load byte
+            (unsigned)<br />STURB Rt, [Rn, #offset] ; Store byte<br />LDURH Rt,
+            [Rn, #offset] ; Load halfword<br />STURH Rt, [Rn, #offset] ; Store
+            halfword<br />LDURSB Rt, [Rn, #offset] ; Load byte (signed)
+          </div>
+          <div class="addressing-mode">
+            <div class="formula">Address = Base Register (Rn) + Offset</div>
+            <div style="margin-top: 5px">
+              Offset range: ±256 bytes (±32 doublewords)
+            </div>
+          </div>
+          <div class="key-point">
+            <strong>Memory is byte-addressed</strong><br />
+            • Byte = 8 bits<br />
+            • Halfword = 16 bits (2 bytes)<br />
+            • Word = 32 bits (4 bytes)<br />
+            • Doubleword = 64 bits (8 bytes)
+          </div>
+        </div>
+
+        <!-- Control Flow -->
+        <div class="section">
+          <div class="section-title">🔀 Control Flow</div>
+          <div class="code-block">
+            B label ; Unconditional<br />BR Rn ; Branch to register<br />BL
+            label ; Branch & link<br />CBZ Rn, label ; Branch if zero<br />CBNZ
+            Rn, label ; Branch if not zero<br />B.EQ label ; Branch if equal<br />B.NE
+            label ; Branch if not equal<br />B.LT label ; Branch if less than<br />B.GE
+            label ; Branch if ≥
+          </div>
+          <div class="key-point">
+            <strong>Condition Branches:</strong><br />
+            Must set flags first with SUBS, ADDS, etc.
+          </div>
+          <div class="terminal-line">B.HI, B.HS = unsigned comparison</div>
+          <div class="terminal-line">B.GT, B.GE = signed comparison</div>
+        </div>
+
+        <!-- Procedure Conventions -->
+        <div class="section wide-section">
+          <div class="section-title">📞 Procedure Calling</div>
+          <div class="code-block">
+            ; Calling a procedure<br />BL ProcedureName ; Save PC+4 in LR,
+            jump<br /><br />; Returning from procedure<br />BR LR ; Return to
+            caller
+          </div>
+          <div class="key-point">
+            <strong>6 Steps of Procedure Call:</strong><br />
+            1. Put parameters in X0-X7<br />
+            2. Transfer control (BL)<br />
+            3. Acquire storage (adjust SP)<br />
+            4. Perform task<br />
+            5. Put result in X0-X7<br />
+            6. Return control (BR LR)
+          </div>
+          <div class="terminal-line">
+            <strong>Caller-saved:</strong> X9-X17 (temps)
+          </div>
+          <div class="terminal-line">
+            <strong>Callee-saved:</strong> X19-X28 (saved)
+          </div>
+          <div class="terminal-line">
+            <strong>Stack grows down:</strong> SUBI SP, SP, #n
+          </div>
+          <div class="terminal-line">
+            <strong>Stack shrinks:</strong> ADDI SP, SP, #n
+          </div>
+        </div>
+
+        <!-- Two's Complement -->
+        <div class="section">
+          <div class="section-title">🔢 Two's Complement</div>
+          <div class="formula">
+            -(2<sup>63</sup>) × x<sub>63</sub> + Σ(2<sup>i</sup> ×
+            x<sub>i</sub>)
+          </div>
+          <div class="key-point">
+            <strong>Range (64-bit):</strong><br />
+            -2<sup>63</sup> to +2<sup>63</sup>-1
+          </div>
+          <div class="terminal-line">
+            <strong>Negate:</strong> Invert bits + 1
+          </div>
+          <div class="terminal-line">
+            <strong>Sign extend:</strong> Copy MSB left
+          </div>
+          <div class="terminal-line">
+            <strong>MSB = 1:</strong> Negative number
+          </div>
+          <div class="terminal-line">
+            <strong>MSB = 0:</strong> Positive number
+          </div>
+          <div class="addressing-mode">
+            <strong>Overflow Detection:</strong><br />
+            • Same sign inputs → different sign output<br />
+            • Pos + Pos = Neg (overflow!)<br />
+            • Neg + Neg = Pos (overflow!)
+          </div>
+        </div>
+
+        <!-- Stack Operations -->
+        <div class="section">
+          <div class="section-title">📚 Stack Operations</div>
+          <div class="code-block">
+            ; Push X19 onto stack<br />SUBI SP, SP, #8<br />STUR X19, [SP,
+            #0]<br /><br />; Pop X19 from stack<br />LDUR X19, [SP, #0]<br />ADDI
+            SP, SP, #8
+          </div>
+          <div class="key-point">
+            <strong>Stack Alignment:</strong> 16-byte (quadword)<br />
+            SP must be multiple of 16
+          </div>
+          <div class="terminal-line">
+            <strong>LIFO:</strong> Last In, First Out
+          </div>
+          <div class="terminal-line">
+            <strong>SP:</strong> Points to top of stack
+          </div>
+          <div class="terminal-line">
+            <strong>FP:</strong> Points to frame base
+          </div>
+          <div class="terminal-line">
+            <strong>Grows down:</strong> High → Low addresses
+          </div>
+        </div>
+
+        <!-- Characters & Strings -->
+        <div class="section">
+          <div class="section-title">📝 Characters</div>
+          <div class="terminal-line">
+            <strong>ASCII:</strong> 8 bits per char
+          </div>
+          <div class="terminal-line">
+            <strong>Unicode:</strong> Variable length
+          </div>
+          <div class="terminal-line">
+            <strong>UTF-8:</strong> 8-32 bits/char
+          </div>
+          <div class="terminal-line"><strong>UTF-16:</strong> 16 bits/char</div>
+          <div class="key-point">
+            <strong>C Strings:</strong> Null-terminated (\0)<br />
+            "Cal" = 4 bytes (C, a, l, \0)
+          </div>
+          <div class="code-block">
+            ; String operations<br />LDURB X11, [X10,#0] ; Load char<br />STURB
+            X11, [X12,#0] ; Store char<br />CBZ X11, done ; Check null
+          </div>
+        </div>
+
+        <!-- Memory Layout -->
+        <div class="section full-width">
+          <div class="section-title">🗺️ Memory Layout</div>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(5, 1fr);
+              gap: 10px;
+              font-size: 0.8em;
+            "
+          >
+            <div
+              style="
+                background: rgba(255, 0, 222, 0.1);
+                border: 1px solid var(--color-accent);
+                padding: 10px;
+                text-align: center;
+                border-radius: 4px;
+              "
+            >
+              <div style="color: var(--color-accent); font-weight: 600">
+                Stack
+              </div>
+              <div style="font-size: 0.85em; margin-top: 5px">
+                ↓ Grows down<br />SP, FP<br />Local vars
+              </div>
+            </div>
+            <div
+              style="
+                background: rgba(0, 212, 255, 0.1);
+                border: 1px solid var(--color-secondary);
+                padding: 10px;
+                text-align: center;
+                border-radius: 4px;
+              "
+            >
+              <div style="color: var(--color-secondary); font-weight: 600">
+                Heap
+              </div>
+              <div style="font-size: 0.85em; margin-top: 5px">
+                ↑ Grows up<br />Dynamic alloc<br />malloc/new
+              </div>
+            </div>
+            <div
+              style="
+                background: rgba(255, 204, 0, 0.1);
+                border: 1px solid var(--color-warning);
+                padding: 10px;
+                text-align: center;
+                border-radius: 4px;
+              "
+            >
+              <div style="color: var(--color-warning); font-weight: 600">
+                Static Data
+              </div>
+              <div style="font-size: 0.85em; margin-top: 5px">
+                GP points here<br />Global vars<br />Constants
+              </div>
+            </div>
+            <div
+              style="
+                background: rgba(0, 255, 65, 0.1);
+                border: 1px solid var(--color-primary);
+                padding: 10px;
+                text-align: center;
+                border-radius: 4px;
+              "
+            >
+              <div style="color: var(--color-primary); font-weight: 600">
+                Text
+              </div>
+              <div style="font-size: 0.85em; margin-top: 5px">
+                Program code<br />Instructions<br />Read-only
+              </div>
+            </div>
+            <div
+              style="
+                background: rgba(255, 51, 102, 0.1);
+                border: 1px solid var(--color-error);
+                padding: 10px;
+                text-align: center;
+                border-radius: 4px;
+              "
+            >
+              <div style="color: var(--color-error); font-weight: 600">
+                Reserved
+              </div>
+              <div style="font-size: 0.85em; margin-top: 5px">
+                Low memory<br />Address 0<br />OS use
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Missing Critical Topics -->
+      <div class="grid" style="margin-top: 20px">
+        <!-- Large Constants -->
+        <div class="section">
+          <div class="section-title">📏 Large Constants</div>
+          <div class="code-block">
+            MOVZ X9, #0xABCD, LSL #0 ; Zeros rest<br />MOVK X9, #0x1234, LSL #16
+            ; Keeps rest
+          </div>
+          <div class="key-point">
+            <strong>MOVZ:</strong> Move with Zero (clears other bits)<br />
+            <strong>MOVK:</strong> Move with Keep (preserves other bits)
+          </div>
+          <div class="terminal-line">Load 16 bits at a time</div>
+          <div class="terminal-line">LSL: 0, 16, 32, or 48 (quadrants)</div>
+          <div class="terminal-line">
+            Build 64-bit constant in 2-4 instructions
+          </div>
+        </div>
+
+        <!-- PC-Relative Addressing -->
+        <div class="section">
+          <div class="section-title">🎯 PC-Relative</div>
+          <div class="key-point">
+            <strong>Why?</strong> Branches to nearby code<br />
+            Most loops/ifs are within ±2<sup>18</sup> words
+          </div>
+          <div class="formula">Target = PC + (offset × 4)</div>
+          <div class="terminal-line">
+            <strong>CB-type:</strong> 19-bit offset (±1MB)
+          </div>
+          <div class="terminal-line">
+            <strong>B-type:</strong> 26-bit offset (±128MB)
+          </div>
+          <div class="code-block">
+            ; At address 80016:<br />CBNZ X11, Exit ; offset=3<br />; Jumps to:
+            80016 + (3×4) = 80028
+          </div>
+          <div class="terminal-line">
+            Instructions are 4 bytes → multiply by 4
+          </div>
+        </div>
+
+        <!-- Pseudoinstructions -->
+        <div class="section">
+          <div class="section-title">🎭 Pseudoinstructions</div>
+          <div class="key-point">Assembly shortcuts → Real instructions</div>
+          <div class="code-block">
+            MOV X9, X10<br />→ ORR X9, XZR, X10<br /><br />CMP X9, X10<br />→
+            SUBS XZR, X9, X10<br /><br />MVN X9, X10<br />→ ORN X9, XZR, X10
+          </div>
+          <div class="terminal-line">Assembler translates automatically</div>
+          <div class="terminal-line">Makes code easier to read/write</div>
+          <div class="terminal-line">No performance penalty</div>
+        </div>
+
+        <!-- Synchronization -->
+        <div class="section wide-section">
+          <div class="section-title">🔒 Synchronization</div>
+          <div class="key-point">
+            <strong>Problem:</strong> Multiple processors accessing shared
+            memory<br />
+            <strong>Solution:</strong> Atomic read-modify-write
+          </div>
+          <div class="code-block">
+            ; Acquire lock<br />ADDI X11, XZR, #1 ; locked value<br />again:<br />LDXR
+            X10, [X20, #0] ; Load exclusive<br />CBNZ X10, again ; Wait if
+            locked<br />STXR X11, X9, [X20] ; Store exclusive<br />CBNZ X9,
+            again ; Retry if failed<br /><br />; Release lock<br />STUR XZR,
+            [X20, #0] ; Write 0 = unlock
+          </div>
+          <div class="terminal-line">
+            <strong>LDXR:</strong> Load exclusive (marks memory)
+          </div>
+          <div class="terminal-line">
+            <strong>STXR:</strong> Store exclusive (X9=0 if success, 1 if fail)
+          </div>
+          <div class="terminal-line">
+            If memory changes between LDXR/STXR → fail
+          </div>
+        </div>
+
+        <!-- Addressing Modes -->
+        <div class="section full-width">
+          <div class="section-title">📍 Four Addressing Modes</div>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(4, 1fr);
+              gap: 10px;
+              font-size: 0.8em;
+            "
+          >
+            <div
+              style="
+                background: rgba(0, 255, 65, 0.1);
+                border: 1px solid var(--color-primary);
+                padding: 10px;
+                border-radius: 4px;
+              "
+            >
+              <div
+                style="
+                  color: var(--color-primary);
+                  font-weight: 600;
+                  margin-bottom: 5px;
+                "
+              >
+                1. Immediate
+              </div>
+              <div class="code-block" style="font-size: 0.9em; margin: 5px 0">
+                ADDI X9, X10, #8
+              </div>
+              <div style="font-size: 0.85em">Constant in instruction</div>
+            </div>
+            <div
+              style="
+                background: rgba(0, 212, 255, 0.1);
+                border: 1px solid var(--color-secondary);
+                padding: 10px;
+                border-radius: 4px;
+              "
+            >
+              <div
+                style="
+                  color: var(--color-secondary);
+                  font-weight: 600;
+                  margin-bottom: 5px;
+                "
+              >
+                2. Register
+              </div>
+              <div class="code-block" style="font-size: 0.9em; margin: 5px 0">
+                ADD X9, X10, X11
+              </div>
+              <div style="font-size: 0.85em">Operand in register</div>
+            </div>
+            <div
+              style="
+                background: rgba(255, 204, 0, 0.1);
+                border: 1px solid var(--color-warning);
+                padding: 10px;
+                border-radius: 4px;
+              "
+            >
+              <div
+                style="
+                  color: var(--color-warning);
+                  font-weight: 600;
+                  margin-bottom: 5px;
+                "
+              >
+                3. Base/Displacement
+              </div>
+              <div class="code-block" style="font-size: 0.9em; margin: 5px 0">
+                LDUR X9, [X10, #8]
+              </div>
+              <div style="font-size: 0.85em">Address = Reg + Offset</div>
+            </div>
+            <div
+              style="
+                background: rgba(255, 0, 222, 0.1);
+                border: 1px solid var(--color-accent);
+                padding: 10px;
+                border-radius: 4px;
+              "
+            >
+              <div
+                style="
+                  color: var(--color-accent);
+                  font-weight: 600;
+                  margin-bottom: 5px;
+                "
+              >
+                4. PC-Relative
+              </div>
+              <div class="code-block" style="font-size: 0.9em; margin: 5px 0">
+                B.EQ label
+              </div>
+              <div style="font-size: 0.85em">Address = PC + Offset</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compilation Process -->
+        <div class="section full-width">
+          <div class="section-title">🔧 Compilation Process</div>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(5, 1fr);
+              gap: 8px;
+              font-size: 0.8em;
+            "
+          >
+            <div
+              style="
+                background: rgba(0, 255, 65, 0.1);
+                border: 2px solid var(--color-primary);
+                padding: 8px;
+                text-align: center;
+                border-radius: 4px;
+              "
+            >
+              <div
+                style="
+                  color: var(--color-primary);
+                  font-weight: 600;
+                  margin-bottom: 5px;
+                "
+              >
+                1. COMPILER
+              </div>
+              <div style="font-size: 0.9em">C → Assembly<br />(.c → .s)</div>
+            </div>
+            <div
+              style="
+                font-size: 2em;
+                color: var(--color-text-dim);
+                text-align: center;
+                line-height: 60px;
+              "
+            >
+              →
+            </div>
+            <div
+              style="
+                background: rgba(0, 212, 255, 0.1);
+                border: 2px solid var(--color-secondary);
+                padding: 8px;
+                text-align: center;
+                border-radius: 4px;
+              "
+            >
+              <div
+                style="
+                  color: var(--color-secondary);
+                  font-weight: 600;
+                  margin-bottom: 5px;
+                "
+              >
+                2. ASSEMBLER
+              </div>
+              <div style="font-size: 0.9em">
+                Assembly → Object<br />(.s → .o)
+              </div>
+            </div>
+            <div
+              style="
+                font-size: 2em;
+                color: var(--color-text-dim);
+                text-align: center;
+                line-height: 60px;
+              "
+            >
+              →
+            </div>
+            <div
+              style="
+                background: rgba(255, 204, 0, 0.1);
+                border: 2px solid var(--color-warning);
+                padding: 8px;
+                text-align: center;
+                border-radius: 4px;
+              "
+            >
+              <div
+                style="
+                  color: var(--color-warning);
+                  font-weight: 600;
+                  margin-bottom: 5px;
+                "
+              >
+                3. LINKER
+              </div>
+              <div style="font-size: 0.9em">
+                Objects → Executable<br />(.o → a.out)
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 10px; font-size: 0.85em; line-height: 1.8">
+            <strong style="color: var(--color-primary)">Compiler:</strong>
+            Translates high-level to assembly, checks types<br />
+            <strong style="color: var(--color-secondary)">Assembler:</strong>
+            Creates object file, resolves labels (symbol table)<br />
+            <strong style="color: var(--color-warning)">Linker:</strong>
+            Combines modules, resolves external refs, relocates addresses<br />
+            <strong style="color: var(--color-accent)">Loader:</strong> Loads
+            executable into memory, sets up stack, starts execution
+          </div>
+        </div>
+
+        <!-- Object File Structure -->
+        <div class="section">
+          <div class="section-title">📦 Object File (.o)</div>
+          <div class="terminal-line">
+            1. <strong>Header:</strong> Size & positions
+          </div>
+          <div class="terminal-line">
+            2. <strong>Text segment:</strong> Machine code
+          </div>
+          <div class="terminal-line">
+            3. <strong>Static data:</strong> Global variables
+          </div>
+          <div class="terminal-line">
+            4. <strong>Relocation info:</strong> Absolute addresses
+          </div>
+          <div class="terminal-line">
+            5. <strong>Symbol table:</strong> Undefined labels
+          </div>
+          <div class="terminal-line">
+            6. <strong>Debug info:</strong> Source mapping
+          </div>
+        </div>
+
+        <!-- DLLs -->
+        <div class="section">
+          <div class="section-title">📚 Dynamic Libraries</div>
+          <div class="key-point">
+            <strong>Static linking:</strong> Library in executable<br />
+            <strong>Dynamic linking:</strong> Linked at runtime
+          </div>
+          <div class="terminal-line">
+            <strong>Pros:</strong> Smaller files, easy updates
+          </div>
+          <div class="terminal-line">
+            <strong>Cons:</strong> Slightly slower first call
+          </div>
+          <div class="terminal-line">
+            <strong>Lazy linking:</strong> Link only when called
+          </div>
+          <div class="terminal-line">
+            After first call: just indirect branch
+          </div>
+        </div>
+
+        <!-- Java vs C -->
+        <div class="section">
+          <div class="section-title">☕ Java Execution</div>
+          <div class="terminal-line">
+            Java → <strong>Bytecode</strong> (not machine code)
+          </div>
+          <div class="terminal-line">
+            <strong>JVM:</strong> Interprets bytecode
+          </div>
+          <div class="terminal-line">
+            <strong>JIT:</strong> Compiles hot methods to native
+          </div>
+          <div class="key-point">
+            <strong>Advantage:</strong> Portable (same bytecode)<br />
+            <strong>Cost:</strong> ~10× slower than C (initially)
+          </div>
+          <div class="terminal-line">JIT profiles & optimizes over time</div>
+        </div>
+
+        <!-- Array vs Pointer -->
+        <div class="section">
+          <div class="section-title">📊 Array vs Pointer</div>
+          <div class="key-point">
+            <strong>Question:</strong> Which is faster for array access?
+          </div>
+          <div class="terminal-line">
+            <strong>Array indexing:</strong> A[i] each loop
+          </div>
+          <div class="code-block" style="font-size: 0.75em">
+            Loop:<br />
+            LSL X10, X9, #3 ; i*8<br />
+            ADD X11, X0, X10 ; addr<br />
+            STUR XZR, [X11] ; store<br />
+            ADDI X9, X9, #1 ; i++<br />
+            ; 6 instructions total
+          </div>
+          <div class="terminal-line">
+            <strong>Pointer increment:</strong> Move ptr directly
+          </div>
+          <div class="code-block" style="font-size: 0.75em">
+            Loop:<br />
+            STUR XZR, [X9] ; store<br />
+            ADDI X9, X9, #8 ; ptr+=8<br />
+            ; 4 instructions total
+          </div>
+          <div class="key-point">
+            <strong>Winner:</strong> Pointers (33% fewer instructions!)<br />
+            Move index calc outside loop
+          </div>
+        </div>
+
+        <!-- Bounds Check Trick -->
+        <div class="section">
+          <div class="section-title">🔒 Bounds Check Shortcut</div>
+          <div class="key-point">
+            <strong>Problem:</strong> Check if 0 ≤ x < length<br />
+            Normally needs 2 comparisons
+          </div>
+          <div class="terminal-line">
+            <strong>Trick:</strong> Use unsigned comparison!
+          </div>
+          <div class="code-block" style="font-size: 0.8em">
+            ; Check: 0 <= X20 < X11<br />SUBS XZR, X20, X11<br />B.HS
+            IndexOutOfBounds
+          </div>
+          <div class="terminal-line">
+            B.HS = Branch if Higher or Same (unsigned)
+          </div>
+          <div class="key-point">
+            <strong>Why it works:</strong><br />
+            Negative numbers = HUGE in unsigned<br />
+            -1 = 0xFFFFFFFFFFFFFFFF > any length<br />
+            One comparison instead of two! 🎯
+          </div>
+        </div>
+
+        <!-- Branch Address Tables -->
+        <div class="section">
+          <div class="section-title">🔀 Switch Statement Tables</div>
+          <div class="key-point">
+            <strong>Problem:</strong> switch with many cases = many branches<br />
+            <strong>Solution:</strong> Table of jump addresses
+          </div>
+          <div class="code-block" style="font-size: 0.75em">
+            ; Switch on X9 (case value)<br />LSL X10, X9, #3 ; i*8
+            (doubleword)<br />LDUR X11, [X12, X10] ; load address<br />BR X11 ;
+            jump indirect
+          </div>
+          <div class="terminal-line">
+            <strong>Table:</strong> Array of code addresses
+          </div>
+          <div class="terminal-line"><strong>Index:</strong> case value</div>
+          <div class="terminal-line">
+            <strong>Speed:</strong> O(1) - one comparison!
+          </div>
+          <div class="key-point">
+            Use BR (branch register), not BL<br />
+            No return needed - this IS the switch
+          </div>
+        </div>
+
+        <!-- Branching Far Away -->
+        <div class="section">
+          <div class="section-title">🎯 Long Distance Branches</div>
+          <div class="key-point">
+            <strong>Problem:</strong> CBZ/CBNZ limited to ±1MB<br />
+            Target too far away!
+          </div>
+          <div class="terminal-line">
+            <strong>Solution:</strong> Invert + unconditional
+          </div>
+          <div class="code-block" style="font-size: 0.8em">
+            ; Want: CBZ X19, FarLabel<br />; But can't reach it!<br /><br />;
+            Fix: Invert condition<br />CBNZ X19, L1 ; skip if NOT zero<br />B
+            FarLabel ; unlimited range<br />L1: ; continue here
+          </div>
+          <div class="key-point">
+            <strong>B instruction:</strong> ±128MB range<br />
+            <strong>Trick:</strong> CBZ → CBNZ (flip!)<br />
+            Skip over the long branch
+          </div>
+        </div>
+
+        <!-- Decoding Machine Language -->
+        <div class="section wide-section">
+          <div class="section-title">🔍 Decode Binary to Assembly</div>
+          <div class="key-point">
+            <strong>Process:</strong> Binary → Assembly
+          </div>
+          <div class="terminal-line">1. Convert hex to binary</div>
+          <div class="terminal-line">2. Extract first 11 bits = opcode</div>
+          <div class="terminal-line">
+            3. Look up opcode table → instruction type
+          </div>
+          <div class="terminal-line">4. Determine format (R/D/I/CB/B)</div>
+          <div class="terminal-line">5. Parse remaining fields by format</div>
+          <div class="key-point">
+            <strong>Example:</strong> 8b050000<sub>hex</sub> = ?
+          </div>
+          <div class="code-block" style="font-size: 0.75em">
+            Binary: 10001011000 00101 000000 00000 00000<br />Opcode:
+            10001011000 = 1112 = ADD (R-format)<br />Rm=5, shamt=0, Rn=0,
+            Rd=0<br />→ ADD X0, X0, X5
+          </div>
+        </div>
+
+        <!-- Extended Addressing Modes -->
+        <div class="section full-width">
+          <div class="section-title">🎯 Full ARMv8 Addressing</div>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              gap: 10px;
+              font-size: 0.8em;
+              margin-bottom: 10px;
+            "
+          >
+            <div
+              style="
+                background: rgba(0, 255, 65, 0.1);
+                border: 1px solid var(--color-primary);
+                padding: 10px;
+                border-radius: 4px;
+              "
+            >
+              <div
+                style="
+                  color: var(--color-primary);
+                  font-weight: 600;
+                  margin-bottom: 5px;
+                "
+              >
+                Pre-indexed
+              </div>
+              <div class="code-block" style="font-size: 0.85em">
+                LDR X10, [X11, #16]!<br />; X11 = X11 + 16 FIRST<br />; then
+                load from new X11
+              </div>
+              <div style="font-size: 0.85em; margin-top: 5px">
+                Note the "!" - updates register
+              </div>
+            </div>
+            <div
+              style="
+                background: rgba(0, 212, 255, 0.1);
+                border: 1px solid var(--color-secondary);
+                padding: 10px;
+                border-radius: 4px;
+              "
+            >
+              <div
+                style="
+                  color: var(--color-secondary);
+                  font-weight: 600;
+                  margin-bottom: 5px;
+                "
+              >
+                Post-indexed
+              </div>
+              <div class="code-block" style="font-size: 0.85em">
+                LDR X10, [X11], #16<br />; Load from X11 FIRST<br />; X11 = X11
+                + 16 AFTER
+              </div>
+              <div style="font-size: 0.85em; margin-top: 5px">
+                Useful for array traversal
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              background: rgba(255, 204, 0, 0.1);
+              border: 1px solid var(--color-warning);
+              padding: 10px;
+              border-radius: 4px;
+              font-size: 0.85em;
+            "
+          >
+            <div
+              style="
+                color: var(--color-warning);
+                font-weight: 600;
+                margin-bottom: 5px;
+              "
+            >
+              Register Offset with Scaling
+            </div>
+            <div class="code-block">
+              LDR X10, [X11, X12, LSL #3]<br />; Address = X11 + (X12 × 8)<br />;
+              Perfect for array indexing!
+            </div>
+          </div>
+        </div>
+
+        <!-- Load/Store Pair & Conditional Select -->
+        <div class="section">
+          <div class="section-title">🎁 Advanced ARM Instructions</div>
+          <div class="key-point">
+            <strong>Load/Store Pair:</strong> 2 registers at once
+          </div>
+          <div class="code-block" style="font-size: 0.8em">
+            LDP X19, X20, [SP, #0]<br />; Load X19 & X20 from stack<br /><br />STP
+            X19, X20, [SP, #-16]!<br />; Pre-decrement & store both
+          </div>
+          <div class="terminal-line">
+            Saves instructions! Common for prologue/epilogue
+          </div>
+          <div class="key-point">
+            <strong>Conditional Select:</strong> No branch!
+          </div>
+          <div class="code-block" style="font-size: 0.8em">
+            CMP X9, X10<br />CSEL X11, X12, X13, GT<br />; X11 = (X9>X10) ? X12
+            : X13
+          </div>
+          <div class="terminal-line">Avoids pipeline flush from branching</div>
+        </div>
+
+        <!-- Biased Notation -->
+        <div class="section">
+          <div class="section-title">🔢 Biased Notation</div>
+          <div class="key-point">
+            <strong>Idea:</strong> Add bias before storing<br />
+            Makes all values positive
+          </div>
+          <div class="formula">Stored Value = Actual + Bias</div>
+          <div class="formula">Actual = Stored - Bias</div>
+          <div class="terminal-line"><strong>Example:</strong> Bias = 127</div>
+          <div class="terminal-line">Store -5: 127 + (-5) = 122</div>
+          <div class="terminal-line">Retrieve: 122 - 127 = -5</div>
+          <div class="key-point">
+            <strong>Used in:</strong> Floating-point exponents<br />
+            Makes comparison easier (just compare bits)
+          </div>
+        </div>
+      </div>
+
+      <!-- x86 ARCHITECTURE SECTION -->
+      <div
+        style="
+          background: linear-gradient(
+            135deg,
+            rgba(239, 68, 68, 0.15),
+            rgba(220, 38, 38, 0.05)
+          );
+          border: 3px solid var(--color-error);
+          border-radius: 12px;
+          padding: 25px;
+          margin: 25px 0;
+        "
+      >
+        <div
+          style="
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.8em;
+            color: var(--color-error);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-align: center;
+            font-weight: 700;
+          "
+        >
+          🔴 x86 (Intel) vs ARM 🔴
+        </div>
+
+        <div class="grid" style="gap: 15px">
+          <!-- CISC vs RISC Overview -->
+          <div
+            class="section full-width"
+            style="
+              border-left-color: var(--color-error);
+              background: rgba(239, 68, 68, 0.05);
+            "
+          >
+            <div class="section-title">⚔️ CISC vs RISC Philosophy</div>
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px"
+            >
+              <div
+                style="
+                  background: rgba(239, 68, 68, 0.1);
+                  padding: 15px;
+                  border-radius: 6px;
+                  border: 2px solid var(--color-error);
+                "
+              >
+                <div
+                  style="
+                    color: var(--color-error);
+                    font-weight: 700;
+                    font-size: 1.1em;
+                    margin-bottom: 10px;
+                  "
+                >
+                  x86 = CISC
+                </div>
+                <div style="line-height: 1.9; font-size: 0.9em">
+                  ✓ Complex instructions<br />
+                  ✓ Memory-to-memory operations<br />
+                  ✓ Variable instruction length (1-15 bytes)<br />
+                  ✓ Fewer instructions in program<br />
+                  ✗ Harder to decode & pipeline<br />
+                  ✗ Complex hardware
+                </div>
+              </div>
+              <div
+                style="
+                  background: rgba(0, 255, 65, 0.1);
+                  padding: 15px;
+                  border-radius: 6px;
+                  border: 2px solid var(--color-primary);
+                "
+              >
+                <div
+                  style="
+                    color: var(--color-primary);
+                    font-weight: 700;
+                    font-size: 1.1em;
+                    margin-bottom: 10px;
+                  "
+                >
+                  ARM = RISC
+                </div>
+                <div style="line-height: 1.9; font-size: 0.9em">
+                  ✓ Simple instructions<br />
+                  ✓ Load/store architecture only<br />
+                  ✓ Fixed 32-bit instructions<br />
+                  ✓ Easy to pipeline<br />
+                  ✗ More instructions needed<br />
+                  ✗ More memory bandwidth
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- x86 Registers -->
+          <div class="section" style="border-left-color: var(--color-error)">
+            <div class="section-title">
+              📋 x86 Registers (NOT General Purpose!)
+            </div>
+            <div class="register-table" style="font-size: 0.75em">
+              <div class="register-row">
+                <div class="reg-name">EAX</div>
+                <div class="reg-desc">
+                  Accumulator (arithmetic, return values)
+                </div>
+              </div>
+              <div class="register-row">
+                <div class="reg-name">EBX</div>
+                <div class="reg-desc">Base (pointer to data)</div>
+              </div>
+              <div class="register-row">
+                <div class="reg-name">ECX</div>
+                <div class="reg-desc">Counter (loop counts, shifts)</div>
+              </div>
+              <div class="register-row">
+                <div class="reg-name">EDX</div>
+                <div class="reg-desc">Data (I/O, large multiply/divide)</div>
+              </div>
+              <div class="register-row">
+                <div class="reg-name">ESP</div>
+                <div class="reg-desc">Stack Pointer</div>
+              </div>
+              <div class="register-row">
+                <div class="reg-name">EBP</div>
+                <div class="reg-desc">Base/Frame Pointer</div>
+              </div>
+              <div class="register-row">
+                <div class="reg-name">ESI</div>
+                <div class="reg-desc">Source Index (string operations)</div>
+              </div>
+              <div class="register-row">
+                <div class="reg-name">EDI</div>
+                <div class="reg-desc">Destination Index (string ops)</div>
+              </div>
+            </div>
+            <div class="terminal-line" style="margin-top: 8px">
+              Key difference: Each register has DEDICATED purpose!
+            </div>
+          </div>
+
+          <!-- x86 Addressing Modes -->
+          <div class="section" style="border-left-color: var(--color-error)">
+            <div class="section-title">🎯 x86 Addressing (Very Complex!)</div>
+            <div class="code-block" style="font-size: 0.7em">
+              1. Register: MOV EAX, EBX<br />2. Immediate: MOV EAX, #100<br />3.
+              Direct: MOV EAX, [1000]<br />4. Register Indir: MOV EAX, [EBX]<br />5.
+              Base+Displace: MOV EAX, [EBX+8]<br />6. Index: MOV EAX, [ESI*4]<br />7.
+              FULL: MOV EAX, [EBX+ESI*4+20]
+            </div>
+            <div class="key-point">
+              <strong>General form:</strong><br />
+              [Base + Index×Scale + Displacement]
+            </div>
+            <div class="terminal-line">Scale can be: 1, 2, 4, or 8</div>
+            <div class="terminal-line">
+              Perfect for arrays: A[i] in ONE instruction!
+            </div>
+          </div>
+
+          <!-- x86 Instructions -->
+          <div class="section" style="border-left-color: var(--color-error)">
+            <div class="section-title">💻 x86 Instructions</div>
+            <div class="code-block" style="font-size: 0.7em">
+              MOV dest, src ; dest = src<br />ADD dest, src ; dest += src<br />SUB
+              dest, src ; dest -= src<br />MUL src ; EDX:EAX = EAX*src<br />DIV
+              src ; EAX = EDX:EAX/src<br /><br />CMP op1, op2 ; Set flags<br />JE/JNE
+              label ; Jump if equal/not<br />JG/JL label ; Jump if >/<<br /><br />PUSH
+              src ; ESP-=4, [ESP]=src<br />POP dest ; dest=[ESP], ESP+=4<br />CALL
+              label ; Push return, jump<br />RET ; Pop return addr
+            </div>
+            <div class="key-point">
+              <strong>Memory operands allowed!</strong><br />
+              ADD EAX, [EBX] - reads memory directly
+            </div>
+          </div>
+
+          <!-- Key Differences -->
+          <div
+            class="section full-width"
+            style="
+              border-left-color: var(--color-error);
+              background: rgba(239, 68, 68, 0.05);
+            "
+          >
+            <div class="section-title">🔑 Key Differences Summary</div>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                font-size: 0.85em;
+              "
+            >
+              <div>
+                <div
+                  style="
+                    font-weight: 600;
+                    color: var(--color-error);
+                    margin-bottom: 8px;
+                  "
+                >
+                  x86:
+                </div>
+                <div style="line-height: 1.8">
+                  • Destination modified: ADD EAX, EBX → EAX += EBX<br />
+                  • Can access memory in operations<br />
+                  • Variable instruction length<br />
+                  • Fewer registers (8 main)<br />
+                  • Specialized register uses<br />
+                  • Complex addressing modes<br />
+                  • Stack grows DOWN (like ARM)
+                </div>
+              </div>
+              <div>
+                <div
+                  style="
+                    font-weight: 600;
+                    color: var(--color-primary);
+                    margin-bottom: 8px;
+                  "
+                >
+                  ARM:
+                </div>
+                <div style="line-height: 1.8">
+                  • Destination separate: ADD Rd, Rn, Rm<br />
+                  • Load/store only for memory<br />
+                  • Fixed 32-bit instructions<br />
+                  • Many registers (31 + XZR)<br />
+                  • True general-purpose registers<br />
+                  • Simple addressing (base+offset)<br />
+                  • Stack grows DOWN (same!)
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Why Learn Both -->
+          <div
+            class="section full-width"
+            style="border-left-color: var(--color-error)"
+          >
+            <div class="section-title">🤔 Why Learn Both?</div>
+            <div style="font-size: 0.9em; line-height: 1.9">
+              • <strong>x86:</strong> Dominates desktop/laptop market (Intel,
+              AMD)<br />
+              • <strong>ARM:</strong> Dominates mobile/embedded (phones,
+              tablets, IoT)<br />
+              • <strong>Trend:</strong> ARM moving into servers (AWS Graviton,
+              Apple M-series)<br />
+              • <strong>Understanding:</strong> CISC vs RISC tradeoffs inform
+              all computer architecture
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Reference -->
+      <div
+        style="
+          background: linear-gradient(
+            135deg,
+            rgba(0, 255, 65, 0.15),
+            rgba(0, 212, 255, 0.05)
+          );
+          border: 3px solid var(--color-primary);
+          border-radius: 12px;
+          padding: 25px;
+          margin: 25px 0;
+        "
+      >
+        <div
+          style="
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.8em;
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-align: center;
+            font-weight: 700;
+          "
+        >
+          ⚡ QUICK REFERENCE ⚡
+        </div>
+        <div class="ref-grid">
+          <div class="ref-item">
+            <div class="ref-label">Data Sizes</div>
+            Byte=8b, Half=16b<br />Word=32b, DW=64b
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Addressing</div>
+            Addr = Rn + offset<br />Range: ±256 bytes
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Branch & Link</div>
+            BL: LR ← PC+4<br />BR LR: PC ← LR
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Condition Codes</div>
+            N=neg, Z=zero<br />V=oflow, C=carry
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Stack Push</div>
+            SUBI SP, #n<br />STUR Rt, [SP,#0]
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Stack Pop</div>
+            LDUR Rt, [SP,#0]<br />ADDI SP, #n
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Always Zero</div>
+            X31 = XZR<br />Hardwired to 0
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">2's Complement</div>
+            Negate: ~x + 1<br />Sign bit = MSB
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Large Constants</div>
+            MOVZ: zeros rest<br />MOVK: keeps rest
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">PC-Relative</div>
+            Target = PC + off×4<br />CB: ±1MB, B: ±128MB
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Pseudoinstructions</div>
+            MOV = ORR w/XZR<br />CMP = SUBS w/XZR
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Synchronization</div>
+            LDXR: load excl<br />STXR: store excl
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Compilation</div>
+            C→.s→.o→a.out<br />Compile→Asm→Link
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">4 Addr Modes</div>
+            Imm, Reg, Base+Off<br />PC-relative
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">DLLs</div>
+            Link at runtime<br />Lazy: link on call
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Java</div>
+            Bytecode→JVM<br />JIT compiles hot code
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Ptr vs Array</div>
+            Ptr faster<br />Move calc out of loop
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Bounds Check</div>
+            Use unsigned!<br />Negative → huge
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Switch Table</div>
+            Array of addrs<br />BR register
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Long Branch</div>
+            Invert condition<br />Use B (±128MB)
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Decode Binary</div>
+            11 bits = opcode<br />Lookup format
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Pre-indexed</div>
+            [Rn, #off]!<br />Update first
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Post-indexed</div>
+            [Rn], #off<br />Update after
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">LDP/STP</div>
+            Load/Store pair<br />2 regs at once
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">CSEL</div>
+            Conditional select<br />No branch needed
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Biased</div>
+            Value + Bias<br />FP exponents
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">x86 = CISC</div>
+            Complex instrs<br />Var length 1-15B
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">ARM = RISC</div>
+            Simple instrs<br />Fixed 32-bit
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">x86 Regs</div>
+            8 dedicated regs<br />EAX,EBX,ECX...
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">x86 Addressing</div>
+            [B+I×S+D]<br />Memory ops OK
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

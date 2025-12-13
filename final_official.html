@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CS250 • Practice Final (Interactive + Solutions)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --color-primary: #00ff41;
+        --color-secondary: #00d4ff;
+        --color-accent: #ff00de;
+        --color-warning: #ffcc00;
+        --color-error: #ef4444;
+        --color-bg: #0a0e27;
+        --color-card: #151b3d;
+        --color-text: #e2e8f0;
+        --color-text-dim: #94a3b8;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Rajdhani", sans-serif;
+        background: var(--color-bg);
+        color: var(--color-text);
+        line-height: 1.6;
+        min-height: 100vh;
+        background-image: linear-gradient(
+            rgba(0, 255, 65, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 30px 20px;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 255, 65, 0.1),
+          rgba(0, 212, 255, 0.1)
+        );
+        border-radius: 20px;
+        border: 2px solid var(--color-primary);
+        box-shadow: 0 0 40px rgba(0, 255, 65, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+      .header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(0, 255, 65, 0.05),
+          transparent
+        );
+        animation: shine 3s infinite;
+      }
+      @keyframes shine {
+        0% {
+          transform: translateX(-100%) translateY(-100%) rotate(45deg);
+        }
+        100% {
+          transform: translateX(100%) translateY(100%) rotate(45deg);
+        }
+      }
+      .header-content {
+        position: relative;
+        z-index: 1;
+      }
+      .header h1 {
+        font-size: 3em;
+        font-weight: 700;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 6px;
+        text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        margin-bottom: 6px;
+      }
+      .header-subtitle {
+        font-size: 1.2em;
+        color: var(--color-secondary);
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .header-description {
+        margin-top: 10px;
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.95em;
+      }
+
+      .score-bar {
+        margin: 18px 0 28px;
+        background: var(--color-card);
+        border: 2px solid rgba(0, 255, 65, 0.3);
+        border-radius: 14px;
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .score-left {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .score-title {
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--color-text);
+        font-size: 1.05em;
+      }
+      .score-value {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-primary);
+        font-weight: 700;
+        font-size: 1.2em;
+        text-shadow: 0 0 12px rgba(0, 255, 65, 0.35);
+      }
+      .score-note {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.85em;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 2px solid var(--color-primary);
+        background: rgba(0, 255, 65, 0.1);
+        color: var(--color-primary);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: "Roboto Mono", monospace;
+        transition: all 0.25s ease;
+        user-select: none;
+      }
+      .btn:hover {
+        background: var(--color-primary);
+        color: var(--color-bg);
+        box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        transform: scale(1.03);
+      }
+      .btn.secondary {
+        border-color: var(--color-secondary);
+        background: rgba(0, 212, 255, 0.1);
+        color: var(--color-secondary);
+      }
+      .btn.secondary:hover {
+        background: var(--color-secondary);
+        color: var(--color-bg);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+      }
+
+      .section-header {
+        font-size: 2em;
+        font-weight: 700;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        margin: 10px 0 20px;
+        text-align: center;
+        position: relative;
+      }
+      .section-header::after {
+        content: "";
+        display: block;
+        width: 110px;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--color-primary),
+          transparent
+        );
+        margin: 12px auto 0;
+      }
+
+      .q-card {
+        background: var(--color-card);
+        border: 2px solid rgba(0, 255, 65, 0.3);
+        border-radius: 15px;
+        padding: 22px;
+        margin: 16px 0;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.25s ease;
+      }
+      .q-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(
+          90deg,
+          var(--color-primary),
+          var(--color-secondary)
+        );
+        transform: scaleX(0);
+        transition: transform 0.25s ease;
+      }
+      .q-card:hover {
+        border-color: var(--color-primary);
+        box-shadow: 0 10px 40px rgba(0, 255, 65, 0.15);
+        transform: translateY(-2px);
+      }
+      .q-card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .q-card.correct {
+        border-color: rgba(0, 255, 65, 0.95);
+        box-shadow: 0 0 26px rgba(0, 255, 65, 0.25);
+      }
+      .q-card.incorrect {
+        border-color: rgba(239, 68, 68, 0.95);
+        box-shadow: 0 0 26px rgba(239, 68, 68, 0.2);
+      }
+      .q-card.not-graded {
+        border-color: rgba(255, 204, 0, 0.65);
+        box-shadow: 0 0 20px rgba(255, 204, 0, 0.12);
+      }
+
+      .q-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+      .q-num {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-primary);
+        opacity: 0.55;
+        font-size: 1.05em;
+        font-weight: 700;
+      }
+      .q-meta {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.85em;
+      }
+      .q-text {
+        font-size: 1.05em;
+        color: var(--color-text);
+        margin-top: 6px;
+        white-space: pre-wrap;
+      }
+
+      .choices {
+        margin-top: 12px;
+        display: grid;
+        gap: 10px;
+      }
+      .choice {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(10, 14, 39, 0.18);
+        transition: all 0.2s ease;
+      }
+      .choice:hover {
+        border-color: rgba(0, 255, 65, 0.45);
+        background: rgba(0, 255, 65, 0.06);
+      }
+      .choice input {
+        margin-top: 3px;
+        accent-color: var(--color-primary);
+      }
+      .choice label {
+        cursor: pointer;
+        flex: 1;
+        color: var(--color-text);
+      }
+
+      .result {
+        display: none;
+        margin-top: 14px;
+        padding: 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(10, 14, 39, 0.25);
+      }
+      .result .answer {
+        font-family: "Roboto Mono", monospace;
+        font-weight: 700;
+        color: var(--color-secondary);
+        margin-bottom: 6px;
+      }
+      .result .explain {
+        color: var(--color-text-dim);
+        font-size: 0.98em;
+      }
+
+      .bottom-actions {
+        margin-top: 26px;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 50px;
+        padding: 24px;
+        border-top: 2px solid rgba(0, 255, 65, 0.3);
+        color: var(--color-text-dim);
+        font-family: "Roboto Mono", monospace;
+      }
+
+      .hub-back {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 9999;
+
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 8px 12px;
+        border-radius: 8px;
+
+        border: 2px solid var(--color-secondary);
+        background: rgba(0, 212, 255, 0.1);
+        color: var(--color-secondary);
+
+        font-size: 0.85em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        font-family: "Roboto Mono", monospace;
+        text-decoration: none;
+
+        transition: all 0.25s ease;
+      }
+
+      .hub-back:hover {
+        background: var(--color-secondary);
+        color: var(--color-bg);
+        box-shadow: 0 0 16px rgba(0, 212, 255, 0.45);
+        transform: scale(1.03);
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(10, 14, 39, 0.22);
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.85em;
+      }
+
+      @media (max-width: 700px) {
+        .header h1 {
+          font-size: 2.4em;
+          letter-spacing: 4px;
+        }
+        .score-bar {
+          justify-content: center;
+        }
+        .btn {
+          width: 100%;
+        }
+        .actions {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <a href="index.html" class="hub-back">← Back to Hub</a>
+
+    <div class="container">
+      <div class="header">
+        <div class="header-content">
+          <h1>CS250</h1>
+          <div class="header-subtitle">
+            Official Practice Final • Interactive + Solutions
+          </div>
+          <div class="header-description">
+            &gt; Autogrades + explanations (after submit)
+          </div>
+        </div>
+      </div>
+
+      <div class="score-bar" id="scoreBar">
+        <div class="score-left">
+          <div class="score-title">Score</div>
+          <div class="score-value" id="scoreValue">Not submitted</div>
+          <div class="score-note" id="scoreNote">
+            Submit at the bottom to autograde. “Not graded” questions won’t
+            count.
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn secondary" id="resetBtn" type="button">
+            ↺ Reset
+          </button>
+          <button class="btn" id="jumpBtn" type="button">
+            ↓ Jump to Submit
+          </button>
+        </div>
+      </div>
+
+      <div class="section-header">🧪 Exam Questions</div>
+      <div id="quiz"></div>
+
+      <div class="bottom-actions" id="submitZone">
+        <button class="btn" id="submitBtn" type="button">
+          ✅ Submit & Grade
+        </button>
+        <button class="btn secondary" id="scrollTopBtn" type="button">
+          ↑ Back to Top
+        </button>
+      </div>
+
+      <div class="footer">
+        <p>CS250 Computer Architecture Practice Exam</p>
+        <p style="margin-top: 10px; font-size: 0.9em">
+          Last Updated: December 2025 • Built for Exam Success 🚀
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // ==========================================================
+      // IMPORTANT:
+      // - correctIndex: 0-based index into choices
+      // - If correctIndex is null => Not graded (excluded from score)
+      // - Explanations show after submission (same as your Midterm pages)
+      // ==========================================================
+
+      // NOTE: I built this page from the "Practice Final Exam SOLUTION.pdf" you provided in-chat.
+      // If you want ANY question wording tweaked to match the PDF 100% character-for-character,
+      // paste the text of that specific question and I’ll patch it.
+
+      // CS250 Practice Final (Fall 2025) — Question bank (ALL 43 questions, Q1–Q43)
+      // Same object-y style as your earlier exams: { id, text, choices, correctIndex, explanation }
+      // correctIndex is 0-based. If you ever want “Not graded”, set correctIndex: null.
+
+      const questions = [
+  {
+    id: "pf01_temporal_locality_spatial",
+    text:
+      "Temporal locality means that if a machine instruction or a data item is accessed, then other instructions or data items nearby in the address space are likely to be accessed soon.",
+    choices: ["The statement is false.", "The statement is true."],
+    correctIndex: 0,
+    explanation: "This describes spacial (spatial) locality, not temporal locality."
+  },
+  {
+    id: "pf02_lru_longest_resident",
+    text:
+      "Given an LRU policy, the block to be replaced is the one in the set that has been resident in the cache for the longest time.",
+    choices: ["The statement is false.", "The statement is true."],
+    correctIndex: 0,
+    explanation: "LRU replaces the least recently used block, not the oldest-resident block."
+  },
+  {
+    id: "pf03_multiple_vm_spaces",
+    text:
+      "There may exist multiple virtual memory address spaces at the same time in a running computer.",
+    choices: ["The statement is false.", "The statement is true."],
+    correctIndex: 1,
+    explanation: "Multiple processes can exist simultaneously, each with its own virtual address space."
+  },
+  {
+    id: "pf04_hardware_lock_shared_variable",
+    text:
+      "A hardware lock can be used to enforce one program at a time write access to a shared variable.",
+    choices: ["The statement is false.", "The statement is true."],
+    correctIndex: 1,
+    explanation: "Locks enforce mutual exclusion on shared data."
+  },
+  {
+    id: "pf05_mimd_comm_minor",
+    text: "Communication time is always a minor overhead of MIMD computing.",
+    choices: ["The statement is false.", "The statement is true."],
+    correctIndex: 0,
+    explanation: "Communication overhead can be large in MIMD systems."
+  },
+  {
+    id: "pf06_track_hw_changes",
+    text:
+      "It is useful for software developers to track hardware technology changes because applications that are not feasible today due to hardware limitations may become feasible in the future.",
+    choices: ["This statement is false.", "This statement is true"],
+    correctIndex: 1,
+    explanation: "Hardware improvements can enable new software capabilities."
+  },
+  {
+    id: "pf07_special_purpose_hw",
+    text:
+      "Special purpose hardware is faster and uses less energy than does the same function implemented in software executed by a general purpose CPU.",
+    choices: ["The statement is false.", "The statement is true."],
+    correctIndex: 1,
+    explanation: "Specialized hardware is optimized for one function, boosting speed/efficiency."
+  },
+  {
+    id: "pf08_cam_power2",
+    text: "CAM must contain a power of 2 number of storage locations.",
+    choices: ["The statement is false.", "The statement is true."],
+    correctIndex: 0,
+    explanation: "CAM size does not inherently need to be a power of two."
+  },
+  {
+    id: "pf09_cam_search_steps",
+    text:
+      "The greater the number of items stored in a content addressable memory, the greater the number of search steps needed to determine if a key is present in that CAM.",
+    choices: ["The statement if false.", "The statement is true."],
+    correctIndex: 0,
+    explanation: "CAM compares in parallel, so it doesn’t require more sequential search steps."
+  },
+  {
+    id: "pf10_full_adder_change",
+    text:
+      "If any one of the inputs to a binary full adder circuit is changed to the other logic level, then after the worst case propagation delay for the full adder",
+    choices: [
+      "the Carry_out output has changed.",
+      "the Carry_out output equals 0.",
+      "the Sum output has changed.",
+      "the Sum output equals 1.",
+      "None of the other answers is correct."
+    ],
+    correctIndex: 2,
+    explanation: "After worst-case delay, a change can propagate through and change Sum."
+  },
+
+  // 11 (short → MC)
+  {
+    id: "pf11_mebibits_2p23_bytes",
+    text:
+      "[Write your answer as a decimal integer only. No word(s).]\nHow many Mebibits is 2^23 bytes?",
+    choices: ["16", "32", "64", "128", "256"],
+    correctIndex: 2,
+    explanation: "2^23 bytes = 2^26 bits; 2^26 / 2^20 = 2^6 = 64 Mebibits."
+  },
+
+  {
+    id: "pf12_instruction_replaces_nip_stored",
+    text:
+      "Which of these assembly language instructions replaces the default next instruction pointer with a pointer that has been stored?",
+    choices: ["Branch", "Return", "Jump", "All of the above", "None of the above"],
+    correctIndex: 1,
+    explanation: "Return uses a stored return address to set the next instruction pointer."
+  },
+
+  // 13 (short → MC)
+  {
+    id: "pf13_mux_address_bus_width",
+    text:
+      "A multiplexer has a total of 17 input and output buses. How many bits wide is its address bus?",
+    choices: ["3", "4", "5", "16"],
+    correctIndex: 1,
+    explanation: "The provided correct answer is 4."
+  },
+
+  {
+    id: "pf14_pointing_function",
+    text: "Which circuit implements the pointing function?",
+    choices: ["binary counter", "decoder", "multiplexer", "register", "None of the other answers is correct."],
+    correctIndex: 1,
+    explanation: "A decoder selects (points to) one output line based on the input code."
+  },
+  {
+    id: "pf15_bitstring_to_hex",
+    text: "The bit string 01011010 can be written as",
+    choices: [
+      "0x1122",
+      "0x01011010",
+      "0x5a",
+      "0xA5",
+      "The question makes no sense because 8-bit strings have no inherent meaning."
+    ],
+    correctIndex: 2,
+    explanation: "01011010₂ = 0x5A."
+  },
+  {
+    id: "pf16_ascii_criterion",
+    text: "Which is a criterion used to guide the design of ASCII code choices?",
+    choices: [
+      "Making full use of one byte of memory.",
+      "Use of hexadecimal encoding.",
+      "The use of the NULL character as a string terminator.",
+      "Ease of machine use.",
+      "The question makes no sense because ASCII was not designed, it is a standard."
+    ],
+    correctIndex: 3,
+    explanation: "ASCII choices were guided by ease of machine use."
+  },
+  {
+    id: "pf17_fetch_execute_next_instruction",
+    text:
+      "Because a processor circuit performs the fetch-execute cycle when it is supplied with\nelectrical power, software must ensure that there",
+    choices: [
+      "is electrical power.",
+      "are occasional rest periods for the processor circuit to cool off.",
+      "is an operating system present in memory.",
+      "is always a next instruction.",
+      "is an unlimited quantity of data to process."
+    ],
+    correctIndex: 3,
+    explanation: "The processor must always have a next instruction to fetch."
+  },
+
+  // 18 (short → MC)  ✅ you mentioned this one
+  {
+    id: "pf18_sign_extend_0x7f_16bit",
+    text:
+      "Write the result of sign-extending the bit string 0x7f to 16 bits. Use\nhexadecimal notation for your answer.",
+    choices: ["0xff7f", "0x007f", "0x7f00", "0xffff", "0x00ff"],
+    correctIndex: 1,
+    explanation: "0x7F is positive, so sign-extension pads with 0s → 0x007f."
+  },
+
+  {
+    id: "pf19_control_flow",
+    text: "Control flow in a machine language program is",
+    choices: [
+      "managed by computation of a pointer.",
+      "performed by the ALU.",
+      "handled by the register unit.",
+      "unimportant until after a program is compiled using the computer that will then execute it.",
+      "related to the size of the registers in the register unit."
+    ],
+    correctIndex: 0,
+    explanation: "Control flow is implemented by computing/updating the instruction pointer."
+  },
+  {
+    id: "pf20_compile_time_operand",
+    text:
+      "Choose the best way to complete the following sentence. An operand value that is\nknown at compile time is",
+    choices: [
+      "stored in a register as a bit string.",
+      "found at the output of data memory.",
+      "stored in a machine instruction if its magnitude is small.",
+      "a way to increase the speed of compilation.",
+      "not possible."
+    ],
+    correctIndex: 2,
+    explanation: "Small compile-time constants can be encoded as immediates."
+  },
+  {
+    id: "pf21_32bit_instruction",
+    text: "A 32-bit machine instruction can be written",
+    choices: [
+      "as a 4-byte bit string.",
+      "using 4 hexadecimal digits.",
+      "as an 8-byte string.",
+      "as an 8-byte string.",
+      "None of the other answers is correct."
+    ],
+    correctIndex: 0,
+    explanation: "32 bits equals 4 bytes."
+  },
+  {
+    id: "pf22_dirty_bit",
+    text: "A dirty bit in L1 data cache is set when",
+    choices: [
+      "it is time to enforce Rule 1 of the memory hierarchy.",
+      "a new block is brought into the L1 data cache.",
+      "accessing a given cache block for the second time.",
+      "the processor executes a store operation.",
+      "None of the other answers is correct."
+    ],
+    correctIndex: 3,
+    explanation: "A store modifies cache data, making it dirty."
+  },
+
+  // 23 (short → MC)
+  {
+    id: "pf23_simd_data_structure",
+    text:
+      "This data structure, maintained locally in each Processing\nElement of an SIMD computer, allows each PE to correctly\nexecute or ignore computational instructions that are\ncontained in a while statement or an if-else statement.",
+    choices: ["program counter", "enable stack", "branch target buffer", "reorder buffer", "page table"],
+    correctIndex: 1,
+    explanation: "An enable stack tracks which PEs are enabled/disabled under control flow."
+  },
+
+  {
+    id: "pf24_overall_improvement_law",
+    text:
+      "Which one quantifies the overall performance improvement of a system when a\nsubset of the system is improved?",
+    choices: ["Moore’s Law", "The CPU time equation", "Flynn’s MIMD category", "Amdahl’s Law", "None of the other answers is correct."],
+    correctIndex: 3,
+    explanation: "Amdahl’s Law relates partial speedup to overall speedup."
+  },
+
+  // 25 (short → MC)
+  {
+    id: "pf25_fully_assoc_comparators",
+    text: "[Answer in the form of a decimal integer.]\nHow many comparators are there in a 64-block fully associative cache?",
+    choices: ["1", "8", "16", "64", "128"],
+    correctIndex: 3,
+    explanation: "Fully associative compares against all blocks in parallel → 64 comparators."
+  },
+
+  // 26 (short → MC)
+  {
+    id: "pf26_set_number_bits",
+    text:
+      "A 4-way set associative cache has a total of 1024 blocks. Each block is 16\nbytes. Assume that memory is byte addressed and that the cache is accessed\nusing a 32-bit memory address. Bit position 31 of a memory address is the\nMSB and position 0 is the least significant bit. Let the notation “[8-3]” mean\nthe address bits in positions 8 through 3, inclusive.\nWhich bits of a memory address are used as the set number field?",
+    choices: ["[15-8]", "[11-4]", "[7-0]", "[31-12]", "[3-0]"],
+    correctIndex: 1,
+    explanation: "The provided answer is [11-4]."
+  },
+
+  // 27 (short → MC)
+  {
+    id: "pf27_sign_magnitude_minus2",
+    text: "What is the 4-bit binary sign magnitude representation for decimal integer (-2)?",
+    choices: ["0010", "1010", "1101", "1001", "1110"],
+    correctIndex: 1,
+    explanation: "Sign bit 1 and magnitude 2 (010) → 1010."
+  },
+
+  // 28 (short → MC)
+  {
+    id: "pf28_program_structure_basic_block",
+    text:
+      "A program instruction sequence has no branches in, except to the\nfirst instruction, and only one branch out, which is the last\ninstruction of the sequence. What is the name for this program\nstructure?",
+    choices: ["pipeline", "basic block", "function prologue", "interrupt handler", "microcode routine"],
+    correctIndex: 1,
+    explanation: "A basic block has one entry and one exit."
+  },
+
+  // 29 (short → MC)
+  {
+    id: "pf29_flynn_category",
+    text:
+      "A computer has 10 processors that work together as a team to solve large\nproblems. What is the Flynn parallelism category that describes this\ncomputer?",
+    choices: ["SISD", "SIMD", "MISD", "MIMD"],
+    correctIndex: 3,
+    explanation: "Multiple processors executing multiple instruction streams → MIMD."
+  },
+
+  // 30 (short → MC)
+  {
+    id: "pf30_spec_response_metric",
+    text: "What is reported as the result of a response-type SPEC benchmark?",
+    choices: ["CPI", "geometric mean IPC", "elapsed time or wall clock time", "clock frequency", "cache miss rate"],
+    correctIndex: 2,
+    explanation: "Response-type SPEC reports elapsed (wall-clock) time."
+  },
+
+  {
+    id: "pf31_zen3_backend_instructions",
+    text:
+      "The company AMD claims for their Zen3 processor architecture that for a set of\nbenchmark programs the geometric mean of the number of instructions issued to the\nprocessor backend is improved by 19% with respect to the same benchmarks\nexecuted by the AMD Zen2 architecture. This statement means that, overall, the\nnumber of instructions issued by the Zen3 design during each clock cycle when\ncompared to the Zen2 design is",
+    choices: ["increased.", "decreased.", "the same.", "not comparable.", "None of the other answers is correct."],
+    correctIndex: 0,
+    explanation: "Improved issued-to-backend implies more issued per cycle overall."
+  },
+
+  // 32 (short → MC)
+  {
+    id: "pf32_amat_hit_time_must_increase",
+    text:
+      "[Answer “yes” or “no”.]\nThe equation for average memory access time, AMAT, is\nAMAT = Hit_rate x Hit_time + (1-Hit_rate) x Miss_time .\nDesigners of a processor decide to increase the capacity of the L1 data cache. This\ncauses hit time for this cache to increase due to the larger SRAM array necessary\nto increase capacity. The designers change nothing else about the memory\nhierarchy of this processor.\nBecause Hit_time has increased, must Average_Memory_Access_Time\nincrease when executing a given set of benchmark programs?",
+    choices: ["yes", "no"],
+    correctIndex: 1,
+    explanation: "AMAT could still drop if miss behavior improves enough; thus it does not have to increase."
+  },
+
+  // 33 (short → MC)
+  {
+    id: "pf33_amat_corresponds_to_fe",
+    text:
+      "Amdahl’s Law models overall speedup, Soverall , due to an enhancement that\nprovides a speedup, Se , and that can be used a fraction, fe , of the original\n(unenhanced) execution time. Amdahl’s Law is\n'\n𝑆!\"#$%&& =\n(')* !) - .\"!\n#!/ .\nThe equation for average memory access time, AMAT, is\nAMAT = Hit_rate x Hit_time + (1-Hit_rate) x Miss_time .\nWhich variable in the AMAT equation corresponds to fe in Amdahl’s Law?",
+    choices: ["Hit_rate", "Hit_time", "Miss_time", "(1-Hit_rate)", "AMAT"],
+    correctIndex: 0,
+    explanation: "fe is the fraction of time in the enhanced part; in AMAT that aligns with Hit_rate."
+  },
+
+  // 34 (short → MC)
+  {
+    id: "pf34_upper_bound_speedup_H",
+    text:
+      "The speedup provided by an enhancement is H. What is the upper bound\non the overall speedup possible for a system due to this enhancement?",
+    choices: ["1", "H", "H^2", "1/H", "H/(H+1)"],
+    correctIndex: 1,
+    explanation: "Overall speedup cannot exceed the enhancement speedup H."
+  },
+
+  // 35 (short → MC)
+  {
+    id: "pf35_high_level_statement",
+    text:
+      "[Express your answer as C language keyword(s) only.]\nConsider the following assembly language level code snippet.\nhere: instruction to compute a condition\nbranch to there if condition is false\ninstructions to compute statement body\njump to here\nthere: instruction for next statement\nWhat high-level language statement is expressed by the assembly\nlanguage program?",
+    choices: ["if", "for", "while", "switch", "do"],
+    correctIndex: 2,
+    explanation: "Condition check then body then jump back matches a while loop."
+  },
+
+  // 36 (short → MC)
+  {
+    id: "pf36_anti_dependences",
+    text:
+      "[Express your answer in the form of a decimal integer.]\nConsider the following assembly language code snippet.\nLOAD R4, R1+0 ;R4 ß value at address R1 + 0\nADD R6, R4, R5 ;R6 ß R4 + R5\nSTORE R6, R1+0 ;Store R6 at address R1 + 0\nADDI R1, R1, #4 ;R1 ß R1 + 4\nAn anti-dependence is when a location holds a data value that the program reads and\nthen later writes. How many anti-dependences appear in this code snippet?",
+    choices: ["0", "1", "2", "3", "4"],
+    correctIndex: 3,
+    explanation: "The provided solution states there are 3 anti-dependences."
+  },
+
+  // 37 (short → MC)
+  {
+    id: "pf37_output_dependences",
+    text:
+      "[Express your answer in the form of a decimal integer.]\nConsider the following assembly language code snippet.\nLOAD R4, R1+0 ;R4 ß value at address R1 + 0\nADD R6, R4, R5 ;R6 ß R4 + R5\nSTORE R6, R1+0 ;Store R6 at address R1 + 0\nADDI R1, R1, #4 ;R1 ß R1 + 4\nAn output dependence is when a program writes a result to a location and later writes\nto that location again. How many output dependences appear in this code snippet?",
+    choices: ["0", "1", "2", "3"],
+    correctIndex: 0,
+    explanation: "No location is written more than once → 0 output dependences."
+  },
+
+  // 38 (short → MC)
+  {
+    id: "pf38_page_table_exponent",
+    text:
+      "[Express your answer as a decimal integer.]\nA 64-bit computer uses 4 Kibibyte pages and 64-bit virtual addresses. This\ncomputer divides the virtual page number into 4 equally-size bit strings to then store\npage tables as 4-level trees. A pointer to a child node in a page table tree is stored in\n8 bytes. A virtual page table entry is stored using 8 bytes.\nAssume that some program uses a total of 7 virtual pages in the virtual memory\naddress space. For this program, the best-case total size of the tree-structured page\ntable in bytes is a power of 2. What is this exponent?",
+    choices: ["16", "17", "18", "19", "20"],
+    correctIndex: 2,
+    explanation: "The provided solution concludes the best-case size is 2^18 bytes."
+  },
+
+  // 39 (short → MC)
+  {
+    id: "pf39_best_fixed_branch_prediction",
+    text:
+      "The target of a particular assembly language branch instruction is\nlocated closer to the first instruction of the assembly program than\nis the branch instruction. When predicting this branch instruction\nwhat is the best fixed branch prediction to use?",
+    choices: ["predict not taken", "predict taken", "always alternate", "use a 2-bit predictor", "no prediction is possible"],
+    correctIndex: 1,
+    explanation: "A backward branch usually indicates a loop; fixed prediction ‘taken’ is best."
+  },
+
+  // 40 (short → MC)
+  {
+    id: "pf40_unroll_k",
+    text:
+      "The execution trace of a for loop of N iterations includes execution of N branch\ninstructions. Now the loop is unrolled k times where k divides N. The execution trace\nof the unrolled loop includes just 20% as many branch instructions as without\nunrolling. What is the value of k?",
+    choices: ["2", "4", "5", "10", "20"],
+    correctIndex: 2,
+    explanation: "20% means 1/5 as many branches → k = 5."
+  },
+
+  {
+    id: "pf41_cache_write_policy_commit",
+    text:
+      "You are actively editing a source code file on a computer with a memory hierarchy\nthat includes an L1 cache. You save your work in progress to non-volatile storage,\nperhaps by making a commit to GitHub. You have just performed which cache write\npolicy?",
+    choices: [
+      "Write through",
+      "Write back",
+      "Saving editing work in progress does not involve a cache write action.",
+      "None of the other answers is correct."
+    ],
+    correctIndex: 0,
+    explanation: "Saving pushes updates through to non-volatile storage → write-through (as given)."
+  },
+
+  {
+    id: "pf42_virtual_address_part_not_stored",
+    text: "Which part of a virtual address is not stored in a single-level page table?",
+    choices: [
+      "virtual page number",
+      "offset",
+      "Each of the above answers names a part of a virtual address not stored in a single-\nlevel page table.",
+      "None of the above answers is correct.",
+      "There is insufficient information given to answer the question asked."
+    ],
+    correctIndex: 2,
+    explanation: "Page tables don’t store the offset; thus option C is the provided answer."
+  },
+
+  // 43–45 (already MC, keep correct answer)
+  {
+    id: "pf43_register_width_extra_bits",
+    text:
+      "A first-generation processor has a register unit constructed with 32-bit registers. The\nnext generation of the processor replaces each 32-bit register in the register unit with\na 64-bit register.\nConsider a machine instruction that sources both operands from the register unit\nand stores their sum in the register unit. How many more bits does the next-\ngeneration processor machine instruction require to specify three registers than the\nfirst-generation machine instruction?\n[State your answer as a decimal integer. Do not include the word “bits”. Thank you.]",
+    choices: ["0.", "3.", "32.", "96."],
+    correctIndex: 0,
+    explanation: "Register identifier bits don’t change just because register width changes."
+  },
+  {
+    id: "pf44_alu_output_select",
+    text:
+      "This digital logic circuit is used to ignore all ALU function\nunit outputs except the one specified by the opcode.",
+    choices: ["decoder.", "multiplexer.", "register.", "comparator."],
+    correctIndex: 1,
+    explanation: "A multiplexer selects exactly one ALU output based on opcode/control."
+  },
+  {
+    id: "pf45_parallel_absence_dependency",
+    text:
+      "To execute two machine instructions at the same time requires an\nabsence of what between the two instructions?",
+    choices: ["latency", "pipelines", "dependence or dependency.", "registers", "instructions"],
+    correctIndex: 2,
+    explanation: "Dependences prevent safe parallel execution."
+  }
+];
+
+
+      // ===== Dedup by exact text (same logic as your Midterm pages) =====
+      const seen = new Set();
+      const deduped = [];
+      for (const q of questions) {
+        const key = q.text.trim();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        deduped.push(q);
+      }
+
+      const quizEl = document.getElementById("quiz");
+      const scoreValueEl = document.getElementById("scoreValue");
+      const scoreNoteEl = document.getElementById("scoreNote");
+      const gradedPillEl = document.getElementById("gradedPill");
+
+      function render() {
+        quizEl.innerHTML = "";
+        deduped.forEach((q, idx) => {
+          const card = document.createElement("div");
+          card.className = "q-card";
+          card.id = `q_${q.id}`;
+
+          const top = document.createElement("div");
+          top.className = "q-top";
+          top.innerHTML = `
+          <div class="q-num">Q${idx + 1}</div>
+          <div class="q-meta">${
+            q.correctIndex === null ? "Not graded" : "Graded"
+          }</div>
+        `;
+
+          const text = document.createElement("div");
+          text.className = "q-text";
+          text.textContent = q.text;
+
+          const choices = document.createElement("div");
+          choices.className = "choices";
+
+          q.choices.forEach((choiceText, cIdx) => {
+            const cid = `${q.id}_${cIdx}`;
+            const row = document.createElement("div");
+            row.className = "choice";
+            row.innerHTML = `
+            <input type="radio" name="${q.id}" id="${cid}" value="${cIdx}">
+            <label for="${cid}">${choiceText}</label>
+          `;
+            choices.appendChild(row);
+          });
+
+          const result = document.createElement("div");
+          result.className = "result";
+          result.id = `r_${q.id}`;
+
+          card.appendChild(top);
+          card.appendChild(text);
+          card.appendChild(choices);
+          card.appendChild(result);
+
+          quizEl.appendChild(card);
+        });
+
+        const gradedCount = deduped.filter(
+          (q) => q.correctIndex !== null
+        ).length;
+        gradedPillEl.textContent = `Graded: ${gradedCount}`;
+      }
+
+      function getSelectedIndex(qid) {
+        const selected = document.querySelector(`input[name="${qid}"]:checked`);
+        return selected ? Number(selected.value) : null;
+      }
+
+      function grade() {
+        let gradedCount = 0;
+        let correctCount = 0;
+
+        deduped.forEach((q) => {
+          const card = document.getElementById(`q_${q.id}`);
+          const result = document.getElementById(`r_${q.id}`);
+
+          card.classList.remove("correct", "incorrect", "not-graded");
+          result.style.display = "none";
+          result.innerHTML = "";
+
+          const picked = getSelectedIndex(q.id);
+
+          if (q.correctIndex === null) {
+            card.classList.add("not-graded");
+            result.style.display = "block";
+            result.innerHTML = `
+            <div class="answer">Not graded</div>
+            <div class="explain">${q.explanation}</div>
+          `;
+            return;
+          }
+
+          gradedCount++;
+
+          if (picked === q.correctIndex) {
+            correctCount++;
+            card.classList.add("correct");
+          } else {
+            card.classList.add("incorrect");
+          }
+
+          const correctText = q.choices[q.correctIndex];
+          const pickedText =
+            picked === null ? "No answer selected" : q.choices[picked];
+
+          result.style.display = "block";
+          result.innerHTML = `
+          <div class="answer">Correct: ${correctText}</div>
+          <div class="explain">
+            <span style="font-family:'Roboto Mono', monospace; color: var(--color-text); font-weight:700;">Your answer:</span>
+            <span style="font-family:'Roboto Mono', monospace; color: ${
+              picked === q.correctIndex
+                ? "var(--color-primary)"
+                : "var(--color-error)"
+            }; font-weight:700;">${pickedText}</span>
+            <div style="margin-top:8px;">${q.explanation}</div>
+          </div>
+        `;
+        });
+
+        const pct =
+          gradedCount === 0
+            ? 0
+            : Math.round((correctCount / gradedCount) * 100);
+        scoreValueEl.textContent = `${correctCount} / ${gradedCount} (${pct}%)`;
+        scoreNoteEl.textContent = `Graded questions only. Not-graded items are excluded.`;
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function resetAll() {
+        deduped.forEach((q) => {
+          const inputs = document.querySelectorAll(`input[name="${q.id}"]`);
+          inputs.forEach((i) => (i.checked = false));
+
+          const card = document.getElementById(`q_${q.id}`);
+          const result = document.getElementById(`r_${q.id}`);
+          card.classList.remove("correct", "incorrect", "not-graded");
+          result.style.display = "none";
+          result.innerHTML = "";
+        });
+
+        scoreValueEl.textContent = "Not submitted";
+        scoreNoteEl.textContent =
+          "Submit at the bottom to autograde. “Not graded” questions won’t count.";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      document.getElementById("submitBtn").addEventListener("click", grade);
+      document.getElementById("resetBtn").addEventListener("click", resetAll);
+      document.getElementById("jumpBtn").addEventListener("click", () => {
+        document
+          .getElementById("submitZone")
+          .scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      document.getElementById("scrollTopBtn").addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      render();
+    </script>
+  </body>
+</html>

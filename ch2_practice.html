@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chapter 2 - Practice Problems</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Rajdhani:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "IBM Plex Mono", monospace;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: #e2e8f0;
+        padding: 30px;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: rgba(15, 23, 42, 0.95);
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      }
+
+      h1 {
+        text-align: center;
+        font-family: "Rajdhani", sans-serif;
+        font-size: 3em;
+        color: #00ff41;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #00d4ff;
+        margin-bottom: 40px;
+        font-size: 1.3em;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .problem {
+        background: rgba(30, 41, 59, 0.8);
+        border-left: 5px solid #00ff41;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 25px;
+        position: relative;
+      }
+
+      .problem-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .problem-number {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #00ff41;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .difficulty {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .easy {
+        background: #10b981;
+        color: white;
+      }
+      .medium {
+        background: #f59e0b;
+        color: white;
+      }
+      .hard {
+        background: #ef4444;
+        color: white;
+      }
+
+      .problem-text {
+        font-size: 1.05em;
+        margin-bottom: 15px;
+        color: #e2e8f0;
+      }
+
+      .given {
+        background: rgba(0, 255, 65, 0.1);
+        border: 1px solid #00ff41;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+        font-size: 0.95em;
+      }
+
+      .given-title {
+        color: #00ff41;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .code-given {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid #00d4ff;
+        border-radius: 5px;
+        padding: 12px;
+        margin: 10px 0;
+        font-family: "IBM Plex Mono", monospace;
+        color: #00d4ff;
+        white-space: pre;
+        overflow-x: auto;
+      }
+
+      .solution {
+        background: rgba(16, 185, 129, 0.1);
+        border: 2px solid #10b981;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 15px;
+        display: none;
+      }
+
+      .solution.show {
+        display: block;
+      }
+
+      .solution-header {
+        color: #10b981;
+        font-weight: 700;
+        font-size: 1.1em;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .solution-step {
+        margin-bottom: 10px;
+        padding-left: 20px;
+        position: relative;
+        font-size: 0.95em;
+      }
+
+      .solution-step::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: #10b981;
+        font-weight: bold;
+      }
+
+      .code-solution {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid #10b981;
+        border-radius: 5px;
+        padding: 12px;
+        margin: 10px 0;
+        font-family: "IBM Plex Mono", monospace;
+        color: #10b981;
+        white-space: pre;
+        overflow-x: auto;
+      }
+
+      .answer-box {
+        background: rgba(255, 204, 0, 0.2);
+        border: 2px dashed #ffcc00;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+        font-weight: 600;
+        color: #ffcc00;
+        text-align: center;
+        font-size: 1.05em;
+      }
+
+      .toggle-btn {
+        background: linear-gradient(135deg, #00ff41, #00d4ff);
+        color: #0a0e27;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 700;
+        font-size: 0.95em;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+      }
+
+      .toggle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 255, 65, 0.4);
+      }
+
+      .section-header {
+        background: linear-gradient(90deg, #00ff41, #00d4ff);
+        color: #0a0e27;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 35px 0 20px 0;
+        font-size: 1.4em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-align: center;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .hint {
+        background: rgba(255, 0, 222, 0.1);
+        border-left: 3px solid #ff00de;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        font-size: 0.9em;
+        color: #ddd;
+      }
+
+      .register-hint {
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid #00d4ff;
+        padding: 8px;
+        margin: 8px 0;
+        border-radius: 4px;
+        font-size: 0.85em;
+        color: #00d4ff;
+      }
+
+      code {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "IBM Plex Mono", monospace;
+        color: #ffcc00;
+      }
+
+      @media print {
+        .toggle-btn {
+          display: none;
+        }
+        .solution {
+          display: block !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>⚡ PRACTICE PROBLEMS ⚡</h1>
+      <div class="subtitle">Chapter 2: LEGv8 Assembly Language</div>
+
+      <div class="section-header">📝 Section 1: Basic Translation</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 1</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          Translate the following C code to LEGv8 assembly. Assume
+          <code>a</code> is in X19, <code>b</code> is in X20, and
+          <code>c</code> is in X21.
+        </div>
+        <div class="code-given">a = b + c;</div>
+        <button class="toggle-btn" onclick="toggleSolution(1)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-1">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">ADD X19, X20, X21 // a = b + c</div>
+          <div class="answer-box">
+            One instruction: ADD with three register operands
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 2</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          Translate to LEGv8 assembly. Variables: <code>a</code>=X19,
+          <code>b</code>=X20, <code>c</code>=X21, <code>d</code>=X22.
+        </div>
+        <div class="code-given">a = (b + c) - d;</div>
+        <button class="toggle-btn" onclick="toggleSolution(2)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-2">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            ADD X9, X20, X21 // temp = b + c SUB X19, X9, X22 // a = temp - d
+          </div>
+          <div class="answer-box">
+            Need temporary register (X9) for intermediate result
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 3</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Translate to LEGv8. Assume base address of array <code>A</code> is in
+          X22, and <code>i</code> is in X9. Each array element is a doubleword.
+        </div>
+        <div class="code-given">A[8] = A[2] + A[5];</div>
+        <div class="hint">
+          💡 Hint: Array index × 8 (bytes/doubleword) = byte offset
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(3)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-3">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Calculate offsets: A[2] is at offset 16, A[5] at 40, A[8] at 64
+          </div>
+          <div class="code-solution">
+            LDUR X9, [X22, #16] // Load A[2] LDUR X10, [X22, #40] // Load A[5]
+            ADD X11, X9, X10 // temp = A[2] + A[5] STUR X11, [X22, #64] // A[8]
+            = temp
+          </div>
+          <div class="answer-box">
+            3 memory operations + 1 arithmetic = 4 instructions
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">🔢 Section 2: Instruction Encoding</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 4</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          What is the machine code (in binary) for this instruction? Use
+          R-format.
+        </div>
+        <div class="code-given">ADD X9, X20, X21</div>
+        <div class="given">
+          <div class="given-title">R-Format:</div>
+          opcode(11) | Rm(5) | shamt(6) | Rn(5) | Rd(5)<br />
+          ADD opcode = 10001011000 (binary)
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(4)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-4">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            opcode = 10001011000 (11 bits for ADD)
+          </div>
+          <div class="solution-step">
+            Rm = 21 = 10101 (X21 is second source)
+          </div>
+          <div class="solution-step">shamt = 000000 (no shift)</div>
+          <div class="solution-step">Rn = 20 = 10100 (X20 is first source)</div>
+          <div class="solution-step">Rd = 9 = 01001 (X9 is destination)</div>
+          <div class="answer-box">10001011000 10101 000000 10100 01001</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 5</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Encode this instruction in D-format (data transfer). Provide the
+          fields.
+        </div>
+        <div class="code-given">LDUR X9, [X22, #64]</div>
+        <div class="given">
+          <div class="given-title">D-Format:</div>
+          opcode(11) | address(9) | op2(2) | Rn(5) | Rt(5)<br />
+          LDUR opcode = 11111000010
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(5)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-5">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">opcode = 11111000010 (LDUR)</div>
+          <div class="solution-step">
+            address = 64 = 001000000 (9-bit offset)
+          </div>
+          <div class="solution-step">op2 = 00 (part of opcode extension)</div>
+          <div class="solution-step">Rn = 22 = 10110 (base register X22)</div>
+          <div class="solution-step">Rt = 9 = 01001 (destination X9)</div>
+          <div class="answer-box">11111000010 001000000 00 10110 01001</div>
+        </div>
+      </div>
+
+      <div class="section-header">🎯 Section 3: Addressing Modes</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 6</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          If X10 contains 1000, what address is accessed by this instruction?
+        </div>
+        <div class="code-given">LDUR X9, [X10, #32]</div>
+        <button class="toggle-btn" onclick="toggleSolution(6)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-6">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">Address = Base + Offset</div>
+          <div class="solution-step">= 1000 + 32 = 1032</div>
+          <div class="answer-box">Memory address 1032</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 7</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Array A starts at address 2000. Each element is a doubleword (8
+          bytes). Write an instruction to load A[10] into X9, assuming X22 holds
+          the base address.
+        </div>
+        <div class="hint">
+          💡 Hint: A[10] is 10 × 8 = 80 bytes from the base
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(7)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-7">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Offset = index × size = 10 × 8 = 80 bytes
+          </div>
+          <div class="code-solution">LDUR X9, [X22, #80]</div>
+          <div class="solution-step">
+            Actual memory address = 2000 + 80 = 2080
+          </div>
+          <div class="answer-box">LDUR X9, [X22, #80]</div>
+        </div>
+      </div>
+
+      <div class="section-header">📞 Section 4: Procedures</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 8</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Write LEGv8 assembly for this leaf procedure that computes
+          <code>f = a + b - c</code>.
+        </div>
+        <div class="given">
+          <div class="given-title">Given:</div>
+          • Parameters a, b, c are in X0, X1, X2<br />
+          • Return result f in X0<br />
+          • Use saved register X19 for temporary storage
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(8)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-8">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            leaf_proc: SUBI SP, SP, #8 ; Make room on stack STUR X19, [SP, #0] ;
+            Save X19 ADD X19, X0, X1 ; X19 = a + b SUB X19, X19, X2 ; X19 =
+            (a+b) - c ADD X0, X19, XZR ; Return f in X0 LDUR X19, [SP, #0] ;
+            Restore X19 ADDI SP, SP, #8 ; Pop stack BR LR ; Return
+          </div>
+          <div class="answer-box">
+            Must save/restore callee-saved register X19
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 9</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Write assembly for a procedure that calls another procedure. Save the
+          return address properly.
+        </div>
+        <div class="code-given">
+          long long int caller(long long int x) { return callee(x + 5); }
+        </div>
+        <div class="register-hint">
+          Caller must save: LR (return address), any saved registers used
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(9)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-9">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            caller: SUBI SP, SP, #8 ; Make room for LR STUR LR, [SP, #0] ; Save
+            return address ADDI X0, X0, #5 ; x = x + 5 BL callee ; Call callee
+            (result in X0) ; X0 already has return value from callee LDUR LR,
+            [SP, #0] ; Restore return address ADDI SP, SP, #8 ; Pop stack BR LR
+            ; Return to original caller
+          </div>
+          <div class="answer-box">
+            Critical: Save LR before BL, restore before returning
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">🔀 Section 5: Control Flow</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 10</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Translate this C if-statement to LEGv8 assembly. Assume
+          <code>i</code> is in X9, <code>j</code> is in X10.
+        </div>
+        <div class="code-given">if (i == j) { i = i + 1; }</div>
+        <button class="toggle-btn" onclick="toggleSolution(10)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-10">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            SUBS XZR, X9, X10 ; Set flags: i - j B.NE Skip ; If not equal, skip
+            ADDI X9, X9, #1 ; i = i + 1 Skip:
+          </div>
+          <div class="solution-step">
+            Alternative using CBZ/CBNZ (if comparing to zero):
+          </div>
+          <div class="code-solution">
+            SUB X11, X9, X10 ; temp = i - j CBNZ X11, Skip ; If temp ≠ 0, skip
+            ADDI X9, X9, #1 ; i = i + 1 Skip:
+          </div>
+          <div class="answer-box">
+            Two approaches: condition codes or CBZ/CBNZ
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 11</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Translate this while loop to LEGv8. Variables: <code>i</code>=X9,
+          <code>n</code>=X10, <code>sum</code>=X19.
+        </div>
+        <div class="code-given">
+          i = 0; sum = 0; while (i < n) { sum = sum + i; i = i + 1; }
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(11)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-11">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            ADD X9, XZR, XZR ; i = 0 ADD X19, XZR, XZR ; sum = 0 Loop: SUBS XZR,
+            X9, X10 ; Set flags: i - n B.GE Done ; If i >= n, exit loop ADD X19,
+            X19, X9 ; sum = sum + i ADDI X9, X9, #1 ; i = i + 1 B Loop ; Jump
+            back to loop start Done:
+          </div>
+          <div class="answer-box">
+            Pattern: test condition, branch if false, body, branch back
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">🔢 Section 6: Two's Complement</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 12</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          What is the decimal value of this 8-bit two's complement number?
+        </div>
+        <div class="code-given">11110100</div>
+        <div class="hint">
+          💡 Hint: MSB is negative, rest are positive powers of 2
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(12)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-12">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Value = -(1×2⁷) + (1×2⁶) + (1×2⁵) + (1×2⁴) + (0×2³) + (1×2²) +
+            (0×2¹) + (0×2⁰)
+          </div>
+          <div class="solution-step">= -128 + 64 + 32 + 16 + 0 + 4 + 0 + 0</div>
+          <div class="solution-step">= -128 + 116 = -12</div>
+          <div class="answer-box">-12 (decimal)</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 13</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Negate the following 8-bit two's complement number using the standard
+          method.
+        </div>
+        <div class="code-given">00001010 (which is +10)</div>
+        <button class="toggle-btn" onclick="toggleSolution(13)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-13">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Step 1: Invert all bits: 00001010 → 11110101
+          </div>
+          <div class="solution-step">
+            Step 2: Add 1: 11110101 + 1 = 11110110
+          </div>
+          <div class="solution-step">
+            Verify: -(1×128) + 64 + 32 + 16 + 4 + 2 = -128 + 118 = -10 ✓
+          </div>
+          <div class="answer-box">11110110 (which is -10)</div>
+        </div>
+      </div>
+
+      <div class="section-header">🔀 Section 7: Logical Operations</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 14</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Use logical operations to extract bits 8-15 from X9 and place them in
+          the rightmost position of X10. All other bits in X10 should be 0.
+        </div>
+        <div class="hint">
+          💡 Hint: Shift right to move bits to rightmost, then mask
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(14)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-14">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Step 1: Shift right by 8 to move bits 8-15 to positions 0-7
+          </div>
+          <div class="code-solution">
+            LSR X10, X9, #8 ; Shift right 8 positions
+          </div>
+          <div class="solution-step">
+            Step 2: Mask to keep only the rightmost 8 bits (0xFF)
+          </div>
+          <div class="code-solution">
+            ANDI X10, X10, #0xFF ; AND with 00...011111111
+          </div>
+          <div class="answer-box">LSR to position, then AND to mask</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 15</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Write assembly to set bit 5 of X9 to 1, leaving all other bits
+          unchanged.
+        </div>
+        <div class="hint">
+          💡 Hint: Use OR with a mask that has only bit 5 set
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(15)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-15">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Create mask with bit 5 set: 2⁵ = 32 = 0x20
+          </div>
+          <div class="code-solution">
+            ORRI X9, X9, #0x20 ; OR with 00...00100000
+          </div>
+          <div class="solution-step">
+            OR operation: 0|1=1, 1|1=1, so bit 5 becomes 1 regardless
+          </div>
+          <div class="solution-step">
+            All other bits: x|0=x, so they stay unchanged
+          </div>
+          <div class="answer-box">ORRI X9, X9, #0x20</div>
+        </div>
+      </div>
+
+      <div class="section-header">💾 Section 9: Advanced Topics</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 19</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Load the 64-bit constant <code>0x0000ABCD00001234</code> into register
+          X9 using MOVZ and MOVK instructions.
+        </div>
+        <div class="hint">
+          💡 Hint: Break into 16-bit chunks, use LSL to position each chunk
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(19)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-19">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Break 0x0000ABCD00001234 into 16-bit chunks:
+          </div>
+          <div class="solution-step">
+            • Bits [15:0] = 0x1234 (position 0)<br />
+            • Bits [31:16] = 0x0000 (position 16)<br />
+            • Bits [47:32] = 0xABCD (position 32)<br />
+            • Bits [63:48] = 0x0000 (position 48)
+          </div>
+          <div class="code-solution">
+            MOVZ X9, #0x1234, LSL #0 ; Load 0x1234, zero rest MOVK X9, #0xABCD,
+            LSL #32 ; Keep existing, load 0xABCD at bit 32
+          </div>
+          <div class="solution-step">
+            We can skip the zero chunks (positions 16 and 48)
+          </div>
+          <div class="answer-box">2 instructions needed (skip zero chunks)</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 20</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          A CBNZ instruction is at address 80012. It has an offset field of -3.
+          What address does it branch to? Show your calculation.
+        </div>
+        <div class="hint">
+          💡 Hint: PC-relative branches multiply offset by 4 (instruction size)
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(20)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-20">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            PC-relative addressing formula: Target = PC + (offset × 4)
+          </div>
+          <div class="solution-step">Current instruction address: 80012</div>
+          <div class="solution-step">Offset: -3 (negative means backwards)</div>
+          <div class="solution-step">
+            Calculation: 80012 + (-3 × 4) = 80012 + (-12) = 80000
+          </div>
+          <div class="answer-box">Branches to address 80000</div>
+          <div style="margin-top: 10px; color: #94a3b8">
+            Note: Multiply by 4 because all instructions are 4 bytes
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 21</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Write code to acquire a lock using LDXR and STXR. The lock is at
+          address in X20. Value 0 = unlocked, 1 = locked.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(21)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-21">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            ADDI X11, XZR, #1 ; X11 = 1 (locked value) TryLock: LDXR X10, [X20,
+            #0] ; Load exclusive from lock CBNZ X10, TryLock ; If already
+            locked, retry STXR X11, X9, [X20] ; Try to store 1 CBNZ X9, TryLock
+            ; If store failed, retry ; Lock acquired! ; ... critical section ...
+            ; Release lock: STUR XZR, [X20, #0] ; Write 0 = unlock
+          </div>
+          <div class="solution-step">
+            LDXR marks memory location for exclusive access
+          </div>
+          <div class="solution-step">
+            STXR succeeds (X9=0) only if no other processor modified it
+          </div>
+          <div class="answer-box">Atomic test-and-set using LDXR/STXR pair</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 22</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          What real LEGv8 instruction does the pseudoinstruction
+          <code>MOV X9, X10</code> translate to?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(22)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-22">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            MOV is a pseudoinstruction - not real hardware instruction
+          </div>
+          <div class="solution-step">To copy X10 to X9, use: X9 = 0 OR X10</div>
+          <div class="code-solution">
+            ORR X9, XZR, X10 ; X9 = XZR | X10 = 0 | X10 = X10
+          </div>
+          <div class="solution-step">
+            Uses XZR (always 0) to create the copy
+          </div>
+          <div class="answer-box">ORR X9, XZR, X10</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 23</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Describe the four stages of the compilation process and what each
+          produces.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(23)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-23">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>1. COMPILER</strong> (C → Assembly)
+          </div>
+          <div class="solution-step">
+            • Input: source.c<br />
+            • Output: source.s (assembly language)<br />
+            • Does: Type checking, optimization, high-level → assembly
+          </div>
+          <div class="solution-step">
+            <strong>2. ASSEMBLER</strong> (Assembly → Object)
+          </div>
+          <div class="solution-step">
+            • Input: source.s<br />
+            • Output: source.o (object file)<br />
+            • Does: Assembly → machine code, creates symbol table
+          </div>
+          <div class="solution-step">
+            <strong>3. LINKER</strong> (Object → Executable)
+          </div>
+          <div class="solution-step">
+            • Input: source.o + libraries<br />
+            • Output: a.out (executable)<br />
+            • Does: Combines modules, resolves external references, relocates
+          </div>
+          <div class="solution-step">
+            <strong>4. LOADER</strong> (Executable → Memory)
+          </div>
+          <div class="solution-step">
+            • Input: a.out<br />
+            • Output: Running program in memory<br />
+            • Does: Loads into memory, sets up stack, starts execution
+          </div>
+          <div class="answer-box">Compiler → Assembler → Linker → Loader</div>
+        </div>
+      </div>
+
+      <div class="section-header">🔥 Section 10: Integrated Problems</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 26</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Write LEGv8 code to check if array index X20 is valid for array of
+          size X11. Use the unsigned comparison trick for bounds checking (0 ≤
+          X20 < X11).
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(26)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-26">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            The trick: negative numbers are HUGE when interpreted as unsigned
+          </div>
+          <div class="code-solution">
+            SUBS XZR, X20, X11 ; Compare index to size B.HS IndexOutOfBounds ;
+            Branch if Higher or Same (unsigned)
+          </div>
+          <div class="solution-step">Why this works:</div>
+          <div class="solution-step">
+            • If X20 < 0: Interpreted as huge unsigned → HS is true → branch<br />
+            • If X20 ≥ X11: HS is true → branch<br />
+            • If 0 ≤ X20 < X11: HS is false → continue
+          </div>
+          <div class="answer-box">One comparison instead of two!</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 27</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Compare array indexing vs pointer increment for clearing an array.
+          Which is more efficient and why?
+        </div>
+        <div class="given">
+          <div class="given-title">Array version:</div>
+          Loop over indices 0 to n-1, calculate address each time
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(27)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-27">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Array indexing version (6 instructions/iteration):</strong>
+          </div>
+          <div class="code-solution">
+            Loop: LSL X10, X9, #3 ; Offset = i × 8 ADD X11, X0, X10 ; Address =
+            base + offset STUR XZR, [X11, #0] ; Store 0 ADDI X9, X9, #1 ; i++
+            SUBS XZR, X9, X1 ; Compare i to n B.LT Loop ; Branch if i < n
+          </div>
+          <div class="solution-step">
+            <strong>Pointer version (4 instructions/iteration):</strong>
+          </div>
+          <div class="code-solution">
+            LSL X11, X1, #3 ; End = base + (n × 8) ADD X11, X0, X11 ; (calculate
+            once!) Loop: STUR XZR, [X9, #0] ; Store 0 ADDI X9, X9, #8 ; ptr += 8
+            SUBS XZR, X9, X11 ; Compare ptr to end B.LT Loop ; Branch if ptr <
+            end
+          </div>
+          <div class="answer-box">
+            <strong>Winner:</strong> Pointer version (33% fewer instructions)<br />
+            Moved address calculation outside loop
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 28</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          You want to branch to label <code>FarAway</code> using CBZ X19, but
+          the label is 2MB away (too far for CB-type). Show how to fix this.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(28)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-28">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            CBZ has ±1MB range, but target is 2MB away
+          </div>
+          <div class="solution-step">
+            Solution: Invert condition and use unconditional branch
+          </div>
+          <div class="code-solution">
+            ; Original (won't work): CBZ X19, FarAway ; Fixed version: CBNZ X19,
+            Skip ; If NOT zero, skip B FarAway ; Unconditional (±128MB range)
+            Skip: ; Continue here if X19 was not zero
+          </div>
+          <div class="solution-step">
+            <strong>Key insight:</strong> B instruction has ±128MB range
+          </div>
+          <div class="solution-step">
+            We inverted CBZ → CBNZ to skip over the long branch
+          </div>
+          <div class="answer-box">Invert condition + unconditional branch</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 29</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Decode this 32-bit instruction to LEGv8 assembly:
+          <code>8b050000</code> (hexadecimal)
+        </div>
+        <div class="hint">
+          💡 Hint: Convert to binary, first 11 bits are the opcode
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(29)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-29">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Step 1:</strong> Convert hex to binary
+          </div>
+          <div class="code-solution">
+            8b050000 hex = 10001011 00000101 00000000 00000000 binary
+          </div>
+          <div class="solution-step">
+            <strong>Step 2:</strong> Extract opcode (first 11 bits)
+          </div>
+          <div class="code-solution">
+            10001011000 = 1112 decimal = ADD instruction
+          </div>
+          <div class="solution-step">
+            <strong>Step 3:</strong> Determine format → R-format
+          </div>
+          <div class="code-solution">
+            R-format: opcode(11) | Rm(5) | shamt(6) | Rn(5) | Rd(5) 10001011000
+            | 00101 | 000000 | 00000 | 00000
+          </div>
+          <div class="solution-step">
+            Parse fields: Rm=5, shamt=0, Rn=0, Rd=0
+          </div>
+          <div class="answer-box">ADD X0, X0, X5</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 30</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Explain the difference between pre-indexed and post-indexed
+          addressing. Give an example of each.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(30)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-30">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Pre-indexed (update FIRST, then load):</strong>
+          </div>
+          <div class="code-solution">
+            LDR X10, [X11, #16]! ; Step 1: X11 = X11 + 16 ; Step 2: X10 =
+            memory[X11] ; The "!" means write-back
+          </div>
+          <div class="solution-step">
+            <strong>Post-indexed (load FIRST, then update):</strong>
+          </div>
+          <div class="code-solution">
+            LDR X10, [X11], #16 ; Step 1: X10 = memory[X11] ; Step 2: X11 = X11
+            + 16
+          </div>
+          <div class="solution-step">
+            <strong>Use cases:</strong>
+          </div>
+          <div class="solution-step">
+            • Pre-indexed: When you need updated address first<br />
+            • Post-indexed: Traversing arrays (use current, advance to next)
+          </div>
+          <div class="answer-box">
+            Pre = update then use; Post = use then update
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 31</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          What is biased notation and where is it used? Give an example with
+          bias = 127.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(31)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-31">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Biased Notation:</strong> Add a constant (bias) before
+            storing
+          </div>
+          <div class="formula">Stored Value = Actual Value + Bias</div>
+          <div class="solution-step">
+            <strong>Example with bias = 127:</strong>
+          </div>
+          <div class="solution-step">
+            To store -5: 127 + (-5) = 122<br />
+            To store 0: 127 + 0 = 127<br />
+            To store +5: 127 + 5 = 132
+          </div>
+          <div class="solution-step">
+            To retrieve: Subtract bias<br />
+            122 - 127 = -5
+          </div>
+          <div class="solution-step">
+            <strong>Used in:</strong> Floating-point exponents
+          </div>
+          <div class="solution-step">
+            <strong>Advantage:</strong> Makes all values positive → easier
+            comparison
+          </div>
+          <div class="answer-box">Add bias to store, subtract to retrieve</div>
+        </div>
+      </div>
+
+      <div class="section-header">💻 Section 11: x86 Architecture</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 32</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Compare CISC (x86) vs RISC (ARM) architectures. List 3 key differences
+          and explain the tradeoffs.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(32)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-32">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>1. Instruction Complexity</strong>
+          </div>
+          <div class="solution-step">
+            • CISC (x86): Complex instructions, can do multiple operations<br />
+            • RISC (ARM): Simple instructions, one operation each<br />
+            • Tradeoff: CISC = fewer instructions but harder to pipeline
+          </div>
+          <div class="solution-step">
+            <strong>2. Instruction Length</strong>
+          </div>
+          <div class="solution-step">
+            • CISC (x86): Variable (1-15 bytes) - harder to decode<br />
+            • RISC (ARM): Fixed (32 bits) - easier to decode/pipeline<br />
+            • Tradeoff: CISC = compact code but complex decoding
+          </div>
+          <div class="solution-step">
+            <strong>3. Memory Operations</strong>
+          </div>
+          <div class="solution-step">
+            • CISC (x86): Memory operands in arithmetic (ADD EAX, [EBX])<br />
+            • RISC (ARM): Load/store only (separate instructions)<br />
+            • Tradeoff: CISC = fewer instructions but inconsistent timing
+          </div>
+          <div class="answer-box">
+            CISC: Complex, variable, flexible<br />
+            RISC: Simple, fixed, pipelined
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 33</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Translate this x86 instruction to ARM:
+          <code>MOV EAX, [EBX+ECX*4+20]</code>
+        </div>
+        <div class="hint">
+          💡 Hint: ARM can't access memory directly in arithmetic, needs
+          multiple instructions
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(33)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-33">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            x86 can compute complex address in ONE instruction!
+          </div>
+          <div class="solution-step">
+            ARM needs multiple steps (load/store architecture):
+          </div>
+          <div class="code-solution">
+            ; Assume: X0=EBX, X1=ECX, X2=EAX ; Step 1: Calculate ECX*4 LSL X10,
+            X1, #2 ; X10 = ECX × 4 ; Step 2: Add to EBX ADD X10, X0, X10 ; X10 =
+            EBX + (ECX × 4) ; Step 3: Add displacement ADDI X10, X10, #20 ; X10
+            = EBX + ECX×4 + 20 ; Step 4: Load from memory LDUR X2, [X10, #0] ;
+            EAX = memory[address]
+          </div>
+          <div class="answer-box">4 ARM instructions vs 1 x86 instruction</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 34</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          Name the 8 main x86 registers and explain why they are NOT truly
+          general-purpose like ARM registers.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(34)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-34">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>x86 Registers:</strong>
+          </div>
+          <div class="solution-step">
+            1. <strong>EAX:</strong> Accumulator - arithmetic, return values<br />
+            2. <strong>EBX:</strong> Base - pointer to data<br />
+            3. <strong>ECX:</strong> Counter - loop counts, shift amounts<br />
+            4. <strong>EDX:</strong> Data - I/O, multiply/divide operations<br />
+            5. <strong>ESP:</strong> Stack Pointer - MUST point to stack<br />
+            6. <strong>EBP:</strong> Base Pointer - stack frame base<br />
+            7. <strong>ESI:</strong> Source Index - string operations source<br />
+            8. <strong>EDI:</strong> Destination Index - string operations dest
+          </div>
+          <div class="solution-step">
+            <strong>Why NOT general-purpose?</strong>
+          </div>
+          <div class="solution-step">
+            • Each has dedicated purpose/special instructions<br />
+            • Some operations REQUIRE specific registers<br />
+            • MUL uses EAX/EDX, DIV uses EAX/EDX, LOOP uses ECX<br />
+            • String operations use ESI/EDI
+          </div>
+          <div class="answer-box">
+            x86 registers have dedicated roles, unlike ARM's X0-X30
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">🎯 Section 12: Final Integration</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 16</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          What was the most critical limitation that the ARMv8 designers needed
+          to overcome from earlier ARM versions, and how many general-purpose
+          registers does ARMv8 have compared to ARMv7?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(16)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-16">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Critical Limitation:</strong> Memory address size (32-bit →
+            64-bit)
+          </div>
+          <div class="solution-step">
+            The most impossible problem to overcome in an instruction set is
+            having too small a memory address. ARMv7 was limited to 32-bit
+            addresses (4GB memory space).
+          </div>
+          <div class="solution-step">
+            <strong>Register Count:</strong>
+          </div>
+          <div class="solution-step">
+            • ARMv7: 15 general-purpose registers (plus PC as "register 16")
+          </div>
+          <div class="solution-step">
+            • ARMv8: 31 general-purpose registers (plus XZR, PC is separate)
+          </div>
+          <div class="answer-box">
+            Address size (32→64 bits)<br />
+            Registers: ARMv7=15, ARMv8=31
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 17</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Write a complete LEGv8 procedure to swap two array elements:
+          <code>A[i]</code> and <code>A[j]</code>.
+        </div>
+        <div class="given">
+          <div class="given-title">Given:</div>
+          • Base address of A in X0<br />
+          • Index i in X1, index j in X2<br />
+          • Each element is a doubleword (8 bytes)<br />
+          • Use saved register X19 as temporary
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(17)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-17">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            swap: SUBI SP, SP, #8 ; Save X19 STUR X19, [SP, #0] LSL X1, X1, #3 ;
+            i = i × 8 (byte offset) LSL X2, X2, #3 ; j = j × 8 (byte offset) ADD
+            X9, X0, X1 ; X9 = address of A[i] ADD X10, X0, X2 ; X10 = address of
+            A[j] LDUR X19, [X9, #0] ; temp = A[i] LDUR X11, [X10, #0] ; X11 =
+            A[j] STUR X11, [X9, #0] ; A[i] = A[j] STUR X19, [X10, #0] ; A[j] =
+            temp LDUR X19, [SP, #0] ; Restore X19 ADDI SP, SP, #8 BR LR
+          </div>
+          <div class="answer-box">
+            Key: Calculate addresses, use temp variable, save/restore
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 18</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Translate this C function to LEGv8 assembly.
+        </div>
+        <div class="code-given">
+          long long int sum_array(long long int A[], int n) { long long int sum
+          = 0; for (int i = 0; i < n; i++) { sum += A[i]; } return sum; }
+        </div>
+        <div class="given">
+          <div class="given-title">Register allocation:</div>
+          • A[] base address: X0<br />
+          • n: X1<br />
+          • sum: X19<br />
+          • i: X20
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(18)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-18">
+          <div class="solution-header">✓ Solution</div>
+          <div class="code-solution">
+            sum_array: SUBI SP, SP, #16 ; Save 2 registers STUR X19, [SP, #0] ;
+            Save sum STUR X20, [SP, #8] ; Save i ADD X19, XZR, XZR ; sum = 0 ADD
+            X20, XZR, XZR ; i = 0 Loop: SUBS XZR, X20, X1 ; Compare i and n B.GE
+            Done ; If i >= n, exit LSL X9, X20, #3 ; X9 = i × 8 (byte offset)
+            ADD X9, X0, X9 ; X9 = address of A[i] LDUR X10, [X9, #0] ; Load A[i]
+            ADD X19, X19, X10 ; sum += A[i] ADDI X20, X20, #1 ; i++ B Loop Done:
+            ADD X0, X19, XZR ; Return sum in X0 LDUR X19, [SP, #0] ; Restore
+            registers LDUR X20, [SP, #8] ADDI SP, SP, #16 BR LR
+          </div>
+          <div class="answer-box">
+            Complete procedure with loop, array access, and proper conventions
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          text-align: center;
+          margin-top: 50px;
+          padding: 25px;
+          background: rgba(0, 255, 65, 0.1);
+          border-radius: 10px;
+          border: 2px solid #00ff41;
+        "
+      >
+        <h2
+          style="
+            color: #00ff41;
+            margin-bottom: 20px;
+            font-family: 'Rajdhani', sans-serif;
+          "
+        >
+          🎯 COMPREHENSIVE STUDY TIPS
+        </h2>
+        <div
+          style="
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 2;
+            column-count: 2;
+            column-gap: 30px;
+          "
+        >
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Register conventions</strong> - Caller vs callee-saved
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Instruction formats</strong> - R, D, I, CB, B
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Address calculation</strong> - Base + (Index × Size)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Stack operations</strong> - Save/restore in reverse
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Procedure calls</strong> - BL saves LR, BR LR returns
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Control flow</strong> - SUBS sets flags, B.cond branches
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>XZR magic</strong> - Always zero, use for comparisons
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>ARM evolution</strong> - ARMv8 closer to MIPS than ARMv7
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Large constants</strong> - MOVZ zeros, MOVK keeps
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>PC-relative</strong> - Target = PC + (offset × 4)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Synchronization</strong> - LDXR/STXR atomic ops
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Compilation</strong> - Compile→Assemble→Link→Load
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Pointers faster</strong> - Move calc outside loop
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Bounds trick</strong> - Unsigned comparison (1 op!)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Switch tables</strong> - Array of addresses, BR register
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Long branches</strong> - Invert condition + B
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Decode binary</strong> - First 11 bits = opcode
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Pre-indexed</strong> - Update first: [Rn,#off]!
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Post-indexed</strong> - Update after: [Rn],#off
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>LDP/STP</strong> - Load/store 2 registers at once
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>CSEL</strong> - Conditional without branching
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Biased notation</strong> - Add bias, used in FP
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>CISC vs RISC</strong> - Complex vs simple
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>x86 registers</strong> - 8 dedicated, not general!
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>x86 addressing</strong> - [Base+Index×Scale+Disp]
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function toggleSolution(num) {
+        const solution = document.getElementById("solution-" + num);
+        solution.classList.toggle("show");
+        const btn = solution.previousElementSibling;
+        btn.textContent = solution.classList.contains("show")
+          ? "Hide Solution"
+          : "Show Solution";
+      }
+    </script>
+  </body>
+</html>

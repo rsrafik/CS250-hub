@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CS250 • Midterm 1 (Mega Practice Exam)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --color-primary: #00ff41;
+        --color-secondary: #00d4ff;
+        --color-accent: #ff00de;
+        --color-warning: #ffcc00;
+        --color-error: #ef4444;
+        --color-bg: #0a0e27;
+        --color-card: #151b3d;
+        --color-text: #e2e8f0;
+        --color-text-dim: #94a3b8;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Rajdhani", sans-serif;
+        background: var(--color-bg);
+        color: var(--color-text);
+        line-height: 1.6;
+        min-height: 100vh;
+        background-image: linear-gradient(
+            rgba(0, 255, 65, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 30px 20px;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 255, 65, 0.1),
+          rgba(0, 212, 255, 0.1)
+        );
+        border-radius: 20px;
+        border: 2px solid var(--color-primary);
+        box-shadow: 0 0 40px rgba(0, 255, 65, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+      .header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(0, 255, 65, 0.05),
+          transparent
+        );
+        animation: shine 3s infinite;
+      }
+      @keyframes shine {
+        0% {
+          transform: translateX(-100%) translateY(-100%) rotate(45deg);
+        }
+        100% {
+          transform: translateX(100%) translateY(100%) rotate(45deg);
+        }
+      }
+      .header-content {
+        position: relative;
+        z-index: 1;
+      }
+      .header h1 {
+        font-size: 3em;
+        font-weight: 700;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 6px;
+        text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        margin-bottom: 6px;
+      }
+      .header-subtitle {
+        font-size: 1.2em;
+        color: var(--color-secondary);
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .header-description {
+        margin-top: 10px;
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.95em;
+      }
+
+      .score-bar {
+        margin: 18px 0 28px;
+        background: var(--color-card);
+        border: 2px solid rgba(0, 255, 65, 0.3);
+        border-radius: 14px;
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .score-left {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .score-title {
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--color-text);
+        font-size: 1.05em;
+      }
+      .score-value {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-primary);
+        font-weight: 700;
+        font-size: 1.2em;
+        text-shadow: 0 0 12px rgba(0, 255, 65, 0.35);
+      }
+      .score-note {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.85em;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 2px solid var(--color-primary);
+        background: rgba(0, 255, 65, 0.1);
+        color: var(--color-primary);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: "Roboto Mono", monospace;
+        transition: all 0.25s ease;
+        user-select: none;
+      }
+      .btn:hover {
+        background: var(--color-primary);
+        color: var(--color-bg);
+        box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        transform: scale(1.03);
+      }
+      .btn.secondary {
+        border-color: var(--color-secondary);
+        background: rgba(0, 212, 255, 0.1);
+        color: var(--color-secondary);
+      }
+      .btn.secondary:hover {
+        background: var(--color-secondary);
+        color: var(--color-bg);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+      }
+
+      .section-header {
+        font-size: 2em;
+        font-weight: 700;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        margin: 10px 0 20px;
+        text-align: center;
+        position: relative;
+      }
+      .section-header::after {
+        content: "";
+        display: block;
+        width: 110px;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--color-primary),
+          transparent
+        );
+        margin: 12px auto 0;
+      }
+
+      .q-card {
+        background: var(--color-card);
+        border: 2px solid rgba(0, 255, 65, 0.3);
+        border-radius: 15px;
+        padding: 22px;
+        margin: 16px 0;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.25s ease;
+      }
+      .q-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(
+          90deg,
+          var(--color-primary),
+          var(--color-secondary)
+        );
+        transform: scaleX(0);
+        transition: transform 0.25s ease;
+      }
+      .q-card:hover {
+        border-color: var(--color-primary);
+        box-shadow: 0 10px 40px rgba(0, 255, 65, 0.15);
+        transform: translateY(-2px);
+      }
+      .q-card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .q-card.correct {
+        border-color: rgba(0, 255, 65, 0.95);
+        box-shadow: 0 0 26px rgba(0, 255, 65, 0.25);
+      }
+      .q-card.incorrect {
+        border-color: rgba(239, 68, 68, 0.95);
+        box-shadow: 0 0 26px rgba(239, 68, 68, 0.2);
+      }
+      .q-card.not-graded {
+        border-color: rgba(255, 204, 0, 0.65);
+        box-shadow: 0 0 20px rgba(255, 204, 0, 0.12);
+      }
+
+      .q-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+      .q-num {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-primary);
+        opacity: 0.55;
+        font-size: 1.05em;
+        font-weight: 700;
+      }
+      .q-meta {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.85em;
+      }
+      .q-text {
+        font-size: 1.05em;
+        color: var(--color-text);
+        margin-top: 6px;
+        white-space: pre-wrap;
+      }
+
+      .choices {
+        margin-top: 12px;
+        display: grid;
+        gap: 10px;
+      }
+      .choice {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(10, 14, 39, 0.18);
+        transition: all 0.2s ease;
+      }
+      .choice:hover {
+        border-color: rgba(0, 255, 65, 0.45);
+        background: rgba(0, 255, 65, 0.06);
+      }
+      .choice input {
+        margin-top: 3px;
+        accent-color: var(--color-primary);
+      }
+      .choice label {
+        cursor: pointer;
+        flex: 1;
+        color: var(--color-text);
+      }
+
+      .result {
+        display: none;
+        margin-top: 14px;
+        padding: 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(10, 14, 39, 0.25);
+      }
+      .result .answer {
+        font-family: "Roboto Mono", monospace;
+        font-weight: 700;
+        color: var(--color-secondary);
+        margin-bottom: 6px;
+      }
+      .result .explain {
+        color: var(--color-text-dim);
+        font-size: 0.98em;
+      }
+
+      .bottom-actions {
+        margin-top: 26px;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 50px;
+        padding: 24px;
+        border-top: 2px solid rgba(0, 255, 65, 0.3);
+        color: var(--color-text-dim);
+        font-family: "Roboto Mono", monospace;
+      }
+
+      .hub-back {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 9999;
+
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 8px 12px; /* smaller */
+        border-radius: 8px; /* smaller */
+
+        border: 2px solid var(--color-secondary);
+        background: rgba(0, 212, 255, 0.1);
+        color: var(--color-secondary);
+
+        font-size: 0.85em; /* smaller text */
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        font-family: "Roboto Mono", monospace;
+        text-decoration: none;
+
+        transition: all 0.25s ease;
+      }
+
+      .hub-back:hover {
+        background: var(--color-secondary);
+        color: var(--color-bg);
+        box-shadow: 0 0 16px rgba(0, 212, 255, 0.45);
+        transform: scale(1.03);
+      }
+
+      @media (max-width: 700px) {
+        .header h1 {
+          font-size: 2.4em;
+          letter-spacing: 4px;
+        }
+        .score-bar {
+          justify-content: center;
+        }
+        .btn {
+          width: 100%;
+        }
+        .actions {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <a href="index.html" class="hub-back">← Back to Hub</a>
+
+    <div class="container">
+      <div class="header">
+        <div class="header-content">
+          <h1>CS250</h1>
+          <div class="header-subtitle">Midterm 1 • Mega Practice Exam</div>
+          <div class="header-description">&gt; Autogrades + explanations</div>
+        </div>
+      </div>
+
+      <div class="score-bar" id="scoreBar">
+        <div class="score-left">
+          <div class="score-title">Score</div>
+          <div class="score-value" id="scoreValue">Not submitted</div>
+          <div class="score-note" id="scoreNote">
+            Submit at the bottom to autograde. “Not graded” questions won’t
+            count.
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn secondary" id="resetBtn" type="button">
+            ↺ Reset
+          </button>
+          <button class="btn" id="jumpBtn" type="button">
+            ↓ Jump to Submit
+          </button>
+        </div>
+      </div>
+
+      <div class="section-header">🧪 Exam Questions</div>
+      <div id="quiz"></div>
+
+      <div class="bottom-actions" id="submitZone">
+        <button class="btn" id="submitBtn" type="button">
+          ✅ Submit & Grade
+        </button>
+        <button class="btn secondary" id="scrollTopBtn" type="button">
+          ↑ Back to Top
+        </button>
+      </div>
+
+      <div class="footer">
+        <p>CS250 Computer Architecture Practice Exam</p>
+        <p style="margin-top: 10px; font-size: 0.9em">
+          Last Updated: December 2025 • Built for Exam Success 🚀
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // NOTE:
+      // - correctIndex: 0-based index into choices
+      // - If correctIndex is null => Not graded (excluded from score)
+      // - Some questions in your paste had “key mistake / ambiguous”. Those are set to not-graded with a note.
+
+      const questions = [
+        // ======== Midterm Exam 2 (from your paste) ========
+        {
+          id: "m2_basic_block",
+          text: "What constrains the instruction execution sequence within a basic block in an assembly language program?",
+          choices: [
+            "Each of the other answers is incorrect",
+            "Nothing",
+            "The branch instruction(s)",
+            "The opcodes of the instructions",
+            "The data dependences among the assembly language instructions",
+          ],
+          correctIndex: 4,
+          explanation:
+            "Inside a basic block (single entry/exit), ordering is constrained by true data dependences (RAW) to preserve correctness.",
+        },
+        {
+          id: "m2_isa_design",
+          text: "An ISA design represents",
+          choices: [
+            "an opcode.",
+            "a choice of machine instruction length.",
+            "a set of logical operations.",
+            "a tradeoff among competing programmable processor issues such as cost, programming convenience, and power consumption.",
+            "a specific processor circuit.",
+          ],
+          correctIndex: 3,
+          explanation:
+            "ISA design balances goals (performance/cost/power/complexity/programmer convenience), not one opcode or one circuit.",
+        },
+        {
+          id: "m2_ascii",
+          text: "Which was a criterion for the design of ASCII?",
+          choices: [
+            "The question makes no sense because ASCII was not designed, it is a standard.",
+            "Ease of use by machine.",
+            "Making full use of one byte of memory.",
+            "Use of hexadecimal encoding.",
+            "The use of the NULL character as a string terminator.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "ASCII was chosen to be machine-friendly and easy to process/communicate (historically 7-bit).",
+        },
+        {
+          id: "m2_float_precision",
+          text: "If the two least significant bits of the exponent field in a floating point representation are instead interpreted as being the two most significant bits of the mantissa field, what happens to the precision of numbers that can be represented?",
+          choices: [
+            "The precision is unchanged.",
+            "The precision is increased by four times as compared to its original value.",
+            "The precision is reduced to one half of its original value.",
+            "The precision is doubled as compared to its original value.",
+            "None of the other answers is correct.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Moving 2 bits into the mantissa increases mantissa resolution by 2 bits → 4× finer precision (while reducing exponent range).",
+        },
+        {
+          id: "m2_pipe_perf",
+          text: "Pipelining improves performance",
+          choices: [
+            "by increasing hardware parallelism.",
+            "by reducing instruction execution latency.",
+            "by exposing dependences.",
+            "by increasing instruction level parallelism in a machine program.",
+            "by reducing worst case gate delay.",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Pipelining overlaps stages of different instructions (hardware parallelism). It improves throughput, not single-instruction latency.",
+        },
+        {
+          id: "m2_bl_control",
+          text: "For a procedure call on a LEGv8 processor, how is control transferred from the caller to the callee?",
+          choices: [
+            "By writing the contents of the LR into the PC.",
+            "By writing PC+4 into the LR.",
+            "By writing PC + offset into the LR.",
+            "By returning a value in X0.",
+            "None of the other answers is correct.",
+          ],
+          correctIndex: 4,
+          explanation:
+            "BL stores return address in LR and updates PC to the target. None of the listed single actions matches full behavior.",
+        },
+        {
+          id: "m2_cpi_formula",
+          text: "Consider an ISA with CPIs as follows: A-type CPI = 1, B-type CPI = 2, C-type CPI = 3, and D-type CPI = 3. Frequencies: 10% A, 20% B, 50% C, 20% D. What is the correct formula for the CPI of the benchmark program?",
+          choices: [
+            "0.1x1 + 0.2x2 + 0.5x3 + 0.2x3",
+            "1.0E6 x (0.1x1 + 0.2x2 + 0.5x3 + 0.2x3)",
+            "0.1 + 0.2 + 0.5 + 0.2",
+            "(0.1 + 0.2 + 0.5 + 0.2) x (clock cycles / instruction)",
+            "(0.1x1 + 0.2x2 + 0.5x3 + 0.2x3) / 1.0E6",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Average CPI is the weighted sum of per-class CPI by instruction frequency.",
+        },
+        {
+          id: "m2_assembler_first_pass",
+          text: "During its first pass over an assembly language program, an assembler",
+          choices: [
+            "builds a symbol table.",
+            "scans for immediate values.",
+            "plans its conversions of mnemonic to opcode.",
+            "partially constructs the more complex opcodes.",
+            "All other answers are correct.",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Pass 1 records labels and addresses (symbol table) so pass 2 can resolve references/offsets.",
+        },
+        {
+          id: "m2_assembler_error",
+          text: "An assembler can signal an error in an assembly language program when",
+          choices: [
+            "scanning for label definitions.",
+            "attempting to represent an immediate value as a 2's complement bit string.",
+            "carrying out its first pass.",
+            "it computes an offset.",
+            "All other answers are correct.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "A common hard error is an immediate that can’t be encoded in the required bit-width/sign format.",
+        },
+        {
+          id: "m2_alu_speedup_claim",
+          text: "Enhancing the ALU of a LEGv8 processor by reducing its worst case propagation delay by 50% will improve the execution time of every application program by 50%.",
+          choices: [
+            "TRUE",
+            "FALSE",
+            "Insufficient information to determine the truth of the statement.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Amdahl’s Law: speedup depends on fraction affected. Faster ALU doesn’t guarantee 50% faster overall program.",
+        },
+        {
+          id: "m2_bl_writes",
+          text: "How many bit string(s) are written to register(s) by the LEGv8 assembly language instruction, BL callee ?",
+          choices: [
+            "0",
+            "1",
+            "2",
+            "3",
+            "Insufficient information given to answer this question.",
+          ],
+          correctIndex: 2,
+          explanation:
+            "BL updates LR (return address) and also updates PC. Interpreting PC as a register, that’s 2 writes.",
+        },
+        {
+          id: "m2_eliminate_stalls",
+          text: "Which will eliminate stalls due to data dependences in the classic 5-stage pipeline?",
+          choices: [
+            "Increasing the fraction of machine program instructions that read and write registers instead of memory address space locations",
+            "Forwarding",
+            "None of the other answers satisfies the question asked.",
+            "Reducing the number of load instructions in an assembly language program",
+            "Reducing the number of machine program data dependences",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Even with forwarding, load-use hazards can still stall; only eliminating dependences entirely (or adding more mechanisms) would fully remove stalls.",
+        },
+        {
+          id: "m2_cpu_time_algorithm",
+          text: "Which factor in the CPU Time equation is most sensitive to the choice of algorithm?",
+          choices: [
+            "clock cycles per machine instruction",
+            "seconds per clock cycle",
+            "All of the factors in the CPU Time question are equally sensitive to choice of algorithm.",
+            "machine instructions per program",
+            "Choice of algorithm has no effect on the CPU Time for a program.",
+          ],
+          correctIndex: 3,
+          explanation:
+            "Algorithm primarily changes the amount of work → instruction count (instructions per program).",
+        },
+        {
+          id: "m2_branch_offset_known",
+          text: "The offset amount for an assembly language branch instruction is",
+          choices: [
+            "the address of the branch instruction.",
+            "the address of the target instruction.",
+            "not known before time of the first pass of the assembler.",
+            "a positive integer.",
+            "the address of the offset.",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Offsets depend on label addresses; you need at least a first pass to know symbol addresses.",
+        },
+        {
+          id: "m2_mul_partial_products",
+          text: "The partial products created during the multiplication of an N-bit multiplicand by an N-bit multiplier can, with sufficient hardware, be summed in time proportional to",
+          choices: ["N^2", "a constant", "N", "2N", "log N"],
+          correctIndex: 4,
+          explanation:
+            "Using a tree of adders (carry-save / reduction), you can reduce many partial products in O(log N) stages.",
+        },
+        {
+          id: "m2_stack_prepare_push",
+          text: "Assume that the stack is 8-byte aligned. Which LEGv8 instruction will prepare the stack for a push operation?",
+          choices: [
+            "STUR SP, [X9, #24]",
+            "STUR X9, [SP, #24]",
+            "SUBI SP, SP, #24",
+            "None of the other answers is correct.",
+            "ADDI SP, SP, #24",
+          ],
+          correctIndex: 2,
+          explanation:
+            "A push typically decrements SP first (stack grows down). SUBI SP, SP, #imm allocates space.",
+        },
+        {
+          id: "m2_cycles_needed",
+          text: "For arithmetic, load/store, and branch instructions, a processor has CPIs of 1, 12, and 5. Program executes 2.0E9 arithmetic, 1.0E9 load/store, 2.0E6 branch. How many clock cycles are needed?",
+          choices: [
+            "To answer the question requires knowing more about the ISA.",
+            "average(1, 12, 5) / (2.0E9 + 1.0E9 + 2.0E6)",
+            "(2.0E9 + 1.0E9 + 2.0E6) x average(1, 12, 5)",
+            "2.0E9 + 1.0E9 + 2.0E6",
+            "2.0E9x1 + 1.0E9x12 + 2.0E6x5",
+          ],
+          correctIndex: 4,
+          explanation:
+            "Total cycles = Σ (instruction count × CPI) across classes.",
+        },
+        {
+          id: "m2_reordering_true",
+          text: "Rearranging the sequence of instructions in a machine can increase the throughput of a pipeline without affecting program correctness.",
+          choices: [
+            "Insufficient information has been given to decide.",
+            "FALSE",
+            "TRUE",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Scheduling can hide stalls while preserving dependences → same semantics, better throughput.",
+        },
+        {
+          id: "m2_pipeline_effect",
+          text: "In comparison to an un-pipelined processor circuit, pipelining that processor",
+          choices: [
+            "decreases the execution time of an instruction.",
+            "decreases processor clock frequency.",
+            "decreases processor stall cycles.",
+            "Two of the claims about the effect of pipelining are correct.",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Pipelining can reduce stall cycles vs a multi-cycle design by overlapping work; it typically increases max clock frequency, not decrease.",
+        },
+        {
+          id: "m2_no_forwarding_id_stage",
+          text: "When a bit string is not available from a register at the time it is needed in the ID stage of the classic 5-stage pipeline without forwarding, then the pipeline",
+          choices: [
+            "has a throughput of more than one instruction per clock cycle.",
+            "stalls.",
+            "restarts the clock cycle.",
+            "stops processing all instructions in the pipeline.",
+            "accesses data memory.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Without forwarding, unmet operand availability forces stall cycles (bubbles).",
+        },
+        {
+          id: "m2_machine_language_name",
+          text: "What is a name for the language that is interpreted by some CPU?",
+          choices: [
+            "high level language",
+            "assembly",
+            "machine language",
+            "interpreted language",
+            "opcode",
+          ],
+          correctIndex: 2,
+          explanation:
+            "CPUs execute machine language (binary instruction encodings).",
+        },
+        {
+          id: "m2_war_dependences",
+          text: `Consider the following LEGv8 assembly language code snippet.
+
+ADD X1, X2, X4
+SUB X4, X1, X6
+AND X6, X2, X9
+ORR X8, X4, X9
+XOR X6, X1, X11
+
+How many WAR data dependences are present in this snippet?`,
+          choices: ["0", "1", "2", "3", "4"],
+          correctIndex: 2,
+          explanation:
+            "WAR = write-after-read (anti-dependence). Here, later writes to X4 and X6 occur after earlier reads of those regs in other instructions → 2.",
+        },
+        {
+          id: "m2_printf_no_specifiers",
+          text: "When a format string for printf( ) contains no conversion specifiers, then",
+          choices: [
+            "the compiler must replace the call to printf( ) with a call to puts( ).",
+            "the compiler may make an error and replace the call to printf( ) with a call to puts( ).",
+            "the compiler will signal an error.",
+            "the compiler will signal a warning.",
+            "the compiler may replace the call to printf( ) with a call to puts( ).",
+          ],
+          correctIndex: 4,
+          explanation:
+            'With no format specifiers, printf("literal") is equivalent to puts("literal") (newline aside), so optimization may replace it.',
+        },
+        {
+          id: "m2_pipeline_true_statement",
+          text: "Which is true of pipelining a processor circuit?",
+          choices: [
+            "It requires the use of five stages.",
+            "It improves on the CPI = 1 of the un-pipelined circuit.",
+            "It improves instruction execution latency.",
+            "It improves maximum clock frequency for the circuit.",
+            "It reduces hardware complexity.",
+          ],
+          correctIndex: 3,
+          explanation:
+            "Pipelining shortens the critical path per stage, allowing higher clock frequency. It does not inherently reduce latency or complexity.",
+        },
+        {
+          id: "m2_forwarding_load_hazard",
+          text: "For which instruction in the LEGv8 ISA is forwarding unable to prevent a data hazard in the classic 5-stage pipeline?",
+          choices: [
+            "LSL",
+            "LDUR",
+            "ADDI",
+            "NOP",
+            "None of the other answers satisfies the question asked.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Load-use hazard: the loaded value from LDUR is available too late for the very next instruction’s EX stage even with forwarding.",
+        },
+
+        // ======== Midterm Exam 1 (multiple versions in your paste) ========
+        {
+          id: "m1_nand_sop_0x33",
+          text: "Consider a Boolean function with inputs A, B, C and output G. In the truth table, G can be represented in hex as 0x33. How many NAND gates are required to implement G in SOP form from its minterms?",
+          choices: [
+            "3",
+            "None of the other answers is correct.",
+            "2",
+            "4",
+            "5",
+          ],
+          correctIndex: 4,
+          explanation:
+            "Per the provided key: SOP from minterms implemented with NAND-NAND typically needs inverters + product terms + final combine; totals to 5 here.",
+        },
+        {
+          id: "m1_hw_iteration",
+          text: "When software would use iteration, hardware uses",
+          choices: [
+            "an array of like circuit elements.",
+            "an increase in supply voltage.",
+            "None of the other answers is correct.",
+            "Exclusive-Or gates.",
+            "higher speed gates.",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Hardware ‘iterates’ by spatial replication: parallel arrays of similar components.",
+        },
+        {
+          id: "m1_speedup_not_faster",
+          text: "A great idea is Make the Common Case Fast. Speedup_Overall = 1 / ( 1 – fe + ( fe / Se ) ). According to this model, what is the fraction of the program that is not made faster?",
+          choices: [
+            "( fe / Se )",
+            "1 - fe",
+            "fe",
+            "None of the other answers is correct.",
+            "Se",
+          ],
+          correctIndex: 1,
+          explanation:
+            "fe is the fraction enhanced; the unaffected fraction is 1 − fe.",
+        },
+        {
+          id: "m1_breadboard_hot",
+          text: "In lab, if a breadboard circuit component is hot to the touch, then",
+          choices: [
+            "you should leave the breadboard plugged in to power.",
+            "there is an error in circuit wiring.",
+            "none of the other answers is correct",
+            "you should assume that a circuit component has failed.",
+            "there is a shock hazard.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Heat usually signals excessive current (often from wiring error/short).",
+        },
+        {
+          id: "m1_moores_law",
+          text: "To design with the anticipation that integrated circuit resources will be significantly increased by the time the design is complete, is to design with consideration for",
+          choices: [
+            "None of the other answers is correct.",
+            "Amdahl's Law",
+            "Sturgeon's Law",
+            "Abstraction",
+            "Moore's Law",
+          ],
+          correctIndex: 4,
+          explanation:
+            "That’s Moore’s Law thinking: more transistors/resources over time.",
+        },
+        {
+          id: "m1_1100_sum",
+          text: "The binary string 1100 interpreted as unsigned, sign-magnitude, and 2’s complement. What is the sum of these three interpretations when expressed as a sign-magnitude decimal integer?",
+          choices: [
+            "-4",
+            "None of the other answers is correct.",
+            "-2",
+            "0",
+            "1",
+            "4",
+          ],
+          correctIndex: 5,
+          explanation:
+            "1100 unsigned=12; sign-mag= -4; 2’s comp= -4; sum = 12-4-4 = 4.",
+        },
+        {
+          id: "m1_range_cost_capability",
+          text: "Which spans the widest range of cost and capability?",
+          choices: [
+            "server computer",
+            "personal computer",
+            "embedded computer",
+            "personal mobile device",
+            "None of the other answers is correct.",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Servers range from small rack units to massive data-center systems with huge variability.",
+        },
+        {
+          id: "m1_full_adder_invert_one_input",
+          text: "Full adder inputs are stable for a long time. Exactly one input is inverted and then held constant. After waiting at least the worst-case propagation delay, what can be said about the full adder outputs?",
+          choices: [
+            "the Sum output has changed.",
+            "the Carry_Out output has changed.",
+            "the Sum output equals 1.",
+            "the Carry_Out output will equal 0.",
+            "the Carry_Out output has inverted.",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Changing one input in a combinational circuit generally changes outputs; the keyed claim here is that Sum changes.",
+        },
+        {
+          id: "m1_loop_branch_corresponds",
+          text: 'Consider while(x == 0){ //loop body }. x is in X0. The instruction "B Loop" corresponds to what item in the C code?',
+          choices: [
+            "the closing curly brace",
+            "the comment //loop body",
+            "None of the other answers is correct.",
+            "the variable x",
+            "the while keyword",
+          ],
+          correctIndex: 0,
+          explanation:
+            "The unconditional branch back to Loop matches the end of the loop body (the closing brace).",
+        },
+        {
+          id: "m1_mem_faster_than_alu_delay",
+          text: "Which memory technology can be read from or written to at a speed that is less than the worst case propagation delay of ALU function circuits?",
+          choices: [
+            "SRAM",
+            "ALU",
+            "None of the other answers is correct.",
+            "DRAM",
+            "register",
+          ],
+          correctIndex: 4,
+          explanation:
+            "Registers are built from very fast storage elements right next to the ALU and can be accessed extremely quickly.",
+        },
+        {
+          id: "m1_not_gate_terminals",
+          text: "How many terminals (external connections) for logic signals does a Boolean NOT gate circuit have?",
+          choices: [
+            "1",
+            "2",
+            "0",
+            "It is not possible to answer this question using the given information.",
+            "4",
+          ],
+          correctIndex: 1,
+          explanation:
+            "A NOT gate has 1 input + 1 output = 2 signal terminals.",
+        },
+        {
+          id: "m1_x_nand_b_equals_b",
+          text: "If X NAND B = B, then what is the value of X?",
+          choices: [
+            "1",
+            "None of the other answers is correct.",
+            "0",
+            "True",
+            "The equation has no solution.",
+          ],
+          // You said you believe the key is wrong. Your later attempt shows correct answer = 0.
+          correctIndex: 2,
+          explanation:
+            "NAND is ¬(X·B). For the identity to hold for all B, X must be 0 so NAND outputs 1 when B=1? (Per your key: X=0.)",
+        },
+        {
+          id: "m1_lsl_10_by_4",
+          text: "Consider LSL X9, X10, #4. If X10 stores decimal 10 (2’s complement), what does X9 store after execution?",
+          choices: [
+            "160",
+            "40",
+            "10",
+            "None of the other answers is correct.",
+            "9",
+          ],
+          correctIndex: 0,
+          explanation: "LSL by 4 multiplies by 2^4 = 16 → 10×16 = 160.",
+        },
+        {
+          id: "m1_pointing_function",
+          text: "Which circuit implements the pointing function?",
+          choices: [
+            "register",
+            "multiplexer",
+            "demultiplexer",
+            "binary counter",
+            "None of the other answers is correct.",
+          ],
+          // From your earlier results: correct was "None of the other answers is correct."
+          correctIndex: 4,
+          explanation:
+            "As keyed in your results: none of these implements the specific “pointing function” as defined in that context.",
+        },
+        {
+          id: "m1_comb_delay",
+          text: "The amount of time needed by a combinational logic circuit to complete its function computation is",
+          choices: [
+            "essentially zero because logic gates produce an output voltage as soon as they receive power.",
+            "the maximum of the delay along each path from a circuit input to a circuit output.",
+            "an improper question to ask, because it is sequential circuits that compute.",
+            "unpredictable.",
+            "described by none of the other answers.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Completion time is governed by the longest (critical) path propagation delay from input to output.",
+        },
+        {
+          id: "m1_least_abstract",
+          text: "Which is least abstract?",
+          choices: [
+            "Java language program",
+            "machine language program",
+            "assembly language program",
+            "Using a different programming language does not make the resulting program more or less abstract because every program is code.",
+            "C language program",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Machine language is closest to hardware (least abstract) compared to assembly or high-level languages.",
+        },
+        {
+          id: "m1_asserted_low",
+          text: "A digital logic circuit uses +5V and Ground. A logic signal is asserted-low when",
+          choices: [
+            "the signal voltage is 0 volts.",
+            "the signal voltage is +5 volts.",
+            "the push-button input for the signal is not pushed.",
+            "None of the other answers is correct.",
+            "the push-button input for the signal is pushed strongly.",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Asserted-low means logical TRUE corresponds to low voltage (0V).",
+        },
+        {
+          id: "m1_stores_1_bit_voltage",
+          text: "Which stores 1 bit, representing it as a voltage on a wire?",
+          choices: [
+            "DRAM",
+            "S'R' latch",
+            "NOT gate",
+            "decoder",
+            "Two of the other answers are correct.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "An S'R' latch stores a state (1 bit) using feedback; its outputs are voltages on wires.",
+        },
+        {
+          id: "m1_sop_circuit_function",
+          text: "SOP circuit question (image not included): This logic circuit implements what function?",
+          choices: [
+            "multiplexor",
+            "decoder",
+            "full adder",
+            "None of the other answers is correct.",
+            "register",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Per your selected/correct result: the SOP structure shown was a multiplexor implementation.",
+        },
+        {
+          id: "m1_array_8bit_addr",
+          text: "An array A[] of 8-bit words has A[0] at byte address 2000 (decimal). What is the decimal byte address of A[3]?",
+          choices: ["2032", "2003", "2024", "2064", "2008"],
+          correctIndex: 1,
+          explanation:
+            "8-bit word = 1 byte per element. Address(A[i]) = base + i → 2000 + 3 = 2003.",
+        },
+        {
+          id: "m1_truth_table_3in_3out",
+          text: "A truth table with three inputs and three outputs will contain",
+          choices: [
+            "more rows than a truth table with three inputs but only two outputs.",
+            "3 rows",
+            "16 rows",
+            "64 rows",
+            "None of the other answers is correct.",
+            "8 rows",
+          ],
+          correctIndex: 5,
+          explanation:
+            "Rows depend only on #inputs: 2^3 = 8 rows (outputs don’t change row count).",
+        },
+        {
+          id: "m1_regfile_muxes",
+          text: "A register file with two read ports and one write port has",
+          choices: [
+            "5-bit address buses.",
+            "2 multiplexers to select registers for the read ports.",
+            "None of the above answers is correct.",
+            "the same number of Write_Register bus wires as it has Read_Register_Number_1 address bus wires.",
+            "twice as many registers to read as it has registers to write.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Each read port selects 1 of many registers → a mux (or equivalent selection logic) per read port.",
+        },
+        {
+          id: "m1_add_and_replace_operand",
+          text: "Which is one LEGv8 assembly language instruction to perform integer addition and replace the bit string of one operand?",
+          choices: [
+            "There is no single LEGv8 instruction that both adds and replaces the contents of an operand register.",
+            "SUB X3, X2, X1",
+            "ADDI X7, X8, X7",
+            "ADDI X19, X20, #21",
+            "ADDI X3, X2, X3",
+          ],
+          // Your later attempt says correct = "None of the other answers is correct." (i.e., none)
+          correctIndex: null,
+          explanation:
+            "Your pasted attempts conflict on this one. If your official key says “None of the other answers is correct,” this item is ambiguous here → not graded.",
+        },
+        {
+          id: "m1_h_plus_A7_h_reg",
+          text: `Consider compiling g = h + A[7]; targeting LEGv8.
+LDUR X9, [X22, #56]
+ADD  X20, X21, X9
+Which register holds the value of h?`,
+          choices: [
+            "X20",
+            "X9",
+            "X21",
+            "None of the other answers is correct.",
+            "X22",
+          ],
+          correctIndex: 2,
+          explanation:
+            "ADD X20, X21, X9 uses X21 as one operand (h) and X9 as loaded A[7].",
+        },
+        {
+          id: "m1_demorgan_gate",
+          text: "Per DeMorgan’s Law, the shown circuit is logically equivalent to (image not included).",
+          choices: [
+            "OR",
+            "NAND",
+            "AND",
+            "XOR",
+            "None of the other answers is correct.",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Inverting inputs then NAND-ing (or equivalent) can yield OR via DeMorgan: (A'B')' = A + B.",
+        },
+
+        // ======== Extra Midterm 1 variant list you pasted at the end ========
+        {
+          id: "m1_printf_led",
+          text: "Which component performs a printf( ) function for voltages on breadboard wires?",
+          choices: [
+            "pushbutton",
+            "10,000 ohm resistor",
+            "LED",
+            "NAND gate",
+            "555 timer",
+          ],
+          correctIndex: 2,
+          explanation:
+            "An LED is a simple output/display device—like printing a visible state.",
+        },
+        {
+          id: "m1_non_asserted",
+          text: "A non-asserted, or deserted, logic signal is",
+          choices: [
+            "a signal that is logically false.",
+            "a high voltage signal.",
+            "a low voltage signal.",
+            "None of the other answers is correct.",
+            "a signal that is logically true.",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Non-asserted means the signal is not in its active/true state → logically false.",
+        },
+        {
+          id: "m1_16bit_array_bad_key",
+          text: "An array A[] of 16-bit words has A[0] at byte address 2000. What is the byte address of A[3]?",
+          choices: ["2003", "2032", "2012", "2016", "2064"],
+          correctIndex: null,
+          explanation:
+            "16-bit word = 2 bytes. Correct address is 2000 + 3×2 = 2006, but 2006 isn’t an option → not graded.",
+        },
+        {
+          id: "m1_demorgan_generalization",
+          text: "DeMorgan’s Laws (AB)’ = A’ + B’ and (A + B)’ = A’B’. These laws each state a generalization of the logical",
+          choices: [
+            "None of the other answers is correct.",
+            "function NOT.",
+            "identity function.",
+            "functions NAND and NOR.",
+            "functions XOR or XNOR.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "DeMorgan is about pushing NOT through AND/OR (i.e., generalizing NOT across expressions).",
+        },
+        {
+          id: "m1_pointing_decoder_variant",
+          text: "Which circuit implements the pointing function? (variant)",
+          choices: [
+            "None of the other answers is correct.",
+            "multiplexer, also known as selector",
+            "binary counter",
+            "register",
+            "decoder",
+          ],
+          correctIndex: null,
+          explanation:
+            "Your pasted attempts disagree (one says none, one says decoder). Keeping this variant ungraded so it doesn’t poison your score.",
+        },
+        {
+          id: "m1_chip_area_one_bit",
+          text: "Which uses the greatest amount of chip area to store one bit?",
+          choices: [
+            "DRAM",
+            "ALU",
+            "SRAM",
+            "None of the other answers is correct.",
+            "register",
+          ],
+          correctIndex: 4,
+          explanation:
+            "A register bit (flip-flop) uses more transistors than SRAM/DRAM cells → larger area per bit.",
+        },
+        {
+          id: "m1_supercomputer",
+          text: "Which includes tens of thousands of processors?",
+          choices: [
+            "supercomputer",
+            "personal computer",
+            "server computer",
+            "None of the other answers is correct.",
+            "embedded computer",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Supercomputers are built from massive parallel processor counts.",
+        },
+        {
+          id: "m1_add_replace_variant",
+          text: "Which is one LEGv8 instruction to perform integer addition and replace the bit string of one operand? (variant)",
+          choices: [
+            "None of the other answers is correct.",
+            "ADDI X19, X20, #21",
+            "ADDI X17, X17, X17",
+            "SUB X3, X2, X1",
+            "ADDI X1, X2, X3",
+          ],
+          correctIndex: 0,
+          explanation:
+            "As keyed in your later result: none of the listed instructions both add and overwrite an operand exactly as described.",
+        },
+        {
+          id: "m1_speedup_without_any",
+          text: "In Speedup_Overall = 1 / ( 1 – fe + ( fe / Se ) ), what represents the time for program execution without any speedup by the enhancement?",
+          choices: [
+            "Se",
+            "1 - fe",
+            "( 1 – fe + ( fe / Se ) )",
+            "( fe / Se )",
+            "1",
+          ],
+          correctIndex: 4,
+          explanation:
+            "Baseline normalized time is 1. The denominator is the normalized improved execution time.",
+        },
+        {
+          id: "m1_moores_variant_none",
+          text: "To design with anticipation of more IC resources by completion time is to design with consideration for (variant)",
+          choices: [
+            "Abstraction",
+            "None of the other answers is correct.",
+            "Amdahl's Law",
+            "Boolean algebra",
+            "Sturgeon's Law",
+          ],
+          correctIndex: 1,
+          explanation:
+            "This variant’s options omit Moore’s Law; therefore the correct choice is “None of the other answers is correct.”",
+        },
+        {
+          id: "m1_truth_table_3in_3out_variant",
+          text: "A truth table with three inputs and three outputs will contain (variant)",
+          choices: [
+            "3 rows",
+            "64 rows",
+            "8 rows",
+            "16 rows",
+            "It is not possible to answer this question using the given information.",
+          ],
+          correctIndex: 2,
+          explanation: "Rows = 2^(#inputs) = 2^3 = 8.",
+        },
+        {
+          id: "m1_charge_in_capacitor_zero",
+          text: "Which stores a logical 0 bit represented as a charge in a capacitor?",
+          choices: [
+            "DRAM",
+            "decoder",
+            "S'R' latch",
+            "None of the other answers is correct.",
+            "SRAM",
+          ],
+          correctIndex: 3,
+          explanation:
+            "DRAM stores bits as charge, but phrasing here + provided key marked “None…” for this specific ‘logical 0’ wording/context.",
+        },
+        {
+          id: "m1_abstraction_order_list",
+          text: "Which of the following is a list of items in order from least abstract to most abstract?",
+          choices: [
+            "a sorting function, a bubble sort function, a library that includes a sorting function",
+            "None of the other answers is correct.",
+            "NAND gate, OR gate, XOR gate",
+            "breadboard circuit in our lab, text description of a circuit to build for our lab, schematic of circuit for our lab",
+            "High-level language program, assembly language program, machine code program",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Your pasted key says none of the listed sequences correctly orders least→most abstract.",
+        },
+        {
+          id: "m1_g_register",
+          text: `Consider compiling g = h + A[7]; targeting LEGv8.
+LDUR X9, [X22, #56]
+ADD  X20, X21, X9
+Which register holds the value of g?`,
+          choices: [
+            "X9",
+            "X20",
+            "X22",
+            "None of the other answers is correct.",
+            "X21",
+          ],
+          correctIndex: 1,
+          explanation: "The ADD writes its result into X20 → that’s g.",
+        },
+        {
+          id: "m1_mux_influence_s1",
+          text: "SOP mux circuit (image not included): If S = 1 then which input has no influence on output C?",
+          choices: [
+            "both S and A",
+            "A",
+            "B",
+            "S",
+            "None of the other answers is correct.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "For a 2:1 mux C = S'·A + S·B. If S=1, C=B, so A doesn’t matter.",
+        },
+      ];
+
+      // Build deduped by exact text (in case you pasted duplicates)
+      const seen = new Set();
+      const deduped = [];
+      for (const q of questions) {
+        const key = q.text.trim();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        deduped.push(q);
+      }
+
+      const quizEl = document.getElementById("quiz");
+      const scoreValueEl = document.getElementById("scoreValue");
+      const scoreNoteEl = document.getElementById("scoreNote");
+
+      function render() {
+        quizEl.innerHTML = "";
+        deduped.forEach((q, idx) => {
+          const card = document.createElement("div");
+          card.className = "q-card";
+          card.id = `q_${q.id}`;
+
+          const top = document.createElement("div");
+          top.className = "q-top";
+          top.innerHTML = `
+          <div class="q-num">Q${idx + 1}</div>
+          <div class="q-meta">${
+            q.correctIndex === null ? "Not graded" : "Graded"
+          }</div>
+        `;
+
+          const text = document.createElement("div");
+          text.className = "q-text";
+          text.textContent = q.text;
+
+          const choices = document.createElement("div");
+          choices.className = "choices";
+
+          q.choices.forEach((choiceText, cIdx) => {
+            const cid = `${q.id}_${cIdx}`;
+            const row = document.createElement("div");
+            row.className = "choice";
+            row.innerHTML = `
+            <input type="radio" name="${q.id}" id="${cid}" value="${cIdx}">
+            <label for="${cid}">${choiceText}</label>
+          `;
+            choices.appendChild(row);
+          });
+
+          const result = document.createElement("div");
+          result.className = "result";
+          result.id = `r_${q.id}`;
+
+          card.appendChild(top);
+          card.appendChild(text);
+          card.appendChild(choices);
+          card.appendChild(result);
+
+          quizEl.appendChild(card);
+        });
+      }
+
+      function getSelectedIndex(qid) {
+        const selected = document.querySelector(`input[name="${qid}"]:checked`);
+        return selected ? Number(selected.value) : null;
+      }
+
+      function grade() {
+        let gradedCount = 0;
+        let correctCount = 0;
+
+        deduped.forEach((q, idx) => {
+          const card = document.getElementById(`q_${q.id}`);
+          const result = document.getElementById(`r_${q.id}`);
+
+          // reset styles
+          card.classList.remove("correct", "incorrect", "not-graded");
+          result.style.display = "none";
+          result.innerHTML = "";
+
+          const picked = getSelectedIndex(q.id);
+
+          if (q.correctIndex === null) {
+            card.classList.add("not-graded");
+            result.style.display = "block";
+            result.innerHTML = `
+            <div class="answer">Not graded</div>
+            <div class="explain">${q.explanation}</div>
+          `;
+            return;
+          }
+
+          gradedCount++;
+
+          if (picked === q.correctIndex) {
+            correctCount++;
+            card.classList.add("correct");
+          } else {
+            card.classList.add("incorrect");
+          }
+
+          const correctText = q.choices[q.correctIndex];
+          const pickedText =
+            picked === null ? "No answer selected" : q.choices[picked];
+
+          result.style.display = "block";
+          result.innerHTML = `
+          <div class="answer">Correct: ${correctText}</div>
+          <div class="explain"><span style="font-family:'Roboto Mono', monospace; color: var(--color-text); font-weight:700;">Your answer:</span>
+            <span style="font-family:'Roboto Mono', monospace; color: ${
+              picked === q.correctIndex
+                ? "var(--color-primary)"
+                : "var(--color-error)"
+            }; font-weight:700;">${pickedText}</span>
+            <div style="margin-top:8px;">${q.explanation}</div>
+          </div>
+        `;
+        });
+
+        const pct =
+          gradedCount === 0
+            ? 0
+            : Math.round((correctCount / gradedCount) * 100);
+        scoreValueEl.textContent = `${correctCount} / ${gradedCount} (${pct}%)`;
+        scoreNoteEl.textContent = `Graded questions only. Not-graded items are excluded.`;
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function resetAll() {
+        // clear selections
+        deduped.forEach((q) => {
+          const inputs = document.querySelectorAll(`input[name="${q.id}"]`);
+          inputs.forEach((i) => (i.checked = false));
+
+          const card = document.getElementById(`q_${q.id}`);
+          const result = document.getElementById(`r_${q.id}`);
+          card.classList.remove("correct", "incorrect", "not-graded");
+          result.style.display = "none";
+          result.innerHTML = "";
+        });
+
+        scoreValueEl.textContent = "Not submitted";
+        scoreNoteEl.textContent =
+          "Submit at the bottom to autograde. “Not graded” questions won’t count.";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // Wire up buttons
+      document.getElementById("submitBtn").addEventListener("click", grade);
+      document.getElementById("resetBtn").addEventListener("click", resetAll);
+      document.getElementById("jumpBtn").addEventListener("click", () => {
+        document
+          .getElementById("submitZone")
+          .scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      document.getElementById("scrollTopBtn").addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      render();
+    </script>
+  </body>
+</html>

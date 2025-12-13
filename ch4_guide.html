@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chapter 4 - Processor Study Guide</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-bg: #1a0d2e;
+        --color-terminal: #1e0e2e;
+        --color-primary: #a855f7;
+        --color-secondary: #c084fc;
+        --color-accent: #ec4899;
+        --color-warning: #fbbf24;
+        --color-error: #ef4444;
+        --color-text: #f3e8ff;
+        --color-text-dim: #c4b5fd;
+      }
+
+      body {
+        font-family: "IBM Plex Mono", monospace;
+        background: var(--color-bg);
+        color: var(--color-text);
+        padding: 20px;
+        line-height: 1.4;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: var(--color-terminal);
+        border: 3px solid var(--color-primary);
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 0 50px rgba(168, 85, 247, 0.3);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid var(--color-primary);
+        position: relative;
+      }
+
+      .header::before {
+        content: ">";
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        color: var(--color-primary);
+        font-size: 2em;
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .header h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 2.5em;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        text-shadow: 0 0 20px rgba(168, 85, 247, 0.8);
+        margin-bottom: 8px;
+      }
+
+      .header .subtitle {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.3em;
+        color: var(--color-secondary);
+        letter-spacing: 2px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .section {
+        background: rgba(0, 0, 0, 0.5);
+        border: 2px solid var(--color-secondary);
+        border-radius: 6px;
+        padding: 15px;
+        position: relative;
+      }
+
+      .section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, var(--color-primary), transparent);
+      }
+
+      .section-title {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.1em;
+        color: var(--color-secondary);
+        margin-bottom: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid rgba(192, 132, 252, 0.3);
+        padding-bottom: 5px;
+      }
+
+      .register-table {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .register-row {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        padding: 6px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.8em;
+      }
+
+      .register-row:last-child {
+        border-bottom: none;
+      }
+
+      .reg-name {
+        color: var(--color-primary);
+        font-weight: 700;
+      }
+
+      .reg-desc {
+        color: var(--color-text-dim);
+      }
+
+      .code-block {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid var(--color-primary);
+        border-radius: 4px;
+        padding: 10px;
+        margin: 8px 0;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.8em;
+        color: var(--color-primary);
+        overflow-x: auto;
+      }
+
+      .terminal-line {
+        color: var(--color-text-dim);
+        font-size: 0.85em;
+        padding: 4px 0;
+      }
+
+      .key-point {
+        background: rgba(192, 132, 252, 0.15);
+        border-left: 3px solid var(--color-warning);
+        padding: 8px;
+        margin: 8px 0;
+        font-size: 0.85em;
+        border-radius: 3px;
+      }
+
+      .wide-section {
+        grid-column: span 2;
+      }
+
+      .full-width {
+        grid-column: span 3;
+      }
+
+      .addressing-mode {
+        background: rgba(0, 0, 0, 0.4);
+        padding: 6px;
+        margin: 5px 0;
+        border-left: 2px solid var(--color-secondary);
+        font-size: 0.8em;
+      }
+
+      .formula {
+        color: var(--color-secondary);
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 600;
+        padding: 4px 0;
+      }
+
+      .quick-ref {
+        background: rgba(236, 72, 153, 0.1);
+        border: 2px solid var(--color-accent);
+        border-radius: 6px;
+        padding: 15px;
+        margin-top: 20px;
+      }
+
+      .quick-ref-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.3em;
+        color: var(--color-accent);
+        text-align: center;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .ref-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      .ref-item {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 8px;
+        border: 1px solid var(--color-accent);
+        border-radius: 4px;
+        font-size: 0.75em;
+      }
+
+      .ref-label {
+        color: var(--color-warning);
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+
+      .highlight-purple {
+        color: var(--color-primary);
+        font-weight: 600;
+      }
+      .highlight-lavender {
+        color: var(--color-secondary);
+        font-weight: 600;
+      }
+      .highlight-pink {
+        color: var(--color-accent);
+        font-weight: 600;
+      }
+      .highlight-yellow {
+        color: var(--color-warning);
+        font-weight: 600;
+      }
+
+      @media print {
+        body {
+          background: white;
+        }
+        .container {
+          border: 2px solid black;
+          box-shadow: none;
+        }
+        .section::before {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>CHAPTER 4</h1>
+        <div class="subtitle">The Processor: Datapath & Control</div>
+      </div>
+
+      <!-- Datapath Components -->
+      <div
+        style="
+          background: rgba(192, 132, 252, 0.1);
+          border: 2px solid var(--color-secondary);
+          border-radius: 8px;
+          padding: 20px;
+          margin-bottom: 25px;
+        "
+      >
+        <div
+          style="
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.4em;
+            color: var(--color-secondary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+          "
+        >
+          🔧 DATAPATH COMPONENTS
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px">
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.4);
+              padding: 12px;
+              border-radius: 6px;
+              border-left: 3px solid var(--color-primary);
+            "
+          >
+            <div
+              style="
+                color: var(--color-primary);
+                font-weight: 600;
+                margin-bottom: 8px;
+              "
+            >
+              State Elements
+            </div>
+            <div style="font-size: 0.85em; line-height: 1.8">
+              <strong>PC:</strong> Program counter (address of current
+              instruction)<br />
+              <strong>Instruction Memory:</strong> Read-only, no write signal<br />
+              <strong>Register File:</strong> 2 read ports, 1 write port<br />
+              <strong>Data Memory:</strong> MemRead/MemWrite controls<br />
+              <strong>Pipeline Registers:</strong> IF/ID, ID/EX, EX/MEM, MEM/WB
+            </div>
+          </div>
+
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.4);
+              padding: 12px;
+              border-radius: 6px;
+              border-left: 3px solid var(--color-accent);
+            "
+          >
+            <div
+              style="
+                color: var(--color-accent);
+                font-weight: 600;
+                margin-bottom: 8px;
+              "
+            >
+              Combinational Elements
+            </div>
+            <div style="font-size: 0.85em; line-height: 1.7">
+              <strong>ALU:</strong> Arithmetic/logic operations<br />
+              <strong>Adders:</strong> PC+4, branch target calculation<br />
+              <strong>Sign-Extend:</strong> 9-bit → 64-bit, 19-bit → 64-bit<br />
+              <strong>Multiplexors:</strong> ALUSrc, MemtoReg, PCSrc, Reg2Loc<br />
+              <strong>Shift Left 2:</strong> Branch offset (word → byte)
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 15px;
+          "
+        >
+          <div style="font-size: 0.85em; line-height: 2">
+            <div style="margin-bottom: 8px">
+              <strong style="color: var(--color-warning)"
+                >Key Principle:</strong
+              >
+            </div>
+            <div style="color: var(--color-text-dim)">
+              No resource can be used more than once per instruction → separate
+              instruction & data memories<br />
+              <span class="highlight-purple">State elements</span> have clock,
+              <span class="highlight-purple">combinational elements</span> don't
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Five Pipeline Stages -->
+      <div
+        style="
+          background: rgba(236, 72, 153, 0.1);
+          border: 2px solid var(--color-accent);
+          border-radius: 8px;
+          padding: 20px;
+          margin-bottom: 25px;
+        "
+      >
+        <div
+          style="
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.3em;
+            color: var(--color-accent);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+          "
+        >
+          ⚡ FIVE PIPELINE STAGES
+        </div>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+          "
+        >
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.3);
+              padding: 12px;
+              border-radius: 6px;
+              border: 2px solid #c084fc;
+            "
+          >
+            <div
+              style="
+                color: #c084fc;
+                font-weight: 700;
+                margin-bottom: 8px;
+                text-align: center;
+                font-size: 1.1em;
+              "
+            >
+              IF - Fetch
+            </div>
+            <div style="font-size: 0.8em; line-height: 1.8">
+              • Read instruction from memory<br />
+              • Use PC as address<br />
+              • Increment PC by 4<br />
+              • Store in IF/ID register
+            </div>
+          </div>
+
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.3);
+              padding: 12px;
+              border-radius: 6px;
+              border: 2px solid #c084fc;
+            "
+          >
+            <div
+              style="
+                color: #c084fc;
+                font-weight: 700;
+                margin-bottom: 8px;
+                text-align: center;
+                font-size: 1.1em;
+              "
+            >
+              ID - Decode
+            </div>
+            <div style="font-size: 0.8em; line-height: 1.8">
+              • Read 1-2 registers<br />
+              • Sign-extend immediate<br />
+              • Generate control signals<br />
+              • Store in ID/EX register
+            </div>
+          </div>
+
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.3);
+              padding: 12px;
+              border-radius: 6px;
+              border: 2px solid #c084fc;
+            "
+          >
+            <div
+              style="
+                color: #c084fc;
+                font-weight: 700;
+                margin-bottom: 8px;
+                text-align: center;
+                font-size: 1.1em;
+              "
+            >
+              EX - Execute
+            </div>
+            <div style="font-size: 0.8em; line-height: 1.8">
+              • ALU operation<br />
+              • Address calculation<br />
+              • Branch target address<br />
+              • Store in EX/MEM register
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px">
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.3);
+              padding: 12px;
+              border-radius: 6px;
+              border: 2px solid #c084fc;
+            "
+          >
+            <div
+              style="
+                color: #c084fc;
+                font-weight: 700;
+                margin-bottom: 8px;
+                text-align: center;
+                font-size: 1.1em;
+              "
+            >
+              MEM - Memory
+            </div>
+            <div style="font-size: 0.8em; line-height: 1.8">
+              • Load: Read data memory<br />
+              • Store: Write data memory<br />
+              • Branch decision (PCSrc)<br />
+              • Store in MEM/WB register
+            </div>
+          </div>
+
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.3);
+              padding: 12px;
+              border-radius: 6px;
+              border: 2px solid #c084fc;
+            "
+          >
+            <div
+              style="
+                color: #c084fc;
+                font-weight: 700;
+                margin-bottom: 8px;
+                text-align: center;
+                font-size: 1.1em;
+              "
+            >
+              WB - Write Back
+            </div>
+            <div style="font-size: 0.8em; line-height: 1.8">
+              • Write ALU result to register<br />
+              • OR write memory data to register<br />
+              • MemtoReg selects source<br />
+              • RegWrite enables write
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pipeline Hazards Section -->
+      <div
+        style="
+          background: rgba(0, 0, 0, 0.7);
+          border: 2px solid var(--color-primary);
+          border-radius: 8px;
+          padding: 20px;
+          margin-bottom: 25px;
+        "
+      >
+        <div
+          style="
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.3em;
+            color: var(--color-warning);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: left;
+          "
+        >
+          ⚠️ PIPELINE HAZARDS
+        </div>
+
+        <div
+          style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px"
+        >
+          <div>
+            <div
+              style="
+                color: var(--color-primary);
+                font-weight: 700;
+                margin-bottom: 8px;
+                font-size: 1.1em;
+              "
+            >
+              Structural Hazard
+            </div>
+            <div
+              style="
+                font-size: 0.85em;
+                line-height: 1.8;
+                color: var(--color-text-dim);
+              "
+            >
+              Hardware can't support instruction combination<br />
+              <strong style="color: var(--color-text)">Solution:</strong>
+              Separate instruction & data memory
+            </div>
+          </div>
+
+          <div>
+            <div
+              style="
+                color: var(--color-accent);
+                font-weight: 700;
+                margin-bottom: 8px;
+                font-size: 1.1em;
+              "
+            >
+              Data Hazard
+            </div>
+            <div
+              style="
+                font-size: 0.85em;
+                line-height: 1.8;
+                color: var(--color-text-dim);
+              "
+            >
+              Instruction needs data not yet available<br />
+              <strong style="color: var(--color-text)">Solution:</strong>
+              Forwarding, stalling (bubbles)
+            </div>
+          </div>
+
+          <div>
+            <div
+              style="
+                color: var(--color-warning);
+                font-weight: 700;
+                margin-bottom: 8px;
+                font-size: 1.1em;
+              "
+            >
+              Control Hazard
+            </div>
+            <div
+              style="
+                font-size: 0.85em;
+                line-height: 1.8;
+                color: var(--color-text-dim);
+              "
+            >
+              Next instruction unknown (branch decision pending)<br />
+              <strong style="color: var(--color-text)">Solution:</strong>
+              Prediction, flushing, stalling
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- Control Signals -->
+        <div class="section">
+          <div class="section-title">🎛️ Control Signals</div>
+          <div class="register-table">
+            <div class="register-row">
+              <div class="reg-name">Reg2Loc</div>
+              <div class="reg-desc">Select read reg 2 (Rm or Rt)</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">ALUSrc</div>
+              <div class="reg-desc">ALU input: reg or immediate</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">MemtoReg</div>
+              <div class="reg-desc">Write data: ALU or memory</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">RegWrite</div>
+              <div class="reg-desc">Enable register write</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">MemRead</div>
+              <div class="reg-desc">Read from data memory</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">MemWrite</div>
+              <div class="reg-desc">Write to data memory</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">Branch</div>
+              <div class="reg-desc">Conditional branch signal</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">ALUOp</div>
+              <div class="reg-desc">2-bit: ALU operation type</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Forwarding -->
+        <div class="section">
+          <div class="section-title">🔀 Forwarding</div>
+          <div class="key-point">
+            <strong>Purpose:</strong> Bypass register file<br />
+            Retrieve data from pipeline registers
+          </div>
+          <div class="code-block">
+            <strong>Hazard Conditions:</strong>
+            1a. EX/MEM.Rd = ID/EX.Rn1 1b. EX/MEM.Rd = ID/EX.Rm2 2a. MEM/WB.Rd =
+            ID/EX.Rn1 2b. MEM/WB.Rd = ID/EX.Rm2
+          </div>
+          <div class="terminal-line" style="margin-top: 8px">
+            Forward from EX/MEM or MEM/WB<br />
+            to ALU inputs in EX stage
+          </div>
+        </div>
+
+        <!-- Load-Use Hazard -->
+        <div class="section">
+          <div class="section-title">🔄 Load-Use Hazard</div>
+          <div class="code-block">LDUR X1, [X2, #0] ADD X3, X1, X4</div>
+          <div class="key-point">
+            <strong>Problem:</strong> Data not ready<br />
+            until MEM stage
+          </div>
+          <div class="terminal-line">
+            <strong>Solution:</strong> Stall 1 cycle<br />
+            Use latency = 1<br />
+            Cannot forward!
+          </div>
+        </div>
+      </div>
+
+      <!-- Branch Prediction -->
+      <div
+        style="
+          background: linear-gradient(
+            135deg,
+            rgba(168, 85, 247, 0.15),
+            rgba(236, 72, 153, 0.05)
+          );
+          border: 3px solid var(--color-accent);
+          border-radius: 12px;
+          padding: 25px;
+          margin: 25px 0;
+        "
+      >
+        <div
+          style="
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8em;
+            color: var(--color-accent);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-align: center;
+            font-weight: 700;
+          "
+        >
+          🔮 BRANCH PREDICTION 🔮
+        </div>
+
+        <div class="grid">
+          <!-- 1-bit Predictor -->
+          <div class="section">
+            <div class="section-title">1-Bit Predictor</div>
+            <div class="key-point">
+              Branch history table indexed by<br />
+              lower bits of branch address
+            </div>
+            <div class="terminal-line">
+              <strong>Bit = 0:</strong> Predict not taken<br />
+              <strong>Bit = 1:</strong> Predict taken<br />
+              <strong>Wrong?</strong> Flip bit, flush pipeline
+            </div>
+            <div class="code-block">
+              Problem: Loop mispredicts<br />
+              first & last iteration
+            </div>
+          </div>
+
+          <!-- 2-bit Predictor -->
+          <div class="section">
+            <div class="section-title">2-Bit Predictor</div>
+            <div class="terminal-line">
+              <strong>States:</strong><br />
+              • Strongly taken (11)<br />
+              • Weakly taken (10)<br />
+              • Weakly not taken (01)<br />
+              • Strongly not taken (00)
+            </div>
+            <div class="key-point">
+              Must be wrong <strong>twice</strong> to change<br />
+              prediction direction
+            </div>
+          </div>
+
+          <!-- Advanced Predictors -->
+          <div class="section">
+            <div class="section-title">Advanced Predictors</div>
+            <div class="terminal-line">
+              <strong>Correlating:</strong> Uses local +<br />
+              global branch behavior<br /><br />
+              <strong>Tournament:</strong> Multiple<br />
+              predictors, selector chooses<br /><br />
+              <strong>Branch Target Buffer:</strong><br />
+              Caches destination address
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- Exceptions -->
+        <div class="section">
+          <div class="section-title">💥 Exceptions</div>
+          <div class="register-table">
+            <div class="register-row">
+              <div class="reg-name">ELR</div>
+              <div class="reg-desc">Exception Link Register</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">ESR</div>
+              <div class="reg-desc">Exception Syndrome Register</div>
+            </div>
+          </div>
+          <div class="key-point">
+            <strong>Actions:</strong><br />
+            1. Save PC → ELR<br />
+            2. Record cause → ESR<br />
+            3. Jump to handler<br />
+            4. Flush pipeline
+          </div>
+          <div class="terminal-line">
+            <strong>Precise:</strong> Exact instruction<br />
+            <strong>Imprecise:</strong> Approximate
+          </div>
+        </div>
+
+        <!-- ILP -->
+        <div class="section">
+          <div class="section-title">⚡ ILP Concepts</div>
+          <div class="terminal-line">
+            <strong>ILP:</strong> Instruction-Level Parallelism<br /><br />
+            <strong>Single issue:</strong> 1 instruction/cycle<br />
+            <strong>Multiple issue:</strong> >1 instruction/cycle (CPI < 1)<br /><br />
+            <strong>Issue slots:</strong> Positions to launch instructions
+          </div>
+          <div class="key-point">
+            Exploit parallelism by overlapping<br />
+            instruction execution
+          </div>
+        </div>
+
+        <!-- Speculation -->
+        <div class="section">
+          <div class="section-title">🎲 Speculation</div>
+          <div class="terminal-line">
+            <strong>Guess:</strong> Branch outcome, load<br />
+            address, instruction properties<br /><br />
+            <strong>Execute:</strong> Speculatively<br />
+            buffer results<br /><br />
+            <strong>Commit:</strong> If correct, write<br />
+            <strong>Rollback:</strong> If wrong, flush
+          </div>
+        </div>
+      </div>
+
+      <!-- Multiple Issue -->
+      <div
+        style="
+          background: rgba(192, 132, 252, 0.1);
+          border: 2px solid var(--color-secondary);
+          border-radius: 8px;
+          padding: 20px;
+          margin-bottom: 25px;
+        "
+      >
+        <div
+          style="
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.4em;
+            color: var(--color-secondary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+          "
+        >
+          🚀 MULTIPLE ISSUE PROCESSORS
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px">
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.4);
+              padding: 12px;
+              border-radius: 6px;
+              border-left: 3px solid var(--color-primary);
+            "
+          >
+            <div
+              style="
+                color: var(--color-primary);
+                font-weight: 600;
+                margin-bottom: 8px;
+              "
+            >
+              Static Multiple Issue (VLIW)
+            </div>
+            <div style="font-size: 0.85em; line-height: 1.8">
+              <strong>Compiler decides:</strong> Instruction packaging<br />
+              <strong>Issue packet:</strong> Multiple ops in wide instruction<br />
+              <strong>Handling hazards:</strong> Compiler inserts NOPs<br />
+              <strong>Example:</strong> 2-issue LEGv8 (ALU + Load/Store)
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                padding: 6px;
+                background: rgba(251, 191, 36, 0.1);
+                border-radius: 4px;
+                font-size: 0.75em;
+                color: var(--color-warning);
+              "
+            >
+              <strong>Requires:</strong> Extra register ports, extra ALU
+            </div>
+          </div>
+
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.4);
+              padding: 12px;
+              border-radius: 6px;
+              border-left: 3px solid var(--color-accent);
+            "
+          >
+            <div
+              style="
+                color: var(--color-accent);
+                font-weight: 600;
+                margin-bottom: 8px;
+              "
+            >
+              Dynamic Multiple Issue (Superscalar)
+            </div>
+            <div style="font-size: 0.85em; line-height: 1.7">
+              <strong>Hardware decides:</strong> Issue at runtime<br />
+              <strong>Dynamic scheduling:</strong> Reorder execution<br />
+              <strong>Out-of-order exec:</strong> Blocked instruction doesn't
+              stall others<br />
+              <strong>Speculation:</strong> Guess outcomes, buffer results
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- Loop Unrolling -->
+        <div class="section">
+          <div class="section-title">🔁 Loop Unrolling</div>
+          <div class="key-point">Multiple loop iterations in one pass</div>
+          <div class="terminal-line">
+            <strong>Benefits:</strong><br />
+            • Reduce branch overhead<br />
+            • Expose more ILP<br />
+            • Enable better scheduling<br /><br />
+            <strong>Drawbacks:</strong><br />
+            • Code size increase<br />
+            • More registers needed
+          </div>
+        </div>
+
+        <!-- Register Renaming -->
+        <div class="section">
+          <div class="section-title">📝 Register Renaming</div>
+          <div class="code-block">
+            Antidependence (name):<br />
+            Two instructions use same<br />
+            register but different data
+          </div>
+          <div class="key-point">
+            <strong>Solution:</strong> Rename registers<br />
+            to eliminate false dependences
+          </div>
+          <div class="terminal-line">
+            Hardware: Reservation stations<br />
+            Software: Compiler renames
+          </div>
+        </div>
+
+        <!-- Dynamic Scheduling -->
+        <div class="section">
+          <div class="section-title">🔧 Dynamic Scheduling</div>
+          <div class="terminal-line">
+            <strong>Fetch & Issue:</strong> Decode,<br />
+            send to functional units<br /><br />
+            <strong>Execute:</strong> Reservation<br />
+            stations hold ops, execute<br />
+            when ready<br /><br />
+            <strong>Commit:</strong> Reorder buffer,<br />
+            in-order commit
+          </div>
+          <div class="key-point">
+            Out-of-order execution +<br />
+            In-order commit = Correct results
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Reference -->
+      <div class="quick-ref">
+        <div class="quick-ref-title">⚡ QUICK REFERENCE ⚡</div>
+        <div class="ref-grid">
+          <div class="ref-item">
+            <div class="ref-label">Pipeline Stages</div>
+            IF → ID → EX<br />→ MEM → WB
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">State Elements</div>
+            PC, Memories,<br />Registers, Piperegs
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Control Signals</div>
+            8 total: Reg2Loc,<br />ALUSrc, MemtoReg, etc.
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Structural Hazard</div>
+            Hardware conflict<br />Solution: Separate mem
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Data Hazard</div>
+            Data not ready<br />Solution: Forward/stall
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Control Hazard</div>
+            Unknown next PC<br />Solution: Predict/flush
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Forwarding</div>
+            Bypass register file<br />Use pipeline data
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Load-Use</div>
+            Must stall 1 cycle<br />Use latency = 1
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">1-Bit Predict</div>
+            Single bit history<br />Flip when wrong
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">2-Bit Predict</div>
+            4 states: Strong/weak<br />Wrong twice to change
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Branch Target</div>
+            PC + (offset << 2)<br />Cache destination
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Flush Pipeline</div>
+            Wrong prediction<br />Zero control signals
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">ELR</div>
+            Exception Link Reg<br />Saves PC
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">ESR</div>
+            Exception Syndrome<br />Records cause
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Precise Exception</div>
+            Exact instruction<br />associated
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Issue Packet</div>
+            Instructions issued<br />together in 1 cycle
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">VLIW</div>
+            Very Long Instruction<br />Static multiple issue
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Superscalar</div>
+            Dynamic multiple<br />issue at runtime
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">ILP</div>
+            Instruction-Level<br />Parallelism
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Out-of-Order</div>
+            Execute when ready<br />not program order
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Speculation</div>
+            Guess outcome<br />Buffer, commit/flush
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Reservation Stn</div>
+            Hold operands & op<br />in functional unit
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Reorder Buffer</div>
+            In-order commit<br />Preserve correctness
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Loop Unrolling</div>
+            Multiple iterations<br />Expose more ILP
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

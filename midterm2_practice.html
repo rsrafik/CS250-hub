@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CS250 • Midterm 2 (Mega Practice Exam)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --color-primary: #00ff41;
+        --color-secondary: #00d4ff;
+        --color-accent: #ff00de;
+        --color-warning: #ffcc00;
+        --color-error: #ef4444;
+        --color-bg: #0a0e27;
+        --color-card: #151b3d;
+        --color-text: #e2e8f0;
+        --color-text-dim: #94a3b8;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Rajdhani", sans-serif;
+        background: var(--color-bg);
+        color: var(--color-text);
+        line-height: 1.6;
+        min-height: 100vh;
+        background-image: linear-gradient(
+            rgba(0, 255, 65, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 30px 20px;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 255, 65, 0.1),
+          rgba(0, 212, 255, 0.1)
+        );
+        border-radius: 20px;
+        border: 2px solid var(--color-primary);
+        box-shadow: 0 0 40px rgba(0, 255, 65, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+      .header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(0, 255, 65, 0.05),
+          transparent
+        );
+        animation: shine 3s infinite;
+      }
+      @keyframes shine {
+        0% {
+          transform: translateX(-100%) translateY(-100%) rotate(45deg);
+        }
+        100% {
+          transform: translateX(100%) translateY(100%) rotate(45deg);
+        }
+      }
+      .header-content {
+        position: relative;
+        z-index: 1;
+      }
+      .header h1 {
+        font-size: 3em;
+        font-weight: 700;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 6px;
+        text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        margin-bottom: 6px;
+      }
+      .header-subtitle {
+        font-size: 1.2em;
+        color: var(--color-secondary);
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .header-description {
+        margin-top: 10px;
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.95em;
+      }
+
+      .score-bar {
+        margin: 18px 0 28px;
+        background: var(--color-card);
+        border: 2px solid rgba(0, 255, 65, 0.3);
+        border-radius: 14px;
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .score-left {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .score-title {
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--color-text);
+        font-size: 1.05em;
+      }
+      .score-value {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-primary);
+        font-weight: 700;
+        font-size: 1.2em;
+        text-shadow: 0 0 12px rgba(0, 255, 65, 0.35);
+      }
+      .score-note {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.85em;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 2px solid var(--color-primary);
+        background: rgba(0, 255, 65, 0.1);
+        color: var(--color-primary);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: "Roboto Mono", monospace;
+        transition: all 0.25s ease;
+        user-select: none;
+      }
+      .btn:hover {
+        background: var(--color-primary);
+        color: var(--color-bg);
+        box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        transform: scale(1.03);
+      }
+      .btn.secondary {
+        border-color: var(--color-secondary);
+        background: rgba(0, 212, 255, 0.1);
+        color: var(--color-secondary);
+      }
+      .btn.secondary:hover {
+        background: var(--color-secondary);
+        color: var(--color-bg);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+      }
+
+      .section-header {
+        font-size: 2em;
+        font-weight: 700;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        margin: 10px 0 20px;
+        text-align: center;
+        position: relative;
+      }
+      .section-header::after {
+        content: "";
+        display: block;
+        width: 110px;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--color-primary),
+          transparent
+        );
+        margin: 12px auto 0;
+      }
+
+      .q-card {
+        background: var(--color-card);
+        border: 2px solid rgba(0, 255, 65, 0.3);
+        border-radius: 15px;
+        padding: 22px;
+        margin: 16px 0;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.25s ease;
+      }
+      .q-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(
+          90deg,
+          var(--color-primary),
+          var(--color-secondary)
+        );
+        transform: scaleX(0);
+        transition: transform 0.25s ease;
+      }
+      .q-card:hover {
+        border-color: var(--color-primary);
+        box-shadow: 0 10px 40px rgba(0, 255, 65, 0.15);
+        transform: translateY(-2px);
+      }
+      .q-card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .q-card.correct {
+        border-color: rgba(0, 255, 65, 0.95);
+        box-shadow: 0 0 26px rgba(0, 255, 65, 0.25);
+      }
+      .q-card.incorrect {
+        border-color: rgba(239, 68, 68, 0.95);
+        box-shadow: 0 0 26px rgba(239, 68, 68, 0.2);
+      }
+      .q-card.not-graded {
+        border-color: rgba(255, 204, 0, 0.65);
+        box-shadow: 0 0 20px rgba(255, 204, 0, 0.12);
+      }
+
+      .q-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+      .q-num {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-primary);
+        opacity: 0.55;
+        font-size: 1.05em;
+        font-weight: 700;
+      }
+      .q-meta {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.85em;
+      }
+      .q-text {
+        font-size: 1.05em;
+        color: var(--color-text);
+        margin-top: 6px;
+        white-space: pre-wrap;
+      }
+
+      .choices {
+        margin-top: 12px;
+        display: grid;
+        gap: 10px;
+      }
+      .choice {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(10, 14, 39, 0.18);
+        transition: all 0.2s ease;
+      }
+      .choice:hover {
+        border-color: rgba(0, 255, 65, 0.45);
+        background: rgba(0, 255, 65, 0.06);
+      }
+      .choice input {
+        margin-top: 3px;
+        accent-color: var(--color-primary);
+      }
+      .choice label {
+        cursor: pointer;
+        flex: 1;
+        color: var(--color-text);
+      }
+
+      .result {
+        display: none;
+        margin-top: 14px;
+        padding: 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(10, 14, 39, 0.25);
+      }
+      .result .answer {
+        font-family: "Roboto Mono", monospace;
+        font-weight: 700;
+        color: var(--color-secondary);
+        margin-bottom: 6px;
+      }
+      .result .explain {
+        color: var(--color-text-dim);
+        font-size: 0.98em;
+      }
+
+      .bottom-actions {
+        margin-top: 26px;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 50px;
+        padding: 24px;
+        border-top: 2px solid rgba(0, 255, 65, 0.3);
+        color: var(--color-text-dim);
+        font-family: "Roboto Mono", monospace;
+      }
+
+      .hub-back {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 9999;
+
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 8px 12px;
+        border-radius: 8px;
+
+        border: 2px solid var(--color-secondary);
+        background: rgba(0, 212, 255, 0.1);
+        color: var(--color-secondary);
+
+        font-size: 0.85em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        font-family: "Roboto Mono", monospace;
+        text-decoration: none;
+
+        transition: all 0.25s ease;
+      }
+      .hub-back:hover {
+        background: var(--color-secondary);
+        color: var(--color-bg);
+        box-shadow: 0 0 16px rgba(0, 212, 255, 0.45);
+        transform: scale(1.03);
+      }
+
+      @media (max-width: 700px) {
+        .header h1 {
+          font-size: 2.4em;
+          letter-spacing: 4px;
+        }
+        .score-bar {
+          justify-content: center;
+        }
+        .btn {
+          width: 100%;
+        }
+        .actions {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <a href="index.html" class="hub-back">← Back to Hub</a>
+
+    <div class="container">
+      <div class="header">
+        <div class="header-content">
+          <h1>CS250</h1>
+          <div class="header-subtitle">Midterm 2 • Mega Practice Exam</div>
+          <div class="header-description">&gt; Autogrades + explanations</div>
+        </div>
+      </div>
+
+      <div class="score-bar" id="scoreBar">
+        <div class="score-left">
+          <div class="score-title">Score</div>
+          <div class="score-value" id="scoreValue">Not submitted</div>
+          <div class="score-note" id="scoreNote">
+            Submit at the bottom to autograde. “Not graded” questions won’t
+            count.
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn secondary" id="resetBtn" type="button">
+            ↺ Reset
+          </button>
+          <button class="btn" id="jumpBtn" type="button">
+            ↓ Jump to Submit
+          </button>
+        </div>
+      </div>
+
+      <div class="section-header">🧪 Exam Questions</div>
+      <div id="quiz"></div>
+
+      <div class="bottom-actions" id="submitZone">
+        <button class="btn" id="submitBtn" type="button">
+          ✅ Submit & Grade
+        </button>
+        <button class="btn secondary" id="scrollTopBtn" type="button">
+          ↑ Back to Top
+        </button>
+      </div>
+
+      <div class="footer">
+        <p>CS250 Computer Architecture Practice Exam</p>
+        <p style="margin-top: 10px; font-size: 0.9em">
+          Last Updated: December 2025 • Built for Exam Success 🚀
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // NOTE:
+      // - correctIndex can be:
+      //   * number (0-based)
+      //   * array of numbers (accept multiple correct answers)
+      //   * null => Not graded (excluded from score)
+
+      const questions = [
+        // ===== Midterm 2 Core =====
+        {
+          id: "m2_stack_push",
+          text: "Assume that the stack is 8-byte aligned. Which LEGv8 instruction will prepare the stack for a push operation?",
+          choices: [
+            "None of the other answers is correct.",
+            "STUR X9, [SP, #24]",
+            "STUR SP, [X9, #24]",
+            "ADDI SP, SP, #24",
+            "SUBI SP, SP, #24",
+          ],
+          correctIndex: 4,
+          explanation:
+            "A push allocates space by decrementing SP (stack grows down) → SUBI SP, SP, #imm.",
+        },
+        {
+          id: "m2_isa_design",
+          text: "An ISA design represents",
+          choices: [
+            "a choice of machine instruction length.",
+            "a tradeoff among competing programmable processor issues such as cost, programming convenience, and power consumption.",
+            "a set of logical operations.",
+            "an opcode.",
+            "a specific processor circuit.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "ISA design is a set of tradeoffs among competing goals (cost, power, ease, performance, etc.).",
+        },
+        {
+          id: "m2_cb_offset",
+          text: "The offset amount for an assembly language conditional branch instruction is",
+          choices: [
+            "the address of the offset.",
+            "a positive integer.",
+            "the address of the branch instruction.",
+            "the address of the target instruction.",
+            "a constant.",
+          ],
+          correctIndex: 4,
+          explanation:
+            "Branch offset is encoded as a fixed-width constant in the instruction.",
+        },
+        {
+          id: "m2_ascii",
+          text: "Which was a criterion for the design of ASCII?",
+          choices: [
+            "The question makes no sense because ASCII was not designed, it is a standard.",
+            "Making full use of one byte of memory.",
+            "The use of the NULL character as a string terminator.",
+            "Ease of use by machine.",
+            "Use of hexadecimal encoding.",
+          ],
+          correctIndex: 3,
+          explanation:
+            "ASCII was designed to be machine-friendly/easy to process and transmit.",
+        },
+        {
+          id: "m2_second_pass",
+          text: "During its second pass over an assembly language program, an assembler",
+          choices: [
+            "outputs each successive machine language instruction.",
+            "checks for label definitions.",
+            "plans its conversions of mnemonic to opcode.",
+            "converts simple instructions to more complex instructions.",
+            "All other answers are correct.",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Pass 2 emits machine code using symbol addresses discovered in pass 1.",
+        },
+        {
+          id: "m2_mul_partial_products",
+          text: "The partial products created during the multiplication of an N-bit multiplicand by an N-bit multiplier can, with sufficient hardware, be summed in time proportional to",
+          choices: ["N", "log N", "2N", "N^2", "a constant"],
+          correctIndex: 1,
+          explanation:
+            "A reduction tree (carry-save / Wallace-style) can sum many partial products in O(log N) stages.",
+        },
+        {
+          id: "m2_reorder_true",
+          text: "Rearranging the sequence of instructions in a machine can increase the throughput of a pipeline without affecting program correctness.",
+          choices: [
+            "FALSE",
+            "Insufficient information has been given to decide.",
+            "TRUE",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Instruction scheduling can preserve dependences while reducing stalls → higher throughput.",
+        },
+        {
+          id: "m2_assembler_error",
+          text: "An assembler can signal an error in an assembly language program when",
+          choices: [
+            "All other answers are correct.",
+            "attempting to represent an immediate value as a 2's complement bit string.",
+            "it computes an offset.",
+            "carrying out its first pass.",
+            "scanning for label definitions.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "If an immediate can’t fit the required signed bit-width, it’s an assembler-time error.",
+        },
+        {
+          id: "m2_cpu_time_algo",
+          text: "Which factor in the CPU Time equation is most sensitive to the choice of algorithm?",
+          choices: [
+            "Choice of algorithm has no effect on the CPU Time for a program.",
+            "All of the factors in the CPU Time question are equally sensitive to choice of algorithm.",
+            "clock cycles per machine instruction",
+            "machine instructions per program",
+            "seconds per clock cycle",
+          ],
+          correctIndex: 3,
+          explanation:
+            "Algorithms primarily change the amount of work → instruction count.",
+        },
+        {
+          id: "m2_pipe_true",
+          text: "Which is true of pipelining a processor circuit?",
+          choices: [
+            "It reduces hardware complexity.",
+            "It requires the use of five stages.",
+            "It improves on the CPI = 1 of the un-pipelined circuit.",
+            "It improves instruction execution latency.",
+            "It improves maximum clock frequency for the circuit.",
+          ],
+          correctIndex: 4,
+          explanation:
+            "Pipelining shortens the critical path per stage → higher max clock frequency.",
+        },
+        {
+          id: "m2_pipe_compare",
+          text: "In comparison to an un-pipelined processor circuit, pipelining that processor",
+          choices: [
+            "slightly increases the execution time of an instruction.",
+            "decreases processor clock frequency.",
+            "decreases processor stall cycles.",
+            "Two of the claims about the effect of pipelining are correct.",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Pipelining improves throughput but adds pipeline register overhead; single-instruction latency can slightly increase.",
+        },
+        {
+          id: "m2_raw_count",
+          text: `Consider the following LEGv8 assembly language code snippet.
+
+ADD X1, X2, X4
+SUB X4, X1, X6
+AND X6, X2, X9
+ORR X8, X4, X9
+XOR X6, X1, X11
+
+How many RAW data dependences are present in this snippet?`,
+          choices: ["0", "1", "2", "3", "4"],
+          correctIndex: 3,
+          explanation:
+            "RAW (true) dependences: SUB reads X1 from ADD; ORR reads X4 from SUB; XOR reads X1 from ADD → 3.",
+        },
+        {
+          id: "m2_bl_writes",
+          text: "How many bit string(s) are written to register(s) by the LEGv8 assembly language instruction, BL callee ?",
+          choices: [
+            "0",
+            "1",
+            "2",
+            "3",
+            "Insufficient information given to answer this question.",
+          ],
+          correctIndex: [1, 2],
+          explanation:
+            "Many keys accept **1** (LR). More formally, BL also updates **PC**, so **2** can be argued (LR + PC). This item accepts both.",
+        },
+        {
+          id: "m2_printf_no_spec",
+          text: "When a format string for printf( ) contains no conversion specifiers, then",
+          choices: [
+            "the compiler may make an error and replace the call to printf( ) with a call to puts( ).",
+            "the compiler will signal an error.",
+            "the compiler must replace the call to printf( ) with a call to puts( ).",
+            "the compiler may replace the call to printf( ) with a call to puts( ).",
+            "the compiler will signal a warning.",
+          ],
+          correctIndex: 3,
+          explanation:
+            'With no conversions, printf("literal") can be optimized/replaced (e.g., puts/puts-like) by the compiler.',
+        },
+        {
+          id: "m2_call_transfer",
+          text: "For a procedure call on a LEGv8 processor, how is control transferred from the caller to the callee?",
+          choices: [
+            "By placing the address of the first machine instruction of the callee in the PC.",
+            "By placing the address of the first machine instruction of the caller in the PC.",
+            "By placing the address of the first machine instruction of the callee in the LR.",
+            "By placing the address of the first machine instruction of the caller in the LR.",
+            "None of the other answers is correct.",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Control transfers by updating the PC to the callee’s entry address (BL also saves return address in LR).",
+        },
+        {
+          id: "m2_basic_block",
+          text: "What constrains the instruction execution sequence within a basic block in an assembly language program?",
+          choices: [
+            "The data dependences among the assembly language instructions",
+            "The opcodes of the instructions",
+            "Nothing",
+            "The branch instruction(s)",
+            "Each of the other answers is incorrect",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Inside a basic block, correctness requires preserving true data dependences (RAW).",
+        },
+        {
+          id: "m2_data_hazard_def",
+          text: "A data hazard occurs when",
+          choices: [
+            "forwarding is used.",
+            "data cannot reach an ALU input by the time needed.",
+            "data cannot reach a stage output register.",
+            "there is a name dependence.",
+            "None of the other answers satisfies the question asked.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Hazard = needed operand isn’t available at the required time at the consuming hardware (e.g., ALU input).",
+        },
+        {
+          id: "m2_reduce_stalls",
+          text: "Which will reduce or perhaps eliminate stalls due to data dependences in the classic 5-stage pipeline?",
+          choices: [
+            "Each of the other answers satisfies the question asked.",
+            "Reducing the number of load instructions in an assembly language program",
+            "Absence of machine program data dependences",
+            "Machine program instructions that read and write registers instead of memory address space locations",
+            "Forwarding",
+          ],
+          correctIndex: 0,
+          explanation:
+            "All listed changes can reduce stalls (some may eliminate in special cases).",
+        },
+        {
+          id: "m2_cycles_needed",
+          text: "Assume for arithmetic, load/store, and branch instructions, a processor has CPIs of 1, 12, and 5, respectively. Also assume a program requires the execution of 2.0E9 arithmetic instructions, 1.0E9 load/store instructions, and 2.0E6 branch instructions. How many clock cycles are needed to execute the program?",
+          choices: [
+            "2.0E9x1 + 1.0E9x12 + 2.0E6x5",
+            "2.0E9 + 1.0E9 + 2.0E6",
+            "To answer the question requires also knowing the clock frequency.",
+            "average(1, 12, 5) / (2.0E9 + 1.0E9 + 2.0E6)",
+            "(2.0E9 + 1.0E9 + 2.0E6) x average(1, 12, 5)",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Total cycles = Σ(count × CPI) across instruction classes.",
+        },
+        {
+          id: "m2_alu_speedup",
+          text: "Enhancing the ALU of a LEGv8 processor by reducing its worst case propagation delay by 50% will improve the execution time of every application program by 50%.",
+          choices: [
+            "TRUE",
+            "FALSE",
+            "Insufficient information to determine the truth of the statement.",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Amdahl’s Law: overall speedup depends on the fraction of execution time affected.",
+        },
+        {
+          id: "m2_machine_lang",
+          text: "What is a name for the language that is interpreted by some CPU?",
+          choices: [
+            "high level language",
+            "assembly",
+            "opcode",
+            "machine language",
+            "interpreted language",
+          ],
+          correctIndex: 3,
+          explanation:
+            "A CPU directly executes machine language (binary instruction encodings).",
+        },
+        {
+          id: "m2_cpi_formula",
+          text: "Consider an ISA with instructions having CPIs as follows: A-type CPI = 1, B-type CPI = 2, C-type CPI = 3, and D-type CPI = 3. The dynamic instruction count for a benchmark program is measured as 1.0E6 and the frequency of instruction types is measured to be: 10% class A, 20% class B, 50% class C, and 20% class D. What is the correct formula for the CPI of the benchmark program?",
+          choices: [
+            "(0.1x1 + 0.2x2 + 0.5x3 + 0.2x3) / 1.0E6",
+            "1.0E6 x (0.1x1 + 0.2x2 + 0.5x3 + 0.2x3)",
+            "(0.1 + 0.2 + 0.5 + 0.2) x (clock cycles / instruction)",
+            "0.1 + 0.2 + 0.5 + 0.2",
+            "0.1x1 + 0.2x2 + 0.5x3 + 0.2x3",
+          ],
+          correctIndex: 4,
+          explanation:
+            "Average CPI is the weighted sum of per-class CPI by frequency.",
+        },
+        {
+          id: "m2_no_forwarding_stall",
+          text: "When an bit string is not available from a register at the time it is needed in the ID stage of the classic 5-stage pipeline without forwarding, then the pipeline",
+          choices: [
+            "restarts the clock cycle.",
+            "stops processing all instructions in the pipeline.",
+            "has a throughput of more than one instruction per clock cycle.",
+            "stalls.",
+            "accesses data memory.",
+          ],
+          correctIndex: 3,
+          explanation:
+            "If operands aren’t ready (and no forwarding), you must stall and insert bubbles.",
+        },
+        {
+          id: "m2_pipelining_perf",
+          text: "Pipelining improves performance",
+          choices: [
+            "by exposing dependences.",
+            "by reducing instruction execution latency.",
+            "by increasing instruction level parallelism in a machine program.",
+            "by increasing hardware parallelism.",
+            "by reducing worst case gate delay.",
+          ],
+          correctIndex: 3,
+          explanation:
+            "Pipelining overlaps work of different instructions (hardware parallelism), improving throughput.",
+        },
+        {
+          id: "m2_eliminate_stalls",
+          text: "Which will eliminate stalls due to data dependences in the classic 5-stage pipeline?",
+          choices: [
+            "Forwarding",
+            "Increasing the fraction of machine program instructions that read and write registers instead of memory address space locations",
+            "None of the other answers satisfies the question asked.",
+            "Reducing the number of machine program data dependences",
+            "Reducing the number of load instructions in an assembly language program",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Forwarding alone doesn’t eliminate all stalls (e.g., load-use). So “none” is the safe, strict answer.",
+        },
+        {
+          id: "m2_float_precision",
+          text: "If the two least significant bits of the exponent field in a floating point representation are instead interpreted as being the two most significant bits of the mantissa field, what happens to the precision of numbers that can be represented?",
+          choices: [
+            "None of the other answers is correct.",
+            "The precision is doubled as compared to its original value.",
+            "The precision is reduced to one half of its original value.",
+            "The precision is increased by four times as compared to its original value.",
+            "The precision is unchanged.",
+          ],
+          correctIndex: 3,
+          explanation:
+            "Adding 2 bits to mantissa → 4× finer precision (while reducing exponent range).",
+        },
+      ];
+
+      // Optional: de-dupe by exact text (keeps behavior like your Midterm 1 file)
+      const seen = new Set();
+      const deduped = [];
+      for (const q of questions) {
+        const key = q.text.trim();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        deduped.push(q);
+      }
+
+      const quizEl = document.getElementById("quiz");
+      const scoreValueEl = document.getElementById("scoreValue");
+      const scoreNoteEl = document.getElementById("scoreNote");
+
+      function render() {
+        quizEl.innerHTML = "";
+        deduped.forEach((q, idx) => {
+          const card = document.createElement("div");
+          card.className = "q-card";
+          card.id = `q_${q.id}`;
+
+          const top = document.createElement("div");
+          top.className = "q-top";
+          const isNotGraded = q.correctIndex === null;
+          top.innerHTML = `
+          <div class="q-num">Q${idx + 1}</div>
+          <div class="q-meta">${isNotGraded ? "Not graded" : "Graded"}</div>
+        `;
+
+          const text = document.createElement("div");
+          text.className = "q-text";
+          text.textContent = q.text;
+
+          const choices = document.createElement("div");
+          choices.className = "choices";
+
+          q.choices.forEach((choiceText, cIdx) => {
+            const cid = `${q.id}_${cIdx}`;
+            const row = document.createElement("div");
+            row.className = "choice";
+            row.innerHTML = `
+            <input type="radio" name="${q.id}" id="${cid}" value="${cIdx}">
+            <label for="${cid}">${choiceText}</label>
+          `;
+            choices.appendChild(row);
+          });
+
+          const result = document.createElement("div");
+          result.className = "result";
+          result.id = `r_${q.id}`;
+
+          card.appendChild(top);
+          card.appendChild(text);
+          card.appendChild(choices);
+          card.appendChild(result);
+
+          quizEl.appendChild(card);
+        });
+      }
+
+      function getSelectedIndex(qid) {
+        const selected = document.querySelector(`input[name="${qid}"]:checked`);
+        return selected ? Number(selected.value) : null;
+      }
+
+      function isCorrect(q, picked) {
+        if (q.correctIndex === null) return null;
+        if (picked === null) return false;
+
+        if (Array.isArray(q.correctIndex)) {
+          return q.correctIndex.includes(picked);
+        }
+        return picked === q.correctIndex;
+      }
+
+      function getCorrectTexts(q) {
+        if (q.correctIndex === null) return [];
+        if (Array.isArray(q.correctIndex))
+          return q.correctIndex.map((i) => q.choices[i]);
+        return [q.choices[q.correctIndex]];
+      }
+
+      function grade() {
+        let gradedCount = 0;
+        let correctCount = 0;
+
+        deduped.forEach((q) => {
+          const card = document.getElementById(`q_${q.id}`);
+          const result = document.getElementById(`r_${q.id}`);
+
+          card.classList.remove("correct", "incorrect", "not-graded");
+          result.style.display = "none";
+          result.innerHTML = "";
+
+          const picked = getSelectedIndex(q.id);
+
+          if (q.correctIndex === null) {
+            card.classList.add("not-graded");
+            result.style.display = "block";
+            result.innerHTML = `
+            <div class="answer">Not graded</div>
+            <div class="explain">${q.explanation}</div>
+          `;
+            return;
+          }
+
+          gradedCount++;
+
+          const ok = isCorrect(q, picked);
+          if (ok) {
+            correctCount++;
+            card.classList.add("correct");
+          } else {
+            card.classList.add("incorrect");
+          }
+
+          const correctTexts = getCorrectTexts(q);
+          const correctLine =
+            correctTexts.length === 1
+              ? `Correct: ${correctTexts[0]}`
+              : `Correct (accepted): ${correctTexts.join("  |  ")}`;
+
+          const pickedText =
+            picked === null ? "No answer selected" : q.choices[picked];
+
+          result.style.display = "block";
+          result.innerHTML = `
+          <div class="answer">${correctLine}</div>
+          <div class="explain"><span style="font-family:'Roboto Mono', monospace; color: var(--color-text); font-weight:700;">Your answer:</span>
+            <span style="font-family:'Roboto Mono', monospace; color: ${
+              ok ? "var(--color-primary)" : "var(--color-error)"
+            }; font-weight:700;">${pickedText}</span>
+            <div style="margin-top:8px;">${q.explanation}</div>
+          </div>
+        `;
+        });
+
+        const pct =
+          gradedCount === 0
+            ? 0
+            : Math.round((correctCount / gradedCount) * 100);
+        scoreValueEl.textContent = `${correctCount} / ${gradedCount} (${pct}%)`;
+        scoreNoteEl.textContent = `Graded questions only. Not-graded items are excluded.`;
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function resetAll() {
+        deduped.forEach((q) => {
+          const inputs = document.querySelectorAll(`input[name="${q.id}"]`);
+          inputs.forEach((i) => (i.checked = false));
+
+          const card = document.getElementById(`q_${q.id}`);
+          const result = document.getElementById(`r_${q.id}`);
+          card.classList.remove("correct", "incorrect", "not-graded");
+          result.style.display = "none";
+          result.innerHTML = "";
+        });
+
+        scoreValueEl.textContent = "Not submitted";
+        scoreNoteEl.textContent =
+          "Submit at the bottom to autograde. “Not graded” questions won’t count.";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      document.getElementById("submitBtn").addEventListener("click", grade);
+      document.getElementById("resetBtn").addEventListener("click", resetAll);
+      document.getElementById("jumpBtn").addEventListener("click", () => {
+        document
+          .getElementById("submitZone")
+          .scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      document.getElementById("scrollTopBtn").addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      render();
+    </script>
+  </body>
+</html>

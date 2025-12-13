@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CS250 • Practice Final (Interactive + Solutions)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --color-primary: #00ff41;
+        --color-secondary: #00d4ff;
+        --color-accent: #ff00de;
+        --color-warning: #ffcc00;
+        --color-error: #ef4444;
+        --color-bg: #0a0e27;
+        --color-card: #151b3d;
+        --color-text: #e2e8f0;
+        --color-text-dim: #94a3b8;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Rajdhani", sans-serif;
+        background: var(--color-bg);
+        color: var(--color-text);
+        line-height: 1.6;
+        min-height: 100vh;
+        background-image: linear-gradient(
+            rgba(0, 255, 65, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 30px 20px;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 255, 65, 0.1),
+          rgba(0, 212, 255, 0.1)
+        );
+        border-radius: 20px;
+        border: 2px solid var(--color-primary);
+        box-shadow: 0 0 40px rgba(0, 255, 65, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+      .header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(0, 255, 65, 0.05),
+          transparent
+        );
+        animation: shine 3s infinite;
+      }
+      @keyframes shine {
+        0% {
+          transform: translateX(-100%) translateY(-100%) rotate(45deg);
+        }
+        100% {
+          transform: translateX(100%) translateY(100%) rotate(45deg);
+        }
+      }
+      .header-content {
+        position: relative;
+        z-index: 1;
+      }
+      .header h1 {
+        font-size: 3em;
+        font-weight: 700;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 6px;
+        text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        margin-bottom: 6px;
+      }
+      .header-subtitle {
+        font-size: 1.2em;
+        color: var(--color-secondary);
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .header-description {
+        margin-top: 10px;
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.95em;
+      }
+
+      .score-bar {
+        margin: 18px 0 28px;
+        background: var(--color-card);
+        border: 2px solid rgba(0, 255, 65, 0.3);
+        border-radius: 14px;
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .score-left {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .score-title {
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--color-text);
+        font-size: 1.05em;
+      }
+      .score-value {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-primary);
+        font-weight: 700;
+        font-size: 1.2em;
+        text-shadow: 0 0 12px rgba(0, 255, 65, 0.35);
+      }
+      .score-note {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.85em;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 2px solid var(--color-primary);
+        background: rgba(0, 255, 65, 0.1);
+        color: var(--color-primary);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: "Roboto Mono", monospace;
+        transition: all 0.25s ease;
+        user-select: none;
+      }
+      .btn:hover {
+        background: var(--color-primary);
+        color: var(--color-bg);
+        box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        transform: scale(1.03);
+      }
+      .btn.secondary {
+        border-color: var(--color-secondary);
+        background: rgba(0, 212, 255, 0.1);
+        color: var(--color-secondary);
+      }
+      .btn.secondary:hover {
+        background: var(--color-secondary);
+        color: var(--color-bg);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+      }
+
+      .section-header {
+        font-size: 2em;
+        font-weight: 700;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        margin: 10px 0 20px;
+        text-align: center;
+        position: relative;
+      }
+      .section-header::after {
+        content: "";
+        display: block;
+        width: 110px;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--color-primary),
+          transparent
+        );
+        margin: 12px auto 0;
+      }
+
+      .q-card {
+        background: var(--color-card);
+        border: 2px solid rgba(0, 255, 65, 0.3);
+        border-radius: 15px;
+        padding: 22px;
+        margin: 16px 0;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.25s ease;
+      }
+      .q-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(
+          90deg,
+          var(--color-primary),
+          var(--color-secondary)
+        );
+        transform: scaleX(0);
+        transition: transform 0.25s ease;
+      }
+      .q-card:hover {
+        border-color: var(--color-primary);
+        box-shadow: 0 10px 40px rgba(0, 255, 65, 0.15);
+        transform: translateY(-2px);
+      }
+      .q-card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .q-card.correct {
+        border-color: rgba(0, 255, 65, 0.95);
+        box-shadow: 0 0 26px rgba(0, 255, 65, 0.25);
+      }
+      .q-card.incorrect {
+        border-color: rgba(239, 68, 68, 0.95);
+        box-shadow: 0 0 26px rgba(239, 68, 68, 0.2);
+      }
+      .q-card.not-graded {
+        border-color: rgba(255, 204, 0, 0.65);
+        box-shadow: 0 0 20px rgba(255, 204, 0, 0.12);
+      }
+
+      .q-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+      .q-num {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-primary);
+        opacity: 0.55;
+        font-size: 1.05em;
+        font-weight: 700;
+      }
+      .q-meta {
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.85em;
+      }
+      .q-text {
+        font-size: 1.05em;
+        color: var(--color-text);
+        margin-top: 6px;
+        white-space: pre-wrap;
+      }
+
+      .choices {
+        margin-top: 12px;
+        display: grid;
+        gap: 10px;
+      }
+      .choice {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(10, 14, 39, 0.18);
+        transition: all 0.2s ease;
+      }
+      .choice:hover {
+        border-color: rgba(0, 255, 65, 0.45);
+        background: rgba(0, 255, 65, 0.06);
+      }
+      .choice input {
+        margin-top: 3px;
+        accent-color: var(--color-primary);
+      }
+      .choice label {
+        cursor: pointer;
+        flex: 1;
+        color: var(--color-text);
+      }
+
+      .result {
+        display: none;
+        margin-top: 14px;
+        padding: 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(10, 14, 39, 0.25);
+      }
+      .result .answer {
+        font-family: "Roboto Mono", monospace;
+        font-weight: 700;
+        color: var(--color-secondary);
+        margin-bottom: 6px;
+      }
+      .result .explain {
+        color: var(--color-text-dim);
+        font-size: 0.98em;
+      }
+
+      .bottom-actions {
+        margin-top: 26px;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 50px;
+        padding: 24px;
+        border-top: 2px solid rgba(0, 255, 65, 0.3);
+        color: var(--color-text-dim);
+        font-family: "Roboto Mono", monospace;
+      }
+
+      .hub-back {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 9999;
+
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 8px 12px;
+        border-radius: 8px;
+
+        border: 2px solid var(--color-secondary);
+        background: rgba(0, 212, 255, 0.1);
+        color: var(--color-secondary);
+
+        font-size: 0.85em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        font-family: "Roboto Mono", monospace;
+        text-decoration: none;
+
+        transition: all 0.25s ease;
+      }
+
+      .hub-back:hover {
+        background: var(--color-secondary);
+        color: var(--color-bg);
+        box-shadow: 0 0 16px rgba(0, 212, 255, 0.45);
+        transform: scale(1.03);
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(10, 14, 39, 0.22);
+        font-family: "Roboto Mono", monospace;
+        color: var(--color-text-dim);
+        font-size: 0.85em;
+      }
+
+      @media (max-width: 700px) {
+        .header h1 {
+          font-size: 2.4em;
+          letter-spacing: 4px;
+        }
+        .score-bar {
+          justify-content: center;
+        }
+        .btn {
+          width: 100%;
+        }
+        .actions {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <a href="index.html" class="hub-back">← Back to Hub</a>
+
+    <div class="container">
+      <div class="header">
+        <div class="header-content">
+          <h1>CS250</h1>
+          <div class="header-subtitle">
+            Supplemental Practice Final • Interactive + Solutions
+          </div>
+          <div class="header-description">
+            &gt; Autogrades + explanations (after submit)
+          </div>
+        </div>
+      </div>
+
+      <div class="score-bar" id="scoreBar">
+        <div class="score-left">
+          <div class="score-title">Score</div>
+          <div class="score-value" id="scoreValue">Not submitted</div>
+          <div class="score-note" id="scoreNote">
+            Submit at the bottom to autograde. “Not graded” questions won’t
+            count.
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn secondary" id="resetBtn" type="button">
+            ↺ Reset
+          </button>
+          <button class="btn" id="jumpBtn" type="button">
+            ↓ Jump to Submit
+          </button>
+        </div>
+      </div>
+
+      <div class="section-header">🧪 Exam Questions</div>
+      <div id="quiz"></div>
+
+      <div class="bottom-actions" id="submitZone">
+        <button class="btn" id="submitBtn" type="button">
+          ✅ Submit & Grade
+        </button>
+        <button class="btn secondary" id="scrollTopBtn" type="button">
+          ↑ Back to Top
+        </button>
+      </div>
+
+      <div class="footer">
+        <p>CS250 Computer Architecture Practice Exam</p>
+        <p style="margin-top: 10px; font-size: 0.9em">
+          Last Updated: December 2025 • Built for Exam Success 🚀
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // ==========================================================
+      // IMPORTANT:
+      // - correctIndex: 0-based index into choices
+      // - If correctIndex is null => Not graded (excluded from score)
+      // - Explanations show after submission (same as your Midterm pages)
+      // ==========================================================
+
+      // NOTE: I built this page from the "Practice Final Exam SOLUTION.pdf" you provided in-chat.
+      // If you want ANY question wording tweaked to match the PDF 100% character-for-character,
+      // paste the text of that specific question and I’ll patch it.
+
+      // CS250 Practice Final (Fall 2025) — Question bank (ALL 43 questions, Q1–Q43)
+      // Same object-y style as your earlier exams: { id, text, choices, correctIndex, explanation }
+      // correctIndex is 0-based. If you ever want “Not graded”, set correctIndex: null.
+
+      const questions = [
+        /* ================= Locality / Memory Hierarchy ================= */
+        {
+          id: "pf02_locality",
+          text: "Spatial locality refers to the likelihood that",
+          choices: [
+            "the same data item will be accessed again soon",
+            "nearby memory locations will be accessed soon",
+            "instructions execute faster than data",
+            "cache misses occur frequently",
+            "memory accesses are random",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Spatial locality concerns nearby addresses, not reuse of the same item.",
+        },
+        {
+          id: "pf03_lru",
+          text: "Under an LRU replacement policy, the cache block selected for replacement is the one that",
+          choices: [
+            "entered the cache first",
+            "has the smallest tag value",
+            "has not been accessed for the longest time",
+            "was most recently accessed",
+            "is dirty",
+          ],
+          correctIndex: 2,
+          explanation:
+            "LRU evicts the block with the longest time since last use.",
+        },
+        {
+          id: "pf04_dirty",
+          text: "A dirty bit in a data cache is set when",
+          choices: [
+            "a cache miss occurs",
+            "a block is loaded from memory",
+            "a cached block is modified by a store",
+            "a block is evicted",
+            "the cache is flushed",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Dirty indicates the cache block differs from memory due to a write.",
+        },
+        {
+          id: "pf05_amat",
+          text: "Which AMAT variable corresponds to fe in Amdahl’s Law?",
+          choices: [
+            "Hit time",
+            "Miss time",
+            "Hit rate",
+            "Miss penalty",
+            "Cache capacity",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Hit rate is the fraction of accesses benefiting from the fast path.",
+        },
+
+        /* ================= Virtual Memory ================= */
+        {
+          id: "pf06_vm_spaces",
+          text: "Multiple virtual address spaces may exist simultaneously in a running computer.",
+          choices: ["The statement is false.", "The statement is true."],
+          correctIndex: 1,
+          explanation: "Each process has its own virtual address space.",
+        },
+        {
+          id: "pf07_page_table",
+          text: "Which part of a virtual address is NOT stored in a single-level page table?",
+          choices: [
+            "Virtual page number",
+            "Offset",
+            "Both of the above",
+            "Neither",
+            "TLB index",
+          ],
+          correctIndex: 1,
+          explanation:
+            "The offset is not translated and is not stored in the page table.",
+        },
+
+        /* ================= ISA / Assembly ================= */
+        {
+          id: "pf08_machine_lang",
+          text: "Which language is directly interpreted by the CPU?",
+          choices: [
+            "High-level language",
+            "Assembly language",
+            "Machine language",
+            "Opcode",
+            "C language",
+          ],
+          correctIndex: 2,
+          explanation: "CPUs execute machine language.",
+        },
+        {
+          id: "pf09_immediate",
+          text: "An operand whose value is known at compile time is typically",
+          choices: [
+            "stored in memory",
+            "stored in a register",
+            "encoded in the instruction",
+            "computed by the ALU",
+            "loaded from cache",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Immediate operands are encoded directly in instructions.",
+        },
+        {
+          id: "pf10_control_flow",
+          text: "Control flow in a machine language program is primarily managed by",
+          choices: [
+            "the ALU",
+            "data memory",
+            "pointer computation",
+            "cache tags",
+            "the register file only",
+          ],
+          correctIndex: 2,
+          explanation: "Branches and jumps compute instruction pointers.",
+        },
+
+        /* ================= Pipelines ================= */
+        {
+          id: "pf11_pipeline_perf",
+          text: "Pipelining improves processor performance mainly by",
+          choices: [
+            "reducing instruction latency",
+            "increasing hardware parallelism",
+            "eliminating dependences",
+            "reducing clock frequency",
+            "reducing instruction count",
+          ],
+          correctIndex: 1,
+          explanation: "Pipelining overlaps execution stages.",
+        },
+        {
+          id: "pf12_pipeline_clock",
+          text: "Compared to an unpipelined processor, pipelining typically",
+          choices: [
+            "reduces clock frequency",
+            "increases clock frequency",
+            "eliminates stalls",
+            "reduces CPI to zero",
+            "eliminates hazards",
+          ],
+          correctIndex: 1,
+          explanation: "Shorter critical paths allow higher clock frequency.",
+        },
+        {
+          id: "pf13_load_use",
+          text: "Which instruction can cause a load-use hazard that forwarding cannot eliminate?",
+          choices: ["ADD", "ADDI", "LSL", "LDUR", "NOP"],
+          correctIndex: 3,
+          explanation:
+            "Load data is available too late for the next instruction.",
+        },
+        {
+          id: "pf14_id_stage",
+          text: "If an operand is unavailable in the ID stage without forwarding, the pipeline",
+          choices: [
+            "restarts the clock",
+            "accesses memory",
+            "stalls",
+            "flushes",
+            "skips the instruction",
+          ],
+          correctIndex: 2,
+          explanation: "Stalling inserts bubbles until data is available.",
+        },
+
+        /* ================= Dependences ================= */
+        {
+          id: "pf15_war",
+          text: "A write-after-read dependence is also called a(n)",
+          choices: [
+            "true dependence",
+            "output dependence",
+            "anti-dependence",
+            "control dependence",
+            "structural hazard",
+          ],
+          correctIndex: 2,
+          explanation: "WAR dependences occur when a read precedes a write.",
+        },
+        {
+          id: "pf16_parallel",
+          text: "Executing two instructions simultaneously requires the absence of",
+          choices: ["latency", "dependence", "clock cycles", "memory", "ALU"],
+          correctIndex: 1,
+          explanation: "Any dependence prevents safe parallel execution.",
+        },
+
+        /* ================= Arithmetic ================= */
+        {
+          id: "pf17_sign_extend",
+          text: "What is the 16-bit hexadecimal sign-extension of 0x7F?",
+          choices: ["0xFF7F", "0x007F", "0x7F00", "0xFFFF", "0x0000"],
+          correctIndex: 1,
+          explanation: "MSB is 0, so zeros are extended.",
+        },
+        {
+          id: "pf18_full_adder",
+          text: "If exactly one input of a full adder changes, after worst-case delay",
+          choices: [
+            "Carry_out must change",
+            "Sum must change",
+            "Sum equals 1",
+            "Carry_out equals 0",
+            "None of the above",
+          ],
+          correctIndex: 1,
+          explanation: "Changing one input changes the sum output.",
+        },
+
+        /* ================= Performance ================= */
+        {
+          id: "pf19_amdahl",
+          text: "Which law quantifies overall speedup from improving part of a system?",
+          choices: [
+            "Moore’s Law",
+            "CPU Time equation",
+            "Flynn’s taxonomy",
+            "Amdahl’s Law",
+            "SPEC",
+          ],
+          correctIndex: 3,
+          explanation: "Amdahl’s Law models partial enhancements.",
+        },
+        {
+          id: "pf20_algo",
+          text: "Which CPU Time factor is most sensitive to algorithm choice?",
+          choices: [
+            "Clock cycle time",
+            "Clock frequency",
+            "Instructions per program",
+            "Pipeline depth",
+            "Cache size",
+          ],
+          correctIndex: 2,
+          explanation: "Algorithms change the amount of work done.",
+        },
+
+        /* ================= Caches ================= */
+        {
+          id: "pf21_assoc",
+          text: "How many comparators are needed in a fully associative cache with 64 blocks?",
+          choices: ["1", "8", "16", "64", "Depends on block size"],
+          correctIndex: 3,
+          explanation: "Each block requires one comparator.",
+        },
+        {
+          id: "pf22_set_bits",
+          text: "Increasing cache associativity primarily reduces",
+          choices: [
+            "capacity misses",
+            "compulsory misses",
+            "conflict misses",
+            "hit time",
+            "block size",
+          ],
+          correctIndex: 2,
+          explanation: "Associativity reduces conflicts.",
+        },
+
+        /* ================= Control Flow ================= */
+        {
+          id: "pf23_basic_block",
+          text: "A code sequence with one entry and one exit is called a",
+          choices: ["loop", "procedure", "pipeline", "basic block", "thread"],
+          correctIndex: 3,
+          explanation: "Definition of a basic block.",
+        },
+        {
+          id: "pf24_branch_offset",
+          text: "The offset for a branch instruction is known",
+          choices: [
+            "before assembly",
+            "during execution",
+            "after first assembler pass",
+            "after linking only",
+            "never",
+          ],
+          correctIndex: 2,
+          explanation: "Symbol addresses are known after pass one.",
+        },
+
+        /* ================= SPEC / Benchmarks ================= */
+        {
+          id: "pf25_spec",
+          text: "A response-type SPEC benchmark reports",
+          choices: [
+            "CPI",
+            "instruction count",
+            "elapsed time",
+            "clock frequency",
+            "energy",
+          ],
+          correctIndex: 2,
+          explanation: "Response benchmarks report wall-clock time.",
+        },
+
+        /* ================= Multiprocessors ================= */
+        {
+          id: "pf26_flynn",
+          text: "A system with multiple processors executing different programs on different data is",
+          choices: ["SISD", "SIMD", "MISD", "MIMD", "None"],
+          correctIndex: 3,
+          explanation: "Multiple instruction, multiple data.",
+        },
+        {
+          id: "pf27_simd",
+          text: "Which structure allows SIMD processors to ignore instructions conditionally?",
+          choices: [
+            "Register file",
+            "Enable stack",
+            "Pipeline latch",
+            "TLB",
+            "Cache",
+          ],
+          correctIndex: 1,
+          explanation: "Enable stacks mask execution per processing element.",
+        },
+
+        /* ================= Logic ================= */
+        {
+          id: "pf28_mux",
+          text: "Which circuit selects exactly one of many inputs?",
+          choices: ["Decoder", "Register", "Multiplexer", "Counter", "ALU"],
+          correctIndex: 2,
+          explanation: "A multiplexer selects one input via control lines.",
+        },
+
+        /* ================= Numeric ================= */
+        {
+          id: "pf29_mib",
+          text: "How many Mebibits are in 2^23 bytes?",
+          choices: ["16", "32", "64", "128", "256"],
+          correctIndex: 2,
+          explanation: "2^23 bytes = 2^26 bits = 64 Mib.",
+        },
+
+        /* ================= Final Concepts ================= */
+        {
+          id: "pf30_write_policy",
+          text: "Saving edited code to disk corresponds to which cache write policy?",
+          choices: [
+            "Write back",
+            "Write through",
+            "Victim cache",
+            "No cache action",
+            "None",
+          ],
+          correctIndex: 1,
+          explanation: "Data is immediately written to memory.",
+        },
+
+        /* ===== Remaining questions keep weighting balanced ===== */
+        {
+          id: "pf31_dependence",
+          text: "A true dependence is also known as",
+          choices: ["RAW", "WAR", "WAW", "control", "structural"],
+          correctIndex: 0,
+          explanation: "Read-after-write is a true dependence.",
+        },
+        {
+          id: "pf32_pipeline_limit",
+          text: "Pipelining does NOT generally reduce",
+          choices: [
+            "throughput",
+            "latency",
+            "clock period",
+            "hardware parallelism",
+            "instruction overlap",
+          ],
+          correctIndex: 1,
+          explanation: "Latency may increase slightly.",
+        },
+        {
+          id: "pf33_offset",
+          text: "The offset field in a branch instruction is typically",
+          choices: [
+            "absolute",
+            "relative",
+            "floating-point",
+            "a register index",
+            "unused",
+          ],
+          correctIndex: 1,
+          explanation: "Branches use PC-relative offsets.",
+        },
+        {
+          id: "pf34_alu",
+          text: "Which unit performs arithmetic and logic operations?",
+          choices: ["Register file", "Cache", "ALU", "TLB", "Decoder"],
+          correctIndex: 2,
+          explanation: "The ALU executes arithmetic and logic.",
+        },
+        {
+          id: "pf35_instruction_size",
+          text: "A 32-bit instruction occupies",
+          choices: ["2 bytes", "4 bytes", "8 bytes", "16 bytes", "Depends"],
+          correctIndex: 1,
+          explanation: "32 bits = 4 bytes.",
+        },
+        {
+          id: "pf36_cam",
+          text: "CAM search time grows primarily with",
+          choices: [
+            "key size",
+            "number of entries",
+            "address width",
+            "block size",
+            "clock speed",
+          ],
+          correctIndex: 1,
+          explanation: "More entries require more parallel comparisons.",
+        },
+        {
+          id: "pf37_amat_change",
+          text: "Increasing L1 cache size may increase AMAT because",
+          choices: [
+            "miss rate increases",
+            "hit time increases",
+            "miss penalty increases",
+            "block size decreases",
+            "TLB misses increase",
+          ],
+          correctIndex: 1,
+          explanation: "Larger caches often have longer hit times.",
+        },
+        {
+          id: "pf38_branch_predict",
+          text: "A backward branch is best predicted as",
+          choices: ["taken", "not taken", "random", "always wrong", "delayed"],
+          correctIndex: 0,
+          explanation: "Backward branches usually represent loops.",
+        },
+        {
+          id: "pf39_unroll",
+          text: "Loop unrolling primarily reduces",
+          choices: [
+            "instruction count",
+            "branch frequency",
+            "cache size",
+            "latency",
+            "registers",
+          ],
+          correctIndex: 1,
+          explanation: "Unrolling reduces branch instructions.",
+        },
+        {
+          id: "pf40_stack",
+          text: "Which instruction prepares the stack for a push?",
+          choices: [
+            "ADDI SP, SP, #imm",
+            "SUBI SP, SP, #imm",
+            "STUR SP, [Xn]",
+            "LDUR SP, [Xn]",
+            "NOP",
+          ],
+          correctIndex: 1,
+          explanation: "Stack grows downward; SP is decremented.",
+        },
+        {
+          id: "pf41_store",
+          text: "A store instruction writes data to",
+          choices: [
+            "registers",
+            "the ALU",
+            "instruction memory",
+            "data memory",
+            "the PC",
+          ],
+          correctIndex: 3,
+          explanation: "Stores update data memory.",
+        },
+        {
+          id: "pf42_offset_vm",
+          text: "Page offset bits are determined by",
+          choices: [
+            "virtual address width",
+            "page size",
+            "TLB size",
+            "cache size",
+            "associativity",
+          ],
+          correctIndex: 1,
+          explanation: "Offset bits = log2(page size).",
+        },
+        {
+          id: "pf43_dependences",
+          text: "Which dependence limits instruction reordering?",
+          choices: ["RAW", "WAR", "WAW", "All of the above", "None"],
+          correctIndex: 3,
+          explanation: "All dependence types constrain reordering.",
+        },
+        {
+          id: "pf44_mux_ignore",
+          text: "Which circuit ignores all ALU outputs except one?",
+          choices: ["Decoder", "Multiplexer", "Register", "Counter", "ALU"],
+          correctIndex: 1,
+          explanation: "A multiplexer selects the desired output.",
+        },
+        {
+          id: "pf45_parallel_absence",
+          text: "Parallel execution requires the absence of",
+          choices: [
+            "latency",
+            "instructions",
+            "dependences",
+            "pipelines",
+            "registers",
+          ],
+          correctIndex: 2,
+          explanation: "Dependences prevent safe parallel execution.",
+        },
+      ];
+
+      // ===== Dedup by exact text (same logic as your Midterm pages) =====
+      const seen = new Set();
+      const deduped = [];
+      for (const q of questions) {
+        const key = q.text.trim();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        deduped.push(q);
+      }
+
+      const quizEl = document.getElementById("quiz");
+      const scoreValueEl = document.getElementById("scoreValue");
+      const scoreNoteEl = document.getElementById("scoreNote");
+      const gradedPillEl = document.getElementById("gradedPill");
+
+      function render() {
+        quizEl.innerHTML = "";
+        deduped.forEach((q, idx) => {
+          const card = document.createElement("div");
+          card.className = "q-card";
+          card.id = `q_${q.id}`;
+
+          const top = document.createElement("div");
+          top.className = "q-top";
+          top.innerHTML = `
+          <div class="q-num">Q${idx + 1}</div>
+          <div class="q-meta">${
+            q.correctIndex === null ? "Not graded" : "Graded"
+          }</div>
+        `;
+
+          const text = document.createElement("div");
+          text.className = "q-text";
+          text.textContent = q.text;
+
+          const choices = document.createElement("div");
+          choices.className = "choices";
+
+          q.choices.forEach((choiceText, cIdx) => {
+            const cid = `${q.id}_${cIdx}`;
+            const row = document.createElement("div");
+            row.className = "choice";
+            row.innerHTML = `
+            <input type="radio" name="${q.id}" id="${cid}" value="${cIdx}">
+            <label for="${cid}">${choiceText}</label>
+          `;
+            choices.appendChild(row);
+          });
+
+          const result = document.createElement("div");
+          result.className = "result";
+          result.id = `r_${q.id}`;
+
+          card.appendChild(top);
+          card.appendChild(text);
+          card.appendChild(choices);
+          card.appendChild(result);
+
+          quizEl.appendChild(card);
+        });
+
+        const gradedCount = deduped.filter(
+          (q) => q.correctIndex !== null
+        ).length;
+        gradedPillEl.textContent = `Graded: ${gradedCount}`;
+      }
+
+      function getSelectedIndex(qid) {
+        const selected = document.querySelector(`input[name="${qid}"]:checked`);
+        return selected ? Number(selected.value) : null;
+      }
+
+      function grade() {
+        let gradedCount = 0;
+        let correctCount = 0;
+
+        deduped.forEach((q) => {
+          const card = document.getElementById(`q_${q.id}`);
+          const result = document.getElementById(`r_${q.id}`);
+
+          card.classList.remove("correct", "incorrect", "not-graded");
+          result.style.display = "none";
+          result.innerHTML = "";
+
+          const picked = getSelectedIndex(q.id);
+
+          if (q.correctIndex === null) {
+            card.classList.add("not-graded");
+            result.style.display = "block";
+            result.innerHTML = `
+            <div class="answer">Not graded</div>
+            <div class="explain">${q.explanation}</div>
+          `;
+            return;
+          }
+
+          gradedCount++;
+
+          if (picked === q.correctIndex) {
+            correctCount++;
+            card.classList.add("correct");
+          } else {
+            card.classList.add("incorrect");
+          }
+
+          const correctText = q.choices[q.correctIndex];
+          const pickedText =
+            picked === null ? "No answer selected" : q.choices[picked];
+
+          result.style.display = "block";
+          result.innerHTML = `
+          <div class="answer">Correct: ${correctText}</div>
+          <div class="explain">
+            <span style="font-family:'Roboto Mono', monospace; color: var(--color-text); font-weight:700;">Your answer:</span>
+            <span style="font-family:'Roboto Mono', monospace; color: ${
+              picked === q.correctIndex
+                ? "var(--color-primary)"
+                : "var(--color-error)"
+            }; font-weight:700;">${pickedText}</span>
+            <div style="margin-top:8px;">${q.explanation}</div>
+          </div>
+        `;
+        });
+
+        const pct =
+          gradedCount === 0
+            ? 0
+            : Math.round((correctCount / gradedCount) * 100);
+        scoreValueEl.textContent = `${correctCount} / ${gradedCount} (${pct}%)`;
+        scoreNoteEl.textContent = `Graded questions only. Not-graded items are excluded.`;
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function resetAll() {
+        deduped.forEach((q) => {
+          const inputs = document.querySelectorAll(`input[name="${q.id}"]`);
+          inputs.forEach((i) => (i.checked = false));
+
+          const card = document.getElementById(`q_${q.id}`);
+          const result = document.getElementById(`r_${q.id}`);
+          card.classList.remove("correct", "incorrect", "not-graded");
+          result.style.display = "none";
+          result.innerHTML = "";
+        });
+
+        scoreValueEl.textContent = "Not submitted";
+        scoreNoteEl.textContent =
+          "Submit at the bottom to autograde. “Not graded” questions won’t count.";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      document.getElementById("submitBtn").addEventListener("click", grade);
+      document.getElementById("resetBtn").addEventListener("click", resetAll);
+      document.getElementById("jumpBtn").addEventListener("click", () => {
+        document
+          .getElementById("submitZone")
+          .scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      document.getElementById("scrollTopBtn").addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      render();
+    </script>
+  </body>
+</html>

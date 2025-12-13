@@ -1,0 +1,1068 @@
+<!-- =========================
+     ch7_practice.html
+     ========================= -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chapter 7 - Practice Problems</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Rajdhani:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* ===== Pink Theme (unique vs your other schemes) ===== */
+      :root {
+        --pink-1: #ff4da6; /* primary */
+        --pink-2: #ff77c8; /* secondary */
+        --pink-3: #ffb3de; /* soft highlight */
+        --bg-1: #1a0f1f; /* deep plum */
+        --bg-2: #0f0a12; /* near-black */
+        --panel: rgba(15, 23, 42, 0.95);
+        --card: rgba(30, 41, 59, 0.8);
+        --text: #e2e8f0;
+        --text-dim: #b6a6bf;
+
+        --ok: #10b981;
+        --warn: #f59e0b;
+        --hard: #ef4444;
+        --code: #ffcc00;
+      }
+
+      body {
+        font-family: "IBM Plex Mono", monospace;
+        background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 100%);
+        color: var(--text);
+        padding: 30px;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: var(--panel);
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      }
+
+      h1 {
+        text-align: center;
+        font-family: "Rajdhani", sans-serif;
+        font-size: 3em;
+        color: var(--pink-1);
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        text-shadow: 0 0 20px rgba(255, 77, 166, 0.55);
+      }
+
+      .subtitle {
+        text-align: center;
+        color: var(--pink-2);
+        margin-bottom: 40px;
+        font-size: 1.3em;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .section-header {
+        background: linear-gradient(90deg, var(--pink-1), var(--pink-2));
+        color: #0a0e27;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 35px 0 20px 0;
+        font-size: 1.4em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-align: center;
+        font-family: "Rajdhani", sans-serif;
+        box-shadow: 0 10px 25px rgba(255, 77, 166, 0.12);
+      }
+
+      .problem {
+        background: var(--card);
+        border-left: 5px solid var(--pink-1);
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 25px;
+        position: relative;
+      }
+
+      .problem-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .problem-number {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: var(--pink-1);
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .difficulty {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .easy {
+        background: var(--ok);
+        color: white;
+      }
+      .medium {
+        background: var(--warn);
+        color: white;
+      }
+      .hard {
+        background: var(--hard);
+        color: white;
+      }
+
+      .problem-text {
+        font-size: 1.05em;
+        margin-bottom: 15px;
+        color: var(--text);
+      }
+
+      .given {
+        background: rgba(255, 77, 166, 0.1);
+        border: 1px solid var(--pink-1);
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+        font-size: 0.95em;
+      }
+
+      .given-title {
+        color: var(--pink-1);
+        font-weight: 700;
+        margin-bottom: 8px;
+        font-family: "Rajdhani", sans-serif;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .code-given {
+        background: rgba(0, 0, 0, 0.55);
+        border: 1px solid var(--pink-2);
+        border-radius: 6px;
+        padding: 12px;
+        margin: 10px 0;
+        font-family: "IBM Plex Mono", monospace;
+        color: var(--pink-2);
+        white-space: pre;
+        overflow-x: auto;
+        font-size: 0.92em;
+      }
+
+      .hint {
+        background: rgba(255, 179, 222, 0.1);
+        border-left: 3px solid var(--pink-3);
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        font-size: 0.9em;
+        color: #e8d7f0;
+      }
+
+      .toggle-btn {
+        background: linear-gradient(135deg, var(--pink-1), var(--pink-2));
+        color: #0a0e27;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 800;
+        font-size: 0.95em;
+        margin-top: 10px;
+        transition: all 0.25s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .toggle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 77, 166, 0.35);
+      }
+
+      .solution {
+        background: rgba(16, 185, 129, 0.1);
+        border: 2px solid var(--ok);
+        border-radius: 8px;
+        padding: 18px;
+        margin-top: 15px;
+        display: none;
+      }
+
+      .solution.show {
+        display: block;
+      }
+
+      .solution-header {
+        color: var(--ok);
+        font-weight: 900;
+        font-size: 1.05em;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        font-family: "Rajdhani", sans-serif;
+        letter-spacing: 1px;
+      }
+
+      .solution-step {
+        margin-bottom: 10px;
+        padding-left: 20px;
+        position: relative;
+        font-size: 0.95em;
+      }
+
+      .solution-step::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: var(--ok);
+        font-weight: 900;
+      }
+
+      .code-solution {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid var(--ok);
+        border-radius: 6px;
+        padding: 12px;
+        margin: 10px 0;
+        font-family: "IBM Plex Mono", monospace;
+        color: var(--ok);
+        white-space: pre;
+        overflow-x: auto;
+        font-size: 0.92em;
+      }
+
+      .answer-box {
+        background: rgba(255, 204, 0, 0.16);
+        border: 2px dashed var(--code);
+        padding: 14px;
+        border-radius: 6px;
+        margin-top: 10px;
+        font-weight: 800;
+        color: var(--code);
+        text-align: center;
+        font-size: 1.05em;
+      }
+
+      code {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "IBM Plex Mono", monospace;
+        color: var(--code);
+      }
+
+      @media print {
+        .toggle-btn {
+          display: none;
+        }
+        .solution {
+          display: block !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>⚡ PRACTICE PROBLEMS ⚡</h1>
+      <div class="subtitle">
+        Chapter 7: Digital Logic, ALU, Sequential Systems, Memory
+      </div>
+
+      <div class="section-header">
+        🧩 Section 1: Fundamentals & Truth Tables
+      </div>
+
+      <!-- P1 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 1</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          A combinational logic block has 7 inputs. How many rows are in its
+          truth table?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(1)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-1">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Truth table rows = <code>2^n</code> for <code>n</code> inputs.
+          </div>
+          <div class="solution-step"><code>2^7 = 128</code>.</div>
+          <div class="answer-box">Answer: 128 rows</div>
+        </div>
+      </div>
+
+      <!-- P2 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 2</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          Define: asserted signal vs deasserted signal.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(2)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-2">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Asserted</strong> = logically true → <code>1</code> (or
+            “active” if active-low).
+          </div>
+          <div class="solution-step">
+            <strong>Deasserted</strong> = logically false → <code>0</code> (or
+            “inactive” if active-low).
+          </div>
+          <div class="answer-box">
+            Answer: asserted=active, deasserted=inactive
+          </div>
+        </div>
+      </div>
+
+      <!-- P3 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 3</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          What’s the difference between combinational and sequential logic (one
+          sentence each)?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(3)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-3">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Combinational</strong>: outputs depend only on current
+            inputs.
+          </div>
+          <div class="solution-step">
+            <strong>Sequential</strong>: outputs depend on current inputs and
+            stored state (history).
+          </div>
+          <div class="answer-box">
+            Answer: comb = input-only; seq = input + state
+          </div>
+        </div>
+      </div>
+
+      <!-- P4 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 4</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Active-low signals: if a control line is named
+          <code>Reset̅</code> (Reset-bar), when is it asserted?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(4)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-4">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            A bar (or “_n”) typically means <strong>active-low</strong>.
+          </div>
+          <div class="solution-step">
+            So it is asserted when the wire is <code>0</code>.
+          </div>
+          <div class="answer-box">Answer: asserted when Reset̅ = 0</div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        🔀 Section 2: Decoders, MUXes, Tri-State Buses
+      </div>
+
+      <!-- P5 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 5</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          A decoder has a 5-bit input. How many outputs does it have?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(5)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-5">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Decoder: <code>n</code>-bit input → <code>2^n</code> outputs.
+          </div>
+          <div class="solution-step"><code>2^5 = 32</code>.</div>
+          <div class="answer-box">Answer: 32 outputs</div>
+        </div>
+      </div>
+
+      <!-- P6 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 6</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A multiplexor has 32 data inputs. How many selector bits are required?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(6)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-6">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Selector bits = <code>log2(N)</code> when <code>N</code> is a power
+            of 2.
+          </div>
+          <div class="solution-step"><code>log2(32) = 5</code>.</div>
+          <div class="answer-box">Answer: 5 selector bits</div>
+        </div>
+      </div>
+
+      <!-- P7 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 7</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Why are tri-state buffers useful on a shared bus?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(7)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-7">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            A tri-state output can be <code>0</code>, <code>1</code>, or
+            <strong>high impedance</strong> (disconnected).
+          </div>
+          <div class="solution-step">
+            High-Z lets multiple devices share one bus safely (only one device
+            enables its output at a time).
+          </div>
+          <div class="answer-box">Answer: High-Z prevents bus contention</div>
+        </div>
+      </div>
+
+      <!-- P8 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 8</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Bus contention: what happens if two devices drive the same bus at once
+          (one drives <code>1</code>, the other drives <code>0</code>)?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(8)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-8">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            You get a <strong>short-like fight</strong> between drivers →
+            undefined logic level and potentially large current.
+          </div>
+          <div class="solution-step">
+            Result: incorrect value, heat, and possible hardware damage.
+          </div>
+          <div class="answer-box">
+            Answer: undefined value + dangerous current
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        ➕ Section 3: Adders, Subtraction, Flags, ALU
+      </div>
+
+      <!-- P9 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 9</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          What is the difference between a half adder and a full adder?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(9)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-9">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Half adder: adds <code>a</code> and <code>b</code> (2 inputs) → Sum
+            + Carry.
+          </div>
+          <div class="solution-step">
+            Full adder: adds <code>a</code>, <code>b</code>, and
+            <code>CarryIn</code> → Sum + CarryOut.
+          </div>
+          <div class="answer-box">Answer: full adder includes CarryIn</div>
+        </div>
+      </div>
+
+      <!-- P10 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 10</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Fill in the identity for subtraction using two’s complement:
+          <div class="code-given">a - b = ____________________</div>
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(10)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-10">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Two’s complement negation: <code>-b = (~b) + 1</code>.
+          </div>
+          <div class="solution-step">
+            So: <code>a - b = a + (~b) + 1</code>.
+          </div>
+          <div class="answer-box">Answer: a + (~b) + 1</div>
+        </div>
+      </div>
+
+      <!-- P11 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 11</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Using carry-lookahead definitions <code>gᵢ = aᵢ·bᵢ</code> and
+          <code>pᵢ = aᵢ + bᵢ</code>, write <code>cᵢ₊₁</code> in terms of
+          <code>gᵢ</code>, <code>pᵢ</code>, and <code>cᵢ</code>. Then: in one
+          sentence, why is CLA faster than ripple-carry?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(11)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-11">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Carry recurrence: <code>cᵢ₊₁ = gᵢ + pᵢ·cᵢ</code>.
+          </div>
+          <div class="solution-step">
+            CLA is faster because it computes carries with parallel logic levels
+            instead of waiting for carries to ripple bit-by-bit.
+          </div>
+          <div class="answer-box">
+            Answer: cᵢ₊₁ = gᵢ + pᵢ·cᵢ; parallel carry compute
+          </div>
+        </div>
+      </div>
+
+      <!-- P12 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 12</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          An ALU computes <code>a - b</code>. What flag can be used to test
+          equality, and how is it computed from the result bits?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(12)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-12">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Use the <strong>Zero</strong> flag: equality when result == 0.
+          </div>
+          <div class="solution-step">
+            Compute by OR-ing all result bits, then invert:
+          </div>
+          <div class="code-solution">Zero = ~(R₆₃ + R₆₂ + ... + R₀)</div>
+          <div class="answer-box">
+            Answer: Zero flag; invert OR of all result bits
+          </div>
+        </div>
+      </div>
+
+      <!-- P13 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 13</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Signed overflow: state the classic sign-based rule for addition.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(13)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-13">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Overflow if adding two positives gives a negative, OR adding two
+            negatives gives a positive.
+          </div>
+          <div class="answer-box">Answer: +/+→- or -/-→+</div>
+        </div>
+      </div>
+
+      <!-- P14 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 14</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          In a typical ALU, why is “subtract” often implemented by inverting
+          <code>b</code> and setting <code>CarryIn=1</code>?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(14)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-14">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Because <code>a - b = a + (~b) + 1</code>, so the same adder
+            hardware can do both add and subtract.
+          </div>
+          <div class="answer-box">
+            Answer: reuse the adder via two’s complement
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        ⏱️ Section 4: Clocking, Latches, Flip-Flops, Timing
+      </div>
+
+      <!-- P15 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 15</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          What is the difference between a latch and a flip-flop?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(15)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-15">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Latch</strong>: level-sensitive (transparent when enable is
+            active).
+          </div>
+          <div class="solution-step">
+            <strong>Flip-flop</strong>: edge-triggered (updates only on a clock
+            edge).
+          </div>
+          <div class="answer-box">Answer: latch = level; FF = edge</div>
+        </div>
+      </div>
+
+      <!-- P16 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 16</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Define setup time and hold time, and explain what can go wrong if
+          they’re violated.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(16)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-16">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Setup</strong>: input stable for <code>t_setup</code> before
+            the active clock edge.
+          </div>
+          <div class="solution-step">
+            <strong>Hold</strong>: input stable for <code>t_hold</code> after
+            the active clock edge.
+          </div>
+          <div class="solution-step">
+            Violations can cause wrong capture or metastability
+            (unstable/unknown outcome).
+          </div>
+          <div class="answer-box">
+            Answer: setup/hold define valid capture window
+          </div>
+        </div>
+      </div>
+
+      <!-- P17 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 17</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          What is metastability (in one sentence), and why is it dangerous in
+          synchronous systems?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(17)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-17">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Metastability is when a storage element sits in a temporary
+            “in-between” voltage/state after sampling an unstable input.
+          </div>
+          <div class="solution-step">
+            It’s dangerous because it can resolve unpredictably and violate
+            timing assumptions downstream.
+          </div>
+          <div class="answer-box">
+            Answer: unpredictable state → unpredictable behavior
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        🗂️ Section 5: Registers, Register Files, Datapaths
+      </div>
+
+      <!-- P18 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 18</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A register file design has combinational reads and clocked writes. Why
+          is that the standard approach?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(18)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-18">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Reads are combinational so outputs reflect the selected address
+            immediately.
+          </div>
+          <div class="solution-step">
+            Writes are sequential so state updates cleanly only on clock edges.
+          </div>
+          <div class="answer-box">
+            Answer: reads = combinational; writes = clocked
+          </div>
+        </div>
+      </div>
+
+      <!-- P19 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 19</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          If a register file must support
+          <strong>2 reads and 1 write per cycle</strong>, what does that imply
+          about the number of read/write ports? Why does “more ports” get
+          expensive?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(19)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-19">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            It needs <strong>2 read ports</strong> and
+            <strong>1 write port</strong> (simultaneous access).
+          </div>
+          <div class="solution-step">
+            More ports require more internal bitline/wordline hardware (area +
+            power + timing complexity).
+          </div>
+          <div class="answer-box">
+            Answer: 2R1W ports; ports cost area/power/complexity
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        💾 Section 6: SRAM, DRAM, Refresh, Errors
+      </div>
+
+      <!-- P20 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 20</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Give one reason SRAM is faster than DRAM, and one reason DRAM is
+          cheaper per bit than SRAM.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(20)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-20">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            SRAM is faster because it stores bits statically (no refresh) with
+            latch-like circuitry.
+          </div>
+          <div class="solution-step">
+            DRAM is cheaper/denser because each bit uses a capacitor + one
+            transistor (smaller cell) but needs refresh.
+          </div>
+          <div class="answer-box">
+            Answer: SRAM static/fast; DRAM dense/cheap (refresh)
+          </div>
+        </div>
+      </div>
+
+      <!-- P21 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 21</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          A 1-bit parity scheme is used on a word. What kinds of errors can it
+          always detect, and what common case can it miss?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(21)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-21">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Parity always detects any <strong>odd</strong> number of flipped
+            bits (including any single-bit error).
+          </div>
+          <div class="solution-step">
+            It can miss <strong>even</strong> number of flips (e.g., two-bit
+            errors).
+          </div>
+          <div class="answer-box">
+            Answer: detects odd-bit errors; can miss even-bit errors
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        🤖 Section 7: Finite State Machines (FSM)
+      </div>
+
+      <!-- P22 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 22</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          What are the two core combinational functions in an FSM, and what do
+          they compute?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(22)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-22">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Next-state function</strong>: (current state, inputs) → next
+            state.
+          </div>
+          <div class="solution-step">
+            <strong>Output function</strong>: (current state[, inputs]) →
+            outputs.
+          </div>
+          <div class="answer-box">Answer: next-state + output logic</div>
+        </div>
+      </div>
+
+      <!-- P23 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 23</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Moore vs Mealy: give one advantage of each for controllers.
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(23)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-23">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            <strong>Moore</strong>: outputs depend only on state → stable
+            outputs between input glitches.
+          </div>
+          <div class="solution-step">
+            <strong>Mealy</strong>: outputs can depend on inputs → often fewer
+            states (smaller FSM).
+          </div>
+          <div class="answer-box">Answer: Moore stable; Mealy fewer states</div>
+        </div>
+      </div>
+
+      <!-- P24 -->
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 24</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          FSM implementation: why do we typically store the state in flip-flops
+          (not combinational logic)?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(24)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-24">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            State must persist across time/clock cycles, which requires memory
+            (flip-flops/latches).
+          </div>
+          <div class="solution-step">
+            Combinational logic alone can’t “remember” a previous state.
+          </div>
+          <div class="answer-box">
+            Answer: state requires storage across cycles
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Study Tips Box (bottom, same placement/style idea as your other practice pages) ===== -->
+      <div
+        style="
+          text-align: center;
+          margin-top: 50px;
+          padding: 25px;
+          background: rgba(255, 77, 166, 0.1);
+          border-radius: 10px;
+          border: 2px solid var(--pink-1);
+        "
+      >
+        <h2
+          style="
+            color: var(--pink-1);
+            margin-bottom: 20px;
+            font-family: 'Rajdhani', sans-serif;
+          "
+        >
+          🎯 COMPREHENSIVE STUDY TIPS
+        </h2>
+        <div
+          style="
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 2;
+            column-count: 2;
+            column-gap: 30px;
+          "
+        >
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Truth tables</strong> — rows = <code>2^n</code> inputs
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Asserted vs deasserted</strong> — remember active-low
+            naming
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Decoder</strong> — <code>n</code>-bit in →
+            <code>2^n</code> outputs
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>MUX</strong> — selectors = <code>log2(N)</code> data
+            inputs
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Tri-state bus</strong> — only one driver enabled, others
+            high-Z
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Half vs full adder</strong> — full has CarryIn
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Two’s complement subtract</strong> —
+            <code>a - b = a + (~b) + 1</code>
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>CLA core</strong> — <code>cᵢ₊₁ = gᵢ + pᵢ·cᵢ</code>
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Zero flag</strong> — result==0 (invert OR of all bits)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Signed overflow</strong> — +/+→- or -/-→+
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Latch vs flip-flop</strong> — level vs edge
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Setup/Hold</strong> — violating can cause metastability
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Register file</strong> — reads combinational, writes
+            clocked
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>SRAM vs DRAM</strong> — SRAM fast; DRAM dense (refresh)
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Parity</strong> — detects odd-bit flips; misses even-bit
+            flips
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>FSM</strong> — next-state logic + output logic + state FFs
+          </p>
+          <p style="margin-bottom: 12px">
+            ✓ <strong>Moore vs Mealy</strong> — stable outputs vs fewer states
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function toggleSolution(n) {
+        const el = document.getElementById("solution-" + n);
+        if (!el) return;
+        el.classList.toggle("show");
+      }
+    </script>
+  </body>
+</html>

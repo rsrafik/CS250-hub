@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chapter 3 - Arithmetic Study Guide</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-bg: #1a0f0a;
+        --color-terminal: #1e140e;
+        --color-primary: #ff6b35;
+        --color-secondary: #ff9f1c;
+        --color-accent: #ff006e;
+        --color-warning: #ffcc00;
+        --color-error: #ff3366;
+        --color-text: #fef3e2;
+        --color-text-dim: #d4a373;
+      }
+
+      body {
+        font-family: "IBM Plex Mono", monospace;
+        background: var(--color-bg);
+        color: var(--color-text);
+        padding: 20px;
+        line-height: 1.4;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: var(--color-terminal);
+        border: 3px solid var(--color-primary);
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 0 50px rgba(255, 107, 53, 0.3);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid var(--color-primary);
+        position: relative;
+      }
+
+      .header::before {
+        content: ">";
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        color: var(--color-primary);
+        font-size: 2em;
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .header h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 2.5em;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        text-shadow: 0 0 20px rgba(255, 107, 53, 0.8);
+        margin-bottom: 8px;
+      }
+
+      .header .subtitle {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.3em;
+        color: var(--color-secondary);
+        letter-spacing: 2px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .section {
+        background: rgba(0, 0, 0, 0.5);
+        border: 2px solid var(--color-secondary);
+        border-radius: 6px;
+        padding: 15px;
+        position: relative;
+      }
+
+      .section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, var(--color-primary), transparent);
+      }
+
+      .section-title {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.1em;
+        color: var(--color-secondary);
+        margin-bottom: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid rgba(255, 159, 28, 0.3);
+        padding-bottom: 5px;
+      }
+
+      .register-table {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .register-row {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        padding: 6px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.8em;
+      }
+
+      .register-row:last-child {
+        border-bottom: none;
+      }
+
+      .reg-name {
+        color: var(--color-primary);
+        font-weight: 700;
+      }
+
+      .reg-desc {
+        color: var(--color-text-dim);
+      }
+
+      .code-block {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid var(--color-primary);
+        border-radius: 4px;
+        padding: 10px;
+        margin: 8px 0;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.8em;
+        color: var(--color-primary);
+        overflow-x: auto;
+      }
+
+      .terminal-line {
+        color: var(--color-text-dim);
+        font-size: 0.85em;
+        padding: 4px 0;
+      }
+
+      .key-point {
+        background: rgba(255, 159, 28, 0.15);
+        border-left: 3px solid var(--color-warning);
+        padding: 8px;
+        margin: 8px 0;
+        font-size: 0.85em;
+        border-radius: 3px;
+      }
+
+      .wide-section {
+        grid-column: span 2;
+      }
+
+      .full-width {
+        grid-column: span 3;
+      }
+
+      .addressing-mode {
+        background: rgba(0, 0, 0, 0.4);
+        padding: 6px;
+        margin: 5px 0;
+        border-left: 2px solid var(--color-secondary);
+        font-size: 0.8em;
+      }
+
+      .formula {
+        color: var(--color-secondary);
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 600;
+        padding: 4px 0;
+      }
+
+      .quick-ref {
+        background: rgba(255, 0, 222, 0.1);
+        border: 2px solid var(--color-accent);
+        border-radius: 6px;
+        padding: 15px;
+        margin-top: 20px;
+      }
+
+      .quick-ref-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.3em;
+        color: var(--color-accent);
+        text-align: center;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .ref-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      .ref-item {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 8px;
+        border: 1px solid var(--color-accent);
+        border-radius: 4px;
+        font-size: 0.75em;
+      }
+
+      .ref-label {
+        color: var(--color-warning);
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+
+      .highlight-orange {
+        color: var(--color-primary);
+        font-weight: 600;
+      }
+      .highlight-yellow {
+        color: var(--color-secondary);
+        font-weight: 600;
+      }
+      .highlight-pink {
+        color: var(--color-accent);
+        font-weight: 600;
+      }
+      .highlight-warn {
+        color: var(--color-warning);
+        font-weight: 600;
+      }
+
+      @media print {
+        body {
+          background: white;
+        }
+        .container {
+          border: 2px solid black;
+          box-shadow: none;
+        }
+        .section::before {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>CHAPTER 3</h1>
+        <div class="subtitle">Arithmetic for Computers</div>
+      </div>
+
+      <!-- Integer Arithmetic Section -->
+      <div
+        style="
+          background: rgba(255, 159, 28, 0.1);
+          border: 2px solid var(--color-secondary);
+          border-radius: 8px;
+          padding: 20px;
+          margin-bottom: 25px;
+        "
+      >
+        <div
+          style="
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.4em;
+            color: var(--color-secondary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+          "
+        >
+          ➕ INTEGER ARITHMETIC
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px">
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.4);
+              padding: 12px;
+              border-radius: 6px;
+              border-left: 3px solid var(--color-primary);
+            "
+          >
+            <div
+              style="
+                color: var(--color-primary);
+                font-weight: 600;
+                margin-bottom: 8px;
+              "
+            >
+              Operations
+            </div>
+            <div style="font-size: 0.85em; line-height: 1.8">
+              <strong>Addition:</strong> Bit-by-bit, right to left, carry
+              passes<br />
+              <strong>Subtraction:</strong> Negate (2's comp) + Add<br />
+              <strong>2's Complement Negate:</strong> Invert bits + 1<br />
+              <strong>ALU:</strong> Hardware for +, -, AND, OR
+            </div>
+          </div>
+
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.4);
+              padding: 12px;
+              border-radius: 6px;
+              border-left: 3px solid var(--color-accent);
+            "
+          >
+            <div
+              style="
+                color: var(--color-accent);
+                font-weight: 600;
+                margin-bottom: 8px;
+              "
+            >
+              Overflow Detection
+            </div>
+            <div style="font-size: 0.85em; line-height: 1.7">
+              • <strong>Addition:</strong> Pos + Pos = Neg → YES<br />
+              • <strong>Addition:</strong> Neg + Neg = Pos → YES<br />
+              • <strong>Addition:</strong> Pos + Neg → NO (never)<br />
+              • <strong>Subtraction:</strong> Pos - Neg = Neg → YES<br />
+              • <strong>Subtraction:</strong> Neg - Pos = Pos → YES
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                padding: 6px;
+                background: rgba(255, 204, 0, 0.1);
+                border-radius: 4px;
+                font-size: 0.75em;
+                color: var(--color-warning);
+              "
+            >
+              <strong>Rule:</strong> Same signs → different result sign =
+              overflow
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 15px;
+          "
+        >
+          <div style="font-size: 0.85em; line-height: 2">
+            <div style="margin-bottom: 8px">
+              <strong style="color: var(--color-warning)"
+                >Saturation Arithmetic:</strong
+              >
+            </div>
+            <div style="color: var(--color-text-dim)">
+              When overflow occurs, result is set to max/min value (not modulo
+              like 2's complement)<br />
+              <span class="highlight-orange">Use:</span> Media operations
+              (audio/video) - volume knobs that stop at max
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Binary Multiplication -->
+      <div
+        style="
+          background: rgba(255, 0, 110, 0.1);
+          border: 2px solid var(--color-accent);
+          border-radius: 8px;
+          padding: 20px;
+          margin-bottom: 25px;
+        "
+      >
+        <div
+          style="
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.3em;
+            color: var(--color-accent);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+          "
+        >
+          ✖️ BINARY MULTIPLICATION
+        </div>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+          "
+        >
+          <div
+            style="
+              background: rgba(16, 185, 129, 0.1);
+              padding: 12px;
+              border-radius: 6px;
+              border: 1px solid var(--color-primary);
+            "
+          >
+            <div
+              style="
+                color: var(--color-primary);
+                font-weight: 600;
+                margin-bottom: 8px;
+                text-align: center;
+              "
+            >
+              📐 SEQUENTIAL ALGORITHM
+            </div>
+            <div style="font-size: 0.8em; line-height: 1.8">
+              <strong>Version 1:</strong><br />
+              1. Product = 0 (128-bit)<br />
+              2. Check Multiplier₀ bit<br />
+              3. If 1: Product += Multiplicand<br />
+              4. Shift Multiplicand LEFT 1<br />
+              5. Shift Multiplier RIGHT 1<br />
+              6. Repeat 64 times
+            </div>
+          </div>
+
+          <div
+            style="
+              background: rgba(255, 159, 28, 0.1);
+              padding: 12px;
+              border-radius: 6px;
+              border: 1px solid var(--color-secondary);
+            "
+          >
+            <div
+              style="
+                color: var(--color-secondary);
+                font-weight: 600;
+                margin-bottom: 8px;
+                text-align: center;
+              "
+            >
+              ⚡ REFINED ALGORITHM
+            </div>
+            <div style="font-size: 0.8em; line-height: 1.8">
+              <strong>Version 2:</strong><br />
+              • Product register holds both result & multiplier<br />
+              • Shift Product RIGHT (not multiplicand LEFT)<br />
+              • Multiplier bits used then overwritten<br />
+              • Hardware: 64-bit ALU + adder
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+          "
+        >
+          <div style="font-size: 0.85em; line-height: 2">
+            <div style="margin-bottom: 8px">
+              <strong style="color: var(--color-warning)">Key Facts:</strong>
+            </div>
+            <div
+              style="
+                color: var(--color-text-dim);
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+              "
+            >
+              <div>
+                • <strong>Product Size:</strong> n-bit × m-bit = (n+m)-bit<br />
+                • <strong>Signed:</strong> Convert to positive, multiply, apply
+                sign<br />
+                • <strong>Sign:</strong> sign(A) XOR sign(B)
+              </div>
+              <div>
+                • <strong>Fast Multiply:</strong> Parallel adders (tree
+                structure)<br />
+                • <strong>Speedup:</strong> log₂(64) = 6 add times vs 64
+                sequential<br />
+                • <strong>Hardware:</strong> Carry save adders, pipelining
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- LEGv8 Multiply Instructions -->
+        <div class="section">
+          <div class="section-title">💻 Multiply Instructions</div>
+          <div class="register-table">
+            <div class="register-row">
+              <div class="reg-name">MUL</div>
+              <div class="reg-desc">Lower 64 bits of product</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">SMULH</div>
+              <div class="reg-desc">Upper 64 bits (signed)</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">UMULH</div>
+              <div class="reg-desc">Upper 64 bits (unsigned)</div>
+            </div>
+          </div>
+          <div class="key-point">
+            ⚠️ <strong>Multiply ignores overflow!</strong><br />
+            Software must check upper 64 bits:<br />
+            • UMULH: upper = 0<br />
+            • SMULH: upper = sign extension
+          </div>
+        </div>
+
+        <!-- Division Basics -->
+        <div class="section wide-section">
+          <div class="section-title">➗ Binary Division</div>
+          <div class="code-block">
+            <span class="highlight-orange">Division Equation:</span><br />
+            Dividend = Quotient × Divisor + Remainder
+          </div>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 10px;
+              margin-top: 10px;
+            "
+          >
+            <div>
+              <strong style="color: var(--color-secondary)"
+                >Restoring Algorithm:</strong
+              >
+              <div class="terminal-line">
+                1. Remainder = Dividend<br />
+                2. Subtract Divisor from Remainder<br />
+                3. If negative: restore (add back)<br />
+                4. Shift Quotient, set bit 0/1<br />
+                5. Shift Divisor RIGHT<br />
+                6. Repeat 65 times
+              </div>
+            </div>
+            <div>
+              <strong style="color: var(--color-accent)">Key Rules:</strong>
+              <div class="terminal-line">
+                • <strong>Remainder Sign = Dividend Sign</strong><br />
+                • -7 ÷ 2 = Quot(-3), Rem(-1) ✓<br />
+                • NOT Quot(-4), Rem(+1) ✗<br />
+                • Ensures unique answer
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Division Instructions -->
+        <div class="section">
+          <div class="section-title">💻 Divide Instructions</div>
+          <div class="register-table">
+            <div class="register-row">
+              <div class="reg-name">SDIV</div>
+              <div class="reg-desc">Signed divide (quotient)</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">UDIV</div>
+              <div class="reg-desc">Unsigned divide (quotient)</div>
+            </div>
+          </div>
+          <div class="key-point">
+            <strong>Hardware Sharing:</strong><br />
+            Same hardware for multiply & divide!<br />
+            128-bit register + 64-bit ALU
+          </div>
+          <div class="terminal-line" style="margin-top: 8px">
+            <strong style="color: var(--color-warning)">Fast Division:</strong
+            ><br />
+            • SRT: Predict 4 bits per step<br />
+            • Nonrestoring: Don't add back<br />
+            • ⅓ fewer operations
+          </div>
+        </div>
+      </div>
+
+      <!-- IEEE 754 Floating Point -->
+      <div
+        style="
+          background: linear-gradient(
+            135deg,
+            rgba(255, 107, 53, 0.15),
+            rgba(255, 0, 110, 0.05)
+          );
+          border: 3px solid var(--color-accent);
+          border-radius: 12px;
+          padding: 25px;
+          margin: 25px 0;
+        "
+      >
+        <div
+          style="
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8em;
+            color: var(--color-accent);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-align: center;
+            font-weight: 700;
+          "
+        >
+          🔴 IEEE 754 FLOATING POINT 🔴
+        </div>
+
+        <div class="grid">
+          <!-- Format -->
+          <div class="section full-width">
+            <div class="section-title">🔬 Format & Formula</div>
+            <div class="code-block">
+              <span class="highlight-orange">General Form:</span><br />
+              (-1)^S × (1 + Fraction) × 2^(Exponent - Bias)
+            </div>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-top: 10px;
+              "
+            >
+              <div
+                style="
+                  background: rgba(255, 107, 53, 0.1);
+                  padding: 10px;
+                  border-radius: 6px;
+                "
+              >
+                <strong style="color: var(--color-primary)"
+                  >Single Precision (32-bit)</strong
+                >
+                <div class="terminal-line">
+                  Sign: 1 bit<br />
+                  Exponent: 8 bits<br />
+                  Fraction: 23 bits<br />
+                  <strong>Bias = 127</strong><br />
+                  Range: ±2.0×10⁻³⁸ to ±2.0×10³⁸
+                </div>
+              </div>
+              <div
+                style="
+                  background: rgba(255, 159, 28, 0.1);
+                  padding: 10px;
+                  border-radius: 6px;
+                "
+              >
+                <strong style="color: var(--color-secondary)"
+                  >Double Precision (64-bit)</strong
+                >
+                <div class="terminal-line">
+                  Sign: 1 bit<br />
+                  Exponent: 11 bits<br />
+                  Fraction: 52 bits<br />
+                  <strong>Bias = 1023</strong><br />
+                  Range: ±2.0×10⁻³⁰⁸ to ±2.0×10³⁰⁸
+                </div>
+              </div>
+            </div>
+            <div class="key-point" style="margin-top: 10px">
+              <strong>Hidden Bit:</strong> Leading 1 NOT stored → 24/53 bits
+              precision!<br />
+              Significand = 1 + Fraction (complete number)
+            </div>
+          </div>
+
+          <!-- Special Values -->
+          <div class="section">
+            <div class="section-title">✨ Special Values</div>
+            <div class="register-table">
+              <div class="register-row">
+                <div class="reg-name">±0</div>
+                <div class="reg-desc">E=0, F=0</div>
+              </div>
+              <div class="register-row">
+                <div class="reg-name">Denorm</div>
+                <div class="reg-desc">E=0, F≠0 (no hidden 1)</div>
+              </div>
+              <div class="register-row">
+                <div class="reg-name">±∞</div>
+                <div class="reg-desc">E=all 1s, F=0</div>
+              </div>
+              <div class="register-row">
+                <div class="reg-name">NaN</div>
+                <div class="reg-desc">E=all 1s, F≠0</div>
+              </div>
+            </div>
+            <div class="terminal-line" style="margin-top: 8px">
+              <strong>NaN examples:</strong> 0/0, ∞-∞, √(-x)<br />
+              <strong>Denormalized:</strong> Gradual underflow
+            </div>
+          </div>
+
+          <!-- Exponent Bias -->
+          <div class="section">
+            <div class="section-title">⚖️ Exponent Bias</div>
+            <div class="key-point">
+              <strong>Why bias?</strong><br />
+              No sign bit for exponent!<br />
+              Shift range to represent + and -
+            </div>
+            <div class="code-block">
+              Actual = Stored - Bias<br />
+              Stored = Actual + Bias
+            </div>
+            <div class="terminal-line">
+              <strong>Example (Single):</strong><br />
+              Store -3: 127 + (-3) = 124<br />
+              Store 0: 127 + 0 = 127<br />
+              Store +4: 127 + 4 = 131
+            </div>
+          </div>
+
+          <!-- IEEE Design -->
+          <div class="section">
+            <div class="section-title">🎨 Design Rationale</div>
+            <ul style="list-style: none; font-size: 0.85em; line-height: 1.8">
+              <li>
+                <span class="highlight-orange">▸</span> Sign bit MSB: Easy
+                sorting
+              </li>
+              <li>
+                <span class="highlight-orange">▸</span> Exponent 2nd: Compare as
+                unsigned
+              </li>
+              <li>
+                <span class="highlight-orange">▸</span> Biased exp: No separate
+                sign
+              </li>
+              <li>
+                <span class="highlight-orange">▸</span> Fraction last:
+                Tie-breaker
+              </li>
+            </ul>
+            <div class="key-point">
+              Can compare FP numbers<br />
+              as unsigned integers!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FP Operations -->
+      <div
+        style="
+          background: rgba(255, 159, 28, 0.1);
+          border: 2px solid var(--color-secondary);
+          border-radius: 8px;
+          padding: 20px;
+          margin-bottom: 25px;
+        "
+      >
+        <div
+          style="
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.4em;
+            color: var(--color-secondary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+          "
+        >
+          ➕ FLOATING-POINT OPERATIONS
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px">
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.4);
+              padding: 12px;
+              border-radius: 6px;
+              border-left: 3px solid var(--color-primary);
+            "
+          >
+            <div
+              style="
+                color: var(--color-primary);
+                font-weight: 600;
+                margin-bottom: 8px;
+              "
+            >
+              FP Addition Steps
+            </div>
+            <div style="font-size: 0.85em; line-height: 1.8">
+              <strong>1. Align:</strong> Shift smaller exponent to match<br />
+              <strong>2. Add:</strong> Add/subtract significands<br />
+              <strong>3. Normalize:</strong> Shift to 1.xxx form<br />
+              <strong>4. Round:</strong> Fit to precision<br />
+              <strong>5. Check:</strong> Overflow/underflow
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                padding: 6px;
+                background: rgba(255, 204, 0, 0.1);
+                border-radius: 4px;
+                font-size: 0.75em;
+                color: var(--color-warning);
+              "
+            >
+              May repeat 3-4 if rounding causes unnormalization
+            </div>
+          </div>
+
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.4);
+              padding: 12px;
+              border-radius: 6px;
+              border-left: 3px solid var(--color-accent);
+            "
+          >
+            <div
+              style="
+                color: var(--color-accent);
+                font-weight: 600;
+                margin-bottom: 8px;
+              "
+            >
+              FP Multiplication Steps
+            </div>
+            <div style="font-size: 0.85em; line-height: 1.7">
+              <strong>1. Add Exponents</strong> (subtract bias once!)<br />
+              <strong>2. Multiply Significands</strong><br />
+              <strong>3. Normalize</strong> result<br />
+              <strong>4. Round</strong> to precision<br />
+              <strong>5. Set Sign</strong> (XOR of inputs)<br />
+              <strong>6. Check</strong> overflow/underflow
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- Rounding Modes -->
+        <div class="section">
+          <div class="section-title">🎯 Rounding Modes</div>
+          <div class="register-table">
+            <div class="register-row">
+              <div class="reg-name">To Nearest</div>
+              <div class="reg-desc">Default, most accurate</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">Toward +∞</div>
+              <div class="reg-desc">Round up</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">Toward -∞</div>
+              <div class="reg-desc">Round down</div>
+            </div>
+            <div class="register-row">
+              <div class="reg-name">Toward 0</div>
+              <div class="reg-desc">Truncate (noisy)</div>
+            </div>
+          </div>
+          <div class="key-point">
+            <strong>Guard & Round bits:</strong><br />
+            2 extra bits on right<br />
+            Improve rounding accuracy
+          </div>
+        </div>
+
+        <!-- Accuracy -->
+        <div class="section">
+          <div class="section-title">📏 Accuracy</div>
+          <div class="code-block">
+            <span class="highlight-orange">ulp</span> = Units in Last Place<br />
+            Bits in error in LSB
+          </div>
+          <div class="key-point">
+            <strong>IEEE 754 Guarantee:</strong><br />
+            Result within <span class="highlight-orange">0.5 ulp</span><br />
+            (no overflow/underflow/invalid)
+          </div>
+          <div class="terminal-line">⚠️ FP numbers are approximations!</div>
+        </div>
+
+        <!-- SIMD -->
+        <div class="section">
+          <div class="section-title">🚀 SIMD Parallelism</div>
+          <div class="key-point">
+            <strong>Subword Parallelism:</strong><br />
+            Same op on multiple data units
+          </div>
+          <div class="terminal-line">
+            <strong>128-bit Register Partitioning:</strong><br />
+            • 16 × 8-bit (.B)<br />
+            • 8 × 16-bit (.H)<br />
+            • 4 × 32-bit (.S)<br />
+            • 2 × 64-bit (.D)
+          </div>
+          <div class="code-block">
+            <span class="highlight-orange">ARMv8 SIMD:</span><br />
+            V0-V31 (128-bit)<br />
+            500+ instructions<br />
+            Graphics/audio/video
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Reference -->
+      <div class="quick-ref">
+        <div class="quick-ref-title">⚡ QUICK REFERENCE ⚡</div>
+        <div class="ref-grid">
+          <div class="ref-item">
+            <div class="ref-label">Overflow Add</div>
+            Same signs → diff sign<br />YES overflow
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Multiply Size</div>
+            n-bit × m-bit<br />= (n+m)-bit
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">LEGv8 Multiply</div>
+            MUL, SMULH<br />UMULH
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Division Rule</div>
+            Remainder sign<br />= Dividend sign
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">LEGv8 Divide</div>
+            SDIV (signed)<br />UDIV (unsigned)
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">FP Formula</div>
+            (-1)^S × (1+F)<br />× 2^(E-Bias)
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Single Precision</div>
+            32-bit: 1+8+23<br />Bias = 127
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Double Precision</div>
+            64-bit: 1+11+52<br />Bias = 1023
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Hidden Bit</div>
+            Implicit leading 1<br />24/53 bits total
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">±∞</div>
+            E = all 1s<br />F = 0
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">NaN</div>
+            E = all 1s<br />F ≠ 0
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">FP Add Steps</div>
+            Align → Add → Norm<br />Round → Check
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">FP Multiply</div>
+            Add Exp → Mult Sig<br />Norm → Round
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Rounding</div>
+            To nearest (default)<br />Guard & Round bits
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Accuracy</div>
+            ulp = bits in error<br />IEEE: ≤ 0.5 ulp
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">SIMD</div>
+            Subword parallelism<br />Same op on multiple
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">ARMv8 SIMD</div>
+            V0-V31 (128-bit)<br />.B .H .S .D
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Saturation</div>
+            Overflow → max/min<br />Media operations
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">2's Complement</div>
+            Negate: ~x + 1<br />Invert + Add 1
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Fast Multiply</div>
+            Parallel adders<br />Tree: log₂(64)=6
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Fast Divide</div>
+            SRT: 4 bits/step<br />Nonrestoring
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Denormalized</div>
+            E=0, F≠0<br />Gradual underflow
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">Bias Formula</div>
+            2^(bits-1) - 1<br />Centers range
+          </div>
+          <div class="ref-item">
+            <div class="ref-label">FP Approximation</div>
+            Not exact!<br />Rounding errors
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

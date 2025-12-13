@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bucket 1 - Practice Problems</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Space Grotesk", sans-serif;
+        background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%);
+        color: #e2e8f0;
+        padding: 30px;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: rgba(15, 23, 42, 0.9);
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 3em;
+        color: #60a5fa;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #94a3b8;
+        margin-bottom: 40px;
+        font-size: 1.2em;
+      }
+
+      .problem {
+        background: rgba(30, 41, 59, 0.7);
+        border-left: 5px solid #3b82f6;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 25px;
+        position: relative;
+      }
+
+      .problem-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .problem-number {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #60a5fa;
+      }
+
+      .difficulty {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .easy {
+        background: #10b981;
+        color: white;
+      }
+      .medium {
+        background: #f59e0b;
+        color: white;
+      }
+      .hard {
+        background: #ef4444;
+        color: white;
+      }
+
+      .problem-text {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        color: #e2e8f0;
+      }
+
+      .given {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid #3b82f6;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.95em;
+      }
+
+      .given-title {
+        color: #60a5fa;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .solution {
+        background: rgba(16, 185, 129, 0.1);
+        border: 2px solid #10b981;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 15px;
+        display: none;
+      }
+
+      .solution.show {
+        display: block;
+      }
+
+      .solution-header {
+        color: #10b981;
+        font-weight: 700;
+        font-size: 1.1em;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+      }
+
+      .solution-step {
+        margin-bottom: 12px;
+        padding-left: 20px;
+        position: relative;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.95em;
+      }
+
+      .solution-step::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: #10b981;
+        font-weight: bold;
+      }
+
+      .answer-box {
+        background: rgba(251, 191, 36, 0.2);
+        border: 2px dashed #fbbf24;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+        font-weight: 600;
+        color: #fbbf24;
+        text-align: center;
+        font-size: 1.1em;
+      }
+
+      .toggle-btn {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 600;
+        font-size: 0.95em;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .toggle-btn:hover {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+      }
+
+      .section-header {
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 30px 0 20px 0;
+        font-size: 1.3em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-align: center;
+      }
+
+      .hint {
+        background: rgba(168, 85, 247, 0.1);
+        border-left: 3px solid #a855f7;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        font-size: 0.9em;
+        color: #c4b5fd;
+      }
+
+      code {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "JetBrains Mono", monospace;
+        color: #fbbf24;
+      }
+
+      @media print {
+        .toggle-btn {
+          display: none;
+        }
+        .solution {
+          display: block !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>⚡ Practice Problems ⚡</h1>
+      <div class="subtitle">Bucket 1: Performance, Power & Benchmarks</div>
+
+      <div class="section-header">📊 Section 1: Basic Performance</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 1</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          Computer A executes a program in 10 seconds. Computer B executes the
+          same program in 15 seconds. How much faster is Computer A than
+          Computer B?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(1)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-1">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Performance<sub>A</sub> / Performance<sub>B</sub> = Execution
+            Time<sub>B</sub> / Execution Time<sub>A</sub>
+          </div>
+          <div class="solution-step">= 15 seconds / 10 seconds = 1.5</div>
+          <div class="answer-box">
+            Computer A is 1.5× faster than Computer B
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 2</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          A processor has a clock rate of 3 GHz. What is the clock cycle time in
+          nanoseconds?
+        </div>
+        <div class="hint">
+          💡 Hint: Clock cycle time = 1 / Clock rate. Remember: 1 GHz = 10⁹ Hz
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(2)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-2">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">Clock cycle time = 1 / Clock rate</div>
+          <div class="solution-step">
+            = 1 / (3 × 10⁹ Hz) = 0.333 × 10⁻⁹ seconds
+          </div>
+          <div class="solution-step">= 0.333 nanoseconds</div>
+          <div class="answer-box">Clock cycle time = 0.333 ns (or 333 ps)</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 3</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A program executes 1 million instructions. The processor has a clock
+          rate of 2 GHz and an average CPI of 2.5. Calculate the CPU execution
+          time.
+        </div>
+        <div class="given">
+          <div class="given-title">Given:</div>
+          • Instruction Count (IC) = 1,000,000<br />
+          • Clock Rate = 2 GHz<br />
+          • CPI = 2.5
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(3)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-3">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">CPU Time = (IC × CPI) / Clock Rate</div>
+          <div class="solution-step">= (1,000,000 × 2.5) / (2 × 10⁹)</div>
+          <div class="solution-step">= 2,500,000 / 2,000,000,000</div>
+          <div class="solution-step">= 0.00125 seconds = 1.25 milliseconds</div>
+          <div class="answer-box">CPU Execution Time = 1.25 ms</div>
+        </div>
+      </div>
+
+      <div class="section-header">🔄 Section 2: CPI & Instruction Mix</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 4</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A program consists of three types of instructions. Calculate the
+          average CPI:
+        </div>
+        <div class="given">
+          <div class="given-title">Instruction Mix:</div>
+          • Type A: 50% of instructions, CPI = 1<br />
+          • Type B: 30% of instructions, CPI = 2<br />
+          • Type C: 20% of instructions, CPI = 4
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(4)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-4">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            CPI<sub>avg</sub> = Σ(CPI<sub>i</sub> × Frequency<sub>i</sub>)
+          </div>
+          <div class="solution-step">
+            = (1 × 0.50) + (2 × 0.30) + (4 × 0.20)
+          </div>
+          <div class="solution-step">= 0.50 + 0.60 + 0.80</div>
+          <div class="solution-step">= 1.90</div>
+          <div class="answer-box">Average CPI = 1.9 cycles/instruction</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 5</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Two processors execute the same instruction set. Processor X has a
+          clock rate of 4 GHz and CPI of 2.0. Processor Y has a clock rate of 3
+          GHz and CPI of 1.5. Which is faster, and by how much?
+        </div>
+        <div class="hint">
+          💡 Hint: Compare CPU execution times. Since IC is the same, you can
+          use: Time = IC × CPI / Clock Rate
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(5)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-5">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Time<sub>X</sub> = IC × CPI<sub>X</sub> / Clock Rate<sub>X</sub> =
+            IC × 2.0 / 4GHz = 0.5 × IC ns
+          </div>
+          <div class="solution-step">
+            Time<sub>Y</sub> = IC × CPI<sub>Y</sub> / Clock Rate<sub>Y</sub> =
+            IC × 1.5 / 3GHz = 0.5 × IC ns
+          </div>
+          <div class="solution-step">Times are equal! Neither is faster.</div>
+          <div class="answer-box">
+            Processors X and Y have identical performance (1.0×)
+          </div>
+          <div style="margin-top: 10px; color: #94a3b8">
+            Key Insight: Higher clock rate doesn't always mean better
+            performance!
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">⚡ Section 3: Power & Energy</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 6</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          If you reduce the voltage of a processor from 1.2V to 1.0V (keeping
+          capacitive load and frequency constant), what is the relative power
+          consumption?
+        </div>
+        <div class="hint">
+          💡 Hint: Power ∝ V². Calculate (V<sub>new</sub> / V<sub>old</sub>)²
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(6)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-6">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Power<sub>new</sub> / Power<sub>old</sub> = (V<sub>new</sub> /
+            V<sub>old</sub>)²
+          </div>
+          <div class="solution-step">= (1.0 / 1.2)² = (0.833)²</div>
+          <div class="solution-step">= 0.694 ≈ 69.4%</div>
+          <div class="answer-box">
+            New power is 69.4% of original (30.6% reduction)
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 7</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A processor operates at 2 GHz with voltage 1.0V. You want to increase
+          clock rate to 2.5 GHz, which requires increasing voltage to 1.1V. What
+          is the relative power increase? (Assume capacitive load stays
+          constant)
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(7)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-7">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Power ∝ V² × f, so Power<sub>new</sub> / Power<sub>old</sub> =
+            (V<sub>new</sub>/V<sub>old</sub>)² ×
+            (f<sub>new</sub>/f<sub>old</sub>)
+          </div>
+          <div class="solution-step">= (1.1/1.0)² × (2.5/2.0)</div>
+          <div class="solution-step">= (1.21) × (1.25)</div>
+          <div class="solution-step">= 1.5125</div>
+          <div class="answer-box">
+            Power increases by 51.25% (1.51× original)
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">🎯 Section 4: Amdahl's Law</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 8</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          A program spends 60% of its time in floating-point operations. You
+          have a new floating-point unit that makes FP operations 3× faster.
+          What is the overall speedup of the program?
+        </div>
+        <div class="hint">
+          💡 Hint: Use Amdahl's Law. Remember: some execution time is
+          unaffected!
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(8)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-8">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Time<sub>new</sub> = Time<sub>affected</sub>/Speedup + Time<sub
+              >unaffected</sub
+            >
+          </div>
+          <div class="solution-step">
+            Let original time = 1. Then: Time<sub>affected</sub> = 0.6, Time<sub
+              >unaffected</sub
+            >
+            = 0.4
+          </div>
+          <div class="solution-step">
+            Time<sub>new</sub> = 0.6/3 + 0.4 = 0.2 + 0.4 = 0.6
+          </div>
+          <div class="solution-step">Overall Speedup = 1 / 0.6 = 1.67×</div>
+          <div class="answer-box">Overall Speedup = 1.67× (not 3×!)</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 9</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          You want to achieve a 4× overall speedup on a program. If 80% of the
+          program can be parallelized and sped up, what speedup do you need for
+          that 80% portion?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(9)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-9">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Desired: Time<sub>new</sub> = Time<sub>old</sub> / 4 = 0.25
+          </div>
+          <div class="solution-step">
+            Using Amdahl's Law: 0.25 = 0.8/S + 0.2, where S is speedup of 80%
+          </div>
+          <div class="solution-step">0.25 - 0.2 = 0.8/S</div>
+          <div class="solution-step">0.05 = 0.8/S → S = 0.8/0.05 = 16</div>
+          <div class="answer-box">Need 16× speedup on the 80% portion</div>
+          <div style="margin-top: 10px; color: #94a3b8">
+            Note: This shows why achieving high overall speedups is difficult!
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 10</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Multiplication operations account for 80% of execution time in a
+          program. What is the maximum possible speedup you can achieve by
+          improving ONLY the multiplication operations, no matter how much you
+          improve them?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(10)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-10">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Maximum speedup when improved portion → 0 time
+          </div>
+          <div class="solution-step">
+            Time<sub>new</sub> = 0 + Time<sub>unaffected</sub> = 0 + 0.2 = 0.2
+          </div>
+          <div class="solution-step">Max Speedup = 1 / 0.2 = 5×</div>
+          <div class="answer-box">
+            Maximum Speedup = 5× (even with infinite improvement!)
+          </div>
+          <div style="margin-top: 10px; color: #94a3b8">
+            This is the key limitation of Amdahl's Law: you're bounded by the
+            unaffected portion.
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">📈 Section 5: Benchmarking</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 11</div>
+          <div class="difficulty easy">Easy</div>
+        </div>
+        <div class="problem-text">
+          A benchmark takes 100 seconds on the reference machine and 25 seconds
+          on your new machine. What is the SPECratio?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(11)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-11">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            SPECratio = Time<sub>reference</sub> / Time<sub>measured</sub>
+          </div>
+          <div class="solution-step">= 100 / 25 = 4.0</div>
+          <div class="answer-box">SPECratio = 4.0 (higher is better!)</div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 12</div>
+          <div class="difficulty medium">Medium</div>
+        </div>
+        <div class="problem-text">
+          Three benchmarks have SPECratios of 2, 4, and 8. Calculate the
+          geometric mean.
+        </div>
+        <div class="hint">
+          💡 Hint: Geometric mean = ⁿ√(product of all values)
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(12)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-12">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">Geometric Mean = ³√(R₁ × R₂ × R₃)</div>
+          <div class="solution-step">= ³√(2 × 4 × 8)</div>
+          <div class="solution-step">= ³√(64) = 4.0</div>
+          <div class="answer-box">Geometric Mean SPECratio = 4.0</div>
+        </div>
+      </div>
+
+      <div class="section-header">🔥 Section 6: Integrated Problems</div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 13</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          Computer A has a clock rate of 3 GHz, CPI of 2.0. Computer B has a
+          clock rate of 2.5 GHz, CPI of 1.5. Both execute the same program with
+          10 million instructions.<br /><br />
+          (a) Which computer is faster?<br />
+          (b) How much faster?<br />
+          (c) Computer A costs $800, Computer B costs $600. Which has better
+          price/performance?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(13)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-13">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            (a) Time<sub>A</sub> = (10M × 2.0) / 3GHz = 20M / 3G = 6.67 ms
+          </div>
+          <div class="solution-step">
+            Time<sub>B</sub> = (10M × 1.5) / 2.5GHz = 15M / 2.5G = 6.0 ms
+          </div>
+          <div class="solution-step">Computer B is faster!</div>
+          <div class="solution-step">
+            (b) Speedup = 6.67 / 6.0 = 1.11× faster
+          </div>
+          <div class="solution-step">
+            (c) Price/Perf<sub>A</sub> = $800 / (1/6.67ms) = $5.34 per unit perf
+          </div>
+          <div class="solution-step">
+            Price/Perf<sub>B</sub> = $600 / (1/6.0ms) = $3.60 per unit perf
+          </div>
+          <div class="answer-box">
+            (a) B is faster<br />
+            (b) 1.11× faster<br />
+            (c) B has better price/performance
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 14</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          You're designing a new processor. Your current design runs a program
+          in 10 seconds. You can improve the FPU (which accounts for 70% of
+          time) by 2×, OR you can reduce CPI for all instructions from 2.0 to
+          1.8 (affecting all execution time).<br /><br />
+          Which improvement should you choose?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(14)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-14">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Option 1 (FPU improvement): Use Amdahl's Law
+          </div>
+          <div class="solution-step">
+            Time<sub>new</sub> = 7/2 + 3 = 3.5 + 3 = 6.5 seconds
+          </div>
+          <div class="solution-step">Speedup = 10/6.5 = 1.54×</div>
+          <div class="solution-step">
+            Option 2 (CPI reduction): Affects all time uniformly
+          </div>
+          <div class="solution-step">
+            Time<sub>new</sub> = 10 × (1.8/2.0) = 10 × 0.9 = 9 seconds
+          </div>
+          <div class="solution-step">Speedup = 10/9 = 1.11×</div>
+          <div class="answer-box">
+            Choose Option 1 (FPU): 1.54× vs 1.11× speedup
+          </div>
+          <div style="margin-top: 10px; color: #94a3b8">
+            Key lesson: Make the common case fast! Focus on what takes the most
+            time.
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <div class="problem-number">Problem 15</div>
+          <div class="difficulty hard">Hard</div>
+        </div>
+        <div class="problem-text">
+          A server runs at 50% utilization and consumes 200W. At 100%
+          utilization, it consumes 300W. You currently run 10 servers at 50%
+          utilization (total work equivalent to 5 servers at 100%).<br /><br />
+          How much power do you save by consolidating to 5 servers at 100%
+          utilization?
+        </div>
+        <button class="toggle-btn" onclick="toggleSolution(15)">
+          Show Solution
+        </button>
+        <div class="solution" id="solution-15">
+          <div class="solution-header">✓ Solution</div>
+          <div class="solution-step">
+            Current setup: 10 servers × 200W = 2000W
+          </div>
+          <div class="solution-step">
+            Consolidated: 5 servers × 300W = 1500W
+          </div>
+          <div class="solution-step">Power saved = 2000W - 1500W = 500W</div>
+          <div class="solution-step">Percentage saved = 500/2000 = 25%</div>
+          <div class="answer-box">Save 500W (25% power reduction)</div>
+          <div style="margin-top: 10px; color: #94a3b8">
+            This demonstrates why "computers at low utilization use little
+            power" is a FALLACY!
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          text-align: center;
+          margin-top: 50px;
+          padding: 20px;
+          background: rgba(59, 130, 246, 0.1);
+          border-radius: 10px;
+        "
+      >
+        <h2 style="color: #60a5fa; margin-bottom: 15px">🎯 Study Tips</h2>
+        <div style="text-align: left; max-width: 700px; margin: 0 auto">
+          <p style="margin-bottom: 10px">
+            ✓ Memorize the core formula:
+            <code>CPU Time = IC × CPI × Cycle Time</code>
+          </p>
+          <p style="margin-bottom: 10px">
+            ✓ Remember: High clock rate ≠ better performance (CPI matters!)
+          </p>
+          <p style="margin-bottom: 10px">
+            ✓ Amdahl's Law: Speedup limited by unaffected portion
+          </p>
+          <p style="margin-bottom: 10px">
+            ✓ Power ∝ V² × f (voltage has squared effect!)
+          </p>
+          <p style="margin-bottom: 10px">
+            ✓ Geometric mean for averaging SPECratios
+          </p>
+          <p style="margin-bottom: 10px">
+            ✓ Low utilization ≠ low power (50-60% at idle!)
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function toggleSolution(num) {
+        const solution = document.getElementById("solution-" + num);
+        solution.classList.toggle("show");
+        const btn = solution.previousElementSibling;
+        btn.textContent = solution.classList.contains("show")
+          ? "Hide Solution"
+          : "Show Solution";
+      }
+    </script>
+  </body>
+</html>

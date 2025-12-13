@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chapter 5 - Memory Hierarchy Study Guide</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-bg: #0f0a0d;
+        --color-terminal: #1a0e14;
+        --color-primary: #ff0844;
+        --color-secondary: #ff2e63;
+        --color-accent: #08ffc8;
+        --color-warning: #ffba08;
+        --color-error: #dc0073;
+        --color-text: #f8e9f1;
+        --color-text-dim: #c9a8c0;
+      }
+
+      body {
+        font-family: "IBM Plex Mono", monospace;
+        background: var(--color-bg);
+        color: var(--color-text);
+        padding: 20px;
+        line-height: 1.4;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: var(--color-terminal);
+        border: 3px solid var(--color-primary);
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 0 50px rgba(255, 8, 68, 0.3);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid var(--color-primary);
+        position: relative;
+      }
+
+      .header::before {
+        content: "▶";
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        color: var(--color-primary);
+        font-size: 2em;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      .header h1 {
+        font-family: "Exo 2", sans-serif;
+        font-size: 2.5em;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        text-shadow: 0 0 20px rgba(255, 8, 68, 0.8);
+        margin-bottom: 8px;
+      }
+
+      .header .subtitle {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.3em;
+        color: var(--color-secondary);
+        letter-spacing: 2px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .section {
+        background: rgba(0, 0, 0, 0.5);
+        border: 2px solid var(--color-secondary);
+        border-radius: 6px;
+        padding: 15px;
+        position: relative;
+      }
+
+      .section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, var(--color-primary), transparent);
+      }
+
+      .section-title {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.1em;
+        color: var(--color-warning);
+        margin-bottom: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid rgba(247, 147, 30, 0.3);
+        padding-bottom: 5px;
+      }
+
+      .memory-level {
+        font-size: 0.85em;
+        margin: 5px 0;
+        padding-left: 15px;
+        position: relative;
+        color: var(--color-text-dim);
+      }
+
+      .memory-level::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: var(--color-primary);
+      }
+
+      .memory-level strong {
+        color: var(--color-text);
+      }
+
+      .formula-box {
+        background: rgba(255, 8, 68, 0.05);
+        border: 1px solid var(--color-primary);
+        border-radius: 4px;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 0.85em;
+        color: var(--color-primary);
+        text-align: center;
+      }
+
+      .formula-label {
+        font-size: 0.75em;
+        color: var(--color-accent);
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .key-point {
+        background: rgba(8, 255, 200, 0.1);
+        border-left: 3px solid var(--color-accent);
+        padding: 8px;
+        margin: 8px 0;
+        font-size: 0.85em;
+        border-radius: 4px;
+      }
+
+      .cache-table {
+        font-size: 0.75em;
+        line-height: 1.6;
+      }
+
+      .cache-row {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        gap: 8px;
+        margin: 4px 0;
+        padding: 3px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .cache-name {
+        color: var(--color-warning);
+        font-weight: 600;
+      }
+
+      .cache-desc {
+        color: var(--color-text-dim);
+      }
+
+      ul.compact {
+        list-style: none;
+        margin-left: 0;
+      }
+
+      ul.compact li {
+        font-size: 0.8em;
+        margin-bottom: 4px;
+        padding-left: 12px;
+        position: relative;
+      }
+
+      ul.compact li::before {
+        content: "●";
+        position: absolute;
+        left: 0;
+        color: var(--color-primary);
+      }
+
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        font-size: 0.85em;
+      }
+
+      .metric {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .metric-name {
+        color: var(--color-accent);
+        font-weight: 600;
+        font-size: 0.9em;
+      }
+
+      .highlight {
+        color: var(--color-accent);
+        font-weight: 600;
+      }
+
+      .red-highlight {
+        color: var(--color-error);
+        font-weight: 600;
+      }
+
+      .wide-section {
+        grid-column: span 2;
+      }
+
+      .full-section {
+        grid-column: span 3;
+      }
+
+      .raid-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .raid-box {
+        background: rgba(255, 46, 99, 0.1);
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid var(--color-secondary);
+        font-size: 0.75em;
+      }
+
+      .raid-level {
+        color: var(--color-primary);
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+
+      .footer-formulas {
+        margin-top: 20px;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 8px;
+        border: 2px solid var(--color-secondary);
+      }
+
+      .formula-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .mini-formula {
+        background: rgba(255, 8, 68, 0.1);
+        border: 1px solid var(--color-primary);
+        padding: 8px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        color: var(--color-text);
+        text-align: center;
+      }
+
+      .address-field {
+        display: inline-block;
+        background: rgba(8, 255, 200, 0.2);
+        border: 1px solid var(--color-accent);
+        padding: 2px 6px;
+        margin: 2px;
+        font-size: 0.75em;
+        border-radius: 3px;
+        color: var(--color-accent);
+      }
+
+      @media (max-width: 1200px) {
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>Chapter 5</h1>
+        <div class="subtitle">Memory Hierarchy</div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="grid">
+        <!-- Memory Technologies -->
+        <div class="section">
+          <div class="section-title">🔥 Memory Technologies</div>
+          <div class="memory-level">
+            <strong>SRAM</strong> - Cache (L1, L2, L3)
+          </div>
+          <div class="memory-level">6-8 transistors/bit • Fast • Expensive</div>
+          <div class="memory-level"><strong>DRAM</strong> - Main Memory</div>
+          <div class="memory-level">1 transistor/bit • Slower • Cheaper</div>
+          <div class="memory-level"><strong>Flash</strong> - SSD Storage</div>
+          <div class="memory-level">Nonvolatile • Wear leveling</div>
+          <div class="memory-level"><strong>Magnetic Disk</strong> - HDD</div>
+          <div class="memory-level">Slowest • Largest capacity</div>
+        </div>
+
+        <!-- Locality Principles -->
+        <div class="section">
+          <div class="section-title">📍 Locality Principles</div>
+          <div class="key-point">
+            <strong>Temporal Locality:</strong><br />
+            Recently accessed items → likely to be accessed again soon
+          </div>
+          <div class="key-point">
+            <strong>Spatial Locality:</strong><br />
+            Items near recently accessed → likely to be accessed soon
+          </div>
+          <ul class="compact">
+            <li>Loops → high temporal locality</li>
+            <li>Arrays → high spatial locality</li>
+            <li>Sequential instructions → spatial</li>
+          </ul>
+        </div>
+
+        <!-- Cache Basics -->
+        <div class="section">
+          <div class="section-title">💾 Cache Fundamentals</div>
+          <div class="formula-box">
+            <div class="formula-label">BLOCK MAPPING</div>
+            (Block addr) mod (# blocks in cache)
+          </div>
+          <div class="key-point">
+            <strong>Tag:</strong> Upper address bits<br />
+            <strong>Index:</strong> Select cache block<br />
+            <strong>Offset:</strong> Byte within block
+          </div>
+          <ul class="compact">
+            <li>Valid bit indicates data validity</li>
+            <li>Tag match → hit, else miss</li>
+            <li>Block size affects miss rate</li>
+          </ul>
+        </div>
+
+        <!-- Direct-Mapped Cache -->
+        <div class="section">
+          <div class="section-title">🎯 Direct-Mapped</div>
+          <div class="key-point">
+            Each memory block → <strong>exactly ONE</strong> cache location
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">CACHE SIZE</div>
+            2<sup>n</sup> × (block size + tag + valid)
+          </div>
+          <ul class="compact">
+            <li>Fast access (no search)</li>
+            <li>Simple hardware</li>
+            <li>Higher conflict misses</li>
+            <li>Index = n bits for 2<sup>n</sup> blocks</li>
+          </ul>
+        </div>
+
+        <!-- Set-Associative -->
+        <div class="section">
+          <div class="section-title">🔀 Set-Associative</div>
+          <div class="key-point">
+            N-way: N blocks per set<br />
+            Reduces conflict misses
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">SET NUMBER</div>
+            (Block addr) mod (# sets)
+          </div>
+          <ul class="compact">
+            <li>2-way → 20-30% ↓ miss rate</li>
+            <li>Needs N comparators</li>
+            <li>LRU replacement policy</li>
+            <li>More associative → fewer sets</li>
+          </ul>
+        </div>
+
+        <!-- Fully Associative -->
+        <div class="section">
+          <div class="section-title">🌐 Fully Associative</div>
+          <div class="key-point">
+            Block can go <strong>ANYWHERE</strong><br />
+            All entries searched in parallel
+          </div>
+          <ul class="compact">
+            <li>Lowest miss rate</li>
+            <li>Expensive (many comparators)</li>
+            <li>Used for small caches/TLBs</li>
+            <li>No index bits (all tag)</li>
+            <li>Always uses LRU/random</li>
+          </ul>
+        </div>
+
+        <!-- Cache Performance -->
+        <div class="section wide-section">
+          <div class="section-title">⚡ Cache Performance</div>
+          <div class="formula-box">
+            <div class="formula-label">CPU TIME</div>
+            (CPU exec cycles + Mem stall cycles) × Cycle time
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">MEMORY STALLS</div>
+            (Mem accesses / Program) × Miss rate × Miss penalty
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">AMAT</div>
+            Hit time + (Miss rate × Miss penalty)
+          </div>
+          <div class="two-col">
+            <div class="metric">
+              <div class="metric-name">Hit Rate</div>
+              Fraction found in cache<br />
+              <span class="highlight">↑ Higher = Better</span>
+            </div>
+            <div class="metric">
+              <div class="metric-name">Miss Penalty</div>
+              Time to fetch from lower level<br />
+              <span class="red-highlight">↓ Lower = Better</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Three Cs -->
+        <div class="section">
+          <div class="section-title">🎯 The Three Cs</div>
+          <div class="key-point">
+            <strong class="red-highlight">Compulsory:</strong> First access<br />
+            → Fix: Larger blocks
+          </div>
+          <div class="key-point">
+            <strong class="red-highlight">Capacity:</strong> Cache too small<br />
+            → Fix: Bigger cache
+          </div>
+          <div class="key-point">
+            <strong class="red-highlight">Conflict:</strong> Set contention<br />
+            → Fix: More associativity
+          </div>
+        </div>
+
+        <!-- Write Policies -->
+        <div class="section">
+          <div class="section-title">✍️ Write Policies</div>
+          <div class="key-point">
+            <strong>Write-Through:</strong><br />
+            Write to cache AND memory<br />
+            → Use write buffer
+          </div>
+          <div class="key-point">
+            <strong>Write-Back:</strong><br />
+            Write to cache only<br />
+            → Dirty bit tracks changes
+          </div>
+          <ul class="compact">
+            <li>Write-back → better performance</li>
+            <li>Write-through → simpler</li>
+            <li>Write-miss: fetch then write</li>
+          </ul>
+        </div>
+
+        <!-- Multilevel Caches -->
+        <div class="section">
+          <div class="section-title">🏗️ Multilevel Caches</div>
+          <div class="formula-box">
+            <div class="formula-label">TOTAL CPI</div>
+            Base + L1 stalls + L2 stalls
+          </div>
+          <div class="key-point">
+            <strong>Global miss rate:</strong> Miss in all levels<br />
+            <strong>Local miss rate:</strong> Miss in one level
+          </div>
+          <ul class="compact">
+            <li>L1 → small, fast (hit time)</li>
+            <li>L2 → large, slower (miss rate)</li>
+            <li>L2 bigger blocks OK</li>
+            <li>Higher associativity in L2</li>
+          </ul>
+        </div>
+
+        <!-- Virtual Memory -->
+        <div class="section wide-section">
+          <div class="section-title">🗺️ Virtual Memory</div>
+          <div class="key-point">
+            Main memory = "cache" for disk<br />
+            Programs use virtual addresses
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">ADDRESS TRANSLATION</div>
+            Virtual Page # → Physical Page # + Page Offset
+          </div>
+          <div class="two-col">
+            <div>
+              <ul class="compact">
+                <li><strong>Page:</strong> VM block (4-64 KiB)</li>
+                <li><strong>Page fault:</strong> Page not in memory</li>
+                <li><strong>Page table:</strong> Mapping storage</li>
+              </ul>
+            </div>
+            <div>
+              <ul class="compact">
+                <li>Fully associative placement</li>
+                <li>Write-back always used</li>
+                <li>Software handles faults</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- TLB -->
+        <div class="section">
+          <div class="section-title">⚡ TLB</div>
+          <div class="key-point">
+            <strong>Translation Lookaside Buffer</strong><br />
+            Cache for page table entries
+          </div>
+          <ul class="compact">
+            <li>Small (16-512 entries)</li>
+            <li>Fully/set-associative</li>
+            <li>TLB hit → fast translation</li>
+            <li>TLB miss → walk page table</li>
+            <li>Critical for VM performance</li>
+          </ul>
+        </div>
+
+        <!-- Page Tables -->
+        <div class="section">
+          <div class="section-title">📋 Page Tables</div>
+          <div class="key-point">
+            Maps virtual → physical pages<br />
+            One per process
+          </div>
+          <ul class="compact">
+            <li>Valid bit: page in memory?</li>
+            <li>Reference bit: for LRU</li>
+            <li>Dirty bit: modified?</li>
+            <li>Multi-level tables (ARMv8: 4)</li>
+            <li>Swap space on disk</li>
+          </ul>
+        </div>
+
+        <!-- Cache Coherence -->
+        <div class="section wide-section">
+          <div class="section-title">🔄 Cache Coherence</div>
+          <div class="key-point">
+            <strong>Multiprocessor Problem:</strong> Multiple caches, shared
+            memory
+          </div>
+          <div class="two-col">
+            <div>
+              <strong class="highlight">Snooping Protocol:</strong>
+              <ul class="compact">
+                <li>All caches watch bus</li>
+                <li>Write-invalidate most common</li>
+                <li>Scalable to ~32 cores</li>
+              </ul>
+            </div>
+            <div>
+              <strong class="highlight">Directory-Based:</strong>
+              <ul class="compact">
+                <li>Central directory tracks sharing</li>
+                <li>Scales to 1000s of cores</li>
+                <li>More complex</li>
+              </ul>
+            </div>
+          </div>
+          <div class="key-point">
+            <strong class="red-highlight">False Sharing:</strong> Different
+            variables, same cache block → unnecessary coherence traffic
+          </div>
+        </div>
+
+        <!-- RAID Levels -->
+        <div class="section full-section">
+          <div class="section-title">💽 RAID Levels</div>
+          <div class="raid-grid">
+            <div class="raid-box">
+              <div class="raid-level">RAID 0</div>
+              Striping only<br />
+              No redundancy<br />
+              <span class="red-highlight">Fast but risky</span>
+            </div>
+            <div class="raid-box">
+              <div class="raid-level">RAID 1</div>
+              Mirroring<br />
+              100% redundancy<br />
+              <span class="highlight">Most expensive</span>
+            </div>
+            <div class="raid-box">
+              <div class="raid-level">RAID 3</div>
+              Bit-interleaved parity<br />
+              All disks for each I/O<br />
+              Good for large transfers
+            </div>
+            <div class="raid-box">
+              <div class="raid-level">RAID 4</div>
+              Block-interleaved parity<br />
+              Independent small reads<br />
+              <span class="red-highlight">Parity bottleneck</span>
+            </div>
+            <div class="raid-box">
+              <div class="raid-level">RAID 5</div>
+              Distributed parity<br />
+              No bottleneck<br />
+              <span class="highlight">Most popular</span>
+            </div>
+            <div class="raid-box">
+              <div class="raid-level">RAID 6</div>
+              P + Q redundancy<br />
+              Survives 2 failures<br />
+              2× overhead of RAID 5
+            </div>
+          </div>
+          <div class="key-point">
+            <strong>Protection Group:</strong> Disks that share check
+            disk/block<br />
+            <strong>Parity:</strong> XOR of all data (can rebuild from failure)
+          </div>
+        </div>
+
+        <!-- Disk Terminology -->
+        <div class="section">
+          <div class="section-title">💿 Disk Basics</div>
+          <div class="cache-table">
+            <div class="cache-row">
+              <div class="cache-name">Seek Time</div>
+              <div class="cache-desc">Move head to track</div>
+            </div>
+            <div class="cache-row">
+              <div class="cache-name">Rotational Latency</div>
+              <div class="cache-desc">Wait for sector (½ rotation)</div>
+            </div>
+            <div class="cache-row">
+              <div class="cache-name">Transfer Time</div>
+              <div class="cache-desc">Read/write data</div>
+            </div>
+            <div class="cache-row">
+              <div class="cache-name">Track</div>
+              <div class="cache-desc">Concentric circle on disk</div>
+            </div>
+            <div class="cache-row">
+              <div class="cache-name">Sector</div>
+              <div class="cache-desc">Smallest I/O unit</div>
+            </div>
+            <div class="cache-row">
+              <div class="cache-name">Cylinder</div>
+              <div class="cache-desc">Same track, all surfaces</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ECC -->
+        <div class="section">
+          <div class="section-title">🛡️ Error Correction</div>
+          <div class="key-point">
+            <strong>Hamming SEC/DED:</strong><br />
+            Single Error Correct<br />
+            Double Error Detect
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">PARITY BITS</div>
+            2<sup>p</sup> ≥ p + d + 1
+          </div>
+          <ul class="compact">
+            <li>8 data bits → 4 parity bits</li>
+            <li>16 data → 5 parity</li>
+            <li>32 data → 6 parity</li>
+            <li>Parity at positions 1,2,4,8,16...</li>
+          </ul>
+        </div>
+
+        <!-- Dependability -->
+        <div class="section">
+          <div class="section-title">⏱️ Dependability</div>
+          <div class="formula-box">
+            <div class="formula-label">AVAILABILITY</div>
+            MTTF / (MTTF + MTTR)
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">AFR</div>
+            8760 hours / MTTF
+          </div>
+          <ul class="compact">
+            <li><strong>MTTF:</strong> Mean Time To Failure</li>
+            <li><strong>MTTR:</strong> Mean Time To Repair</li>
+            <li><strong>AFR:</strong> Annual Failure Rate</li>
+            <li>5 nines = 99.999% = 5.26 min/year</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Quick Reference Formulas -->
+      <div class="footer-formulas">
+        <div
+          class="section-title"
+          style="text-align: center; margin-bottom: 10px"
+        >
+          🔥 QUICK FORMULA REFERENCE 🔥
+        </div>
+        <div class="formula-grid">
+          <div class="mini-formula">
+            CPU Time = (Exec + Mem stall) × Cycle time
+          </div>
+          <div class="mini-formula">
+            Mem stall = (Mem access / Prog) × Miss rate × Penalty
+          </div>
+          <div class="mini-formula">
+            AMAT = Hit time + (Miss rate × Penalty)
+          </div>
+          <div class="mini-formula">
+            Cache block = (Block addr) mod (# blocks)
+          </div>
+          <div class="mini-formula">Set number = (Block addr) mod (# sets)</div>
+          <div class="mini-formula">
+            Cache size = 2<sup>n</sup> × (block + tag + valid)
+          </div>
+          <div class="mini-formula">Tag size = 64 - (index + offset + 2)</div>
+          <div class="mini-formula">Availability = MTTF / (MTTF + MTTR)</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
