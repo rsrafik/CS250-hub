@@ -75,6 +75,26 @@
         margin-bottom: 15px;
       }
 
+      /* Responsive: when it gets tight, reflow into fewer columns (wrap) */
+      @media (max-width: 1200px) {
+        .grid {
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        .wide-section,
+        .full-width {
+          grid-column: span 1 !important;
+        }
+      }
+      @media (max-width: 720px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .wide-section,
+        .full-width {
+          grid-column: span 1 !important;
+        }
+      }
+
       .section {
         background: rgba(0, 0, 0, 0.4);
         border-radius: 8px;
@@ -257,6 +277,49 @@
         gap: 8px;
       }
 
+      /* Responsive wrap for formula grid */
+      @media (max-width: 720px) {
+        .formula-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Inline-grid responsiveness (overrides inline template cols on narrow screens) */
+      @media (max-width: 1200px) {
+        div[style*="display: grid"][style*="grid-template-columns"] {
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+        }
+      }
+      @media (max-width: 720px) {
+        div[style*="display: grid"][style*="grid-template-columns"] {
+          grid-template-columns: 1fr !important;
+        }
+      }
+
+      .footer-formulas .section-title {
+        position: relative;
+      }
+
+      /* Quick-ref button (top right) */
+      .qr-toggle-btn {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        border: 1px solid var(--color-secondary);
+        background: rgba(0, 0, 0, 0.4);
+        color: var(--color-secondary);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.6em;
+        padding: 6px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .qr-toggle-btn:hover {
+        box-shadow: 0 0 10px rgba(255, 0, 110, 0.35);
+      }
+
       .mini-formula {
         font-family: "JetBrains Mono", monospace;
         font-size: 0.75em;
@@ -265,6 +328,65 @@
         padding: 6px;
         border-radius: 4px;
         border: 1px solid rgba(255, 0, 110, 0.3);
+      }
+
+      /* ============================
+         ✅ FLIP CARD WITH BLANK BACK
+         - Entire card flips in 3D
+         - Back side is completely blank
+         ============================ */
+      .quiz-flip {
+        cursor: pointer;
+        user-select: none;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+      }
+
+      .quiz-flip.is-flipped {
+        transform: rotateY(180deg);
+      }
+
+      /* Front content - participates in 3D flip but hidden when facing back */
+      .quiz-flip > * {
+        backface-visibility: hidden;
+        transform: rotateY(0deg);
+        transform-style: preserve-3d;
+        opacity: 1;
+      }
+
+      /* When flipping to back, fade out content early */
+      .quiz-flip.is-flipped > * {
+        opacity: 0;
+        transition: opacity 0.2s ease-out 0s;
+      }
+
+      /* When unflipping, delay content appearance until halfway through */
+      .quiz-flip:not(.is-flipped) > * {
+        transition: opacity 0.25s ease-in 0.2s;
+      }
+
+      /* Blank back side - covers the content when flipped */
+      .quiz-flip::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: inherit;
+        border-radius: inherit;
+        transform: rotateY(180deg);
+        backface-visibility: hidden;
+        pointer-events: auto;
+        transform-style: preserve-3d;
+      }
+
+      /* Only apply hover effect when NOT flipped */
+      .quiz-flip:not(.is-flipped):hover {
+        filter: brightness(1.05);
+      }
+
+      /* Ensure flipped cards maintain proper appearance on hover */
+      .quiz-flip.is-flipped:hover > * {
+        backface-visibility: hidden;
       }
 
       @media print {
@@ -288,7 +410,7 @@
 
       <div class="grid">
         <!-- Eight Great Ideas -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="section-title">🎯 8 Great Ideas</div>
           <ul class="idea-list">
             <li><strong>Moore's Law:</strong> IC doubles every 18-24mo</li>
@@ -305,7 +427,7 @@
         </div>
 
         <!-- Performance Metrics -->
-        <div class="section performance-section">
+        <div class="section performance-section quiz-flip">
           <div class="section-title">📊 Performance Metrics</div>
           <div class="two-col">
             <div class="metric">
@@ -348,7 +470,7 @@
         </div>
 
         <!-- Power Wall -->
-        <div class="section power-section">
+        <div class="section power-section quiz-flip">
           <div class="section-title">⚡ Power Wall</div>
 
           <div class="key-point">
@@ -380,7 +502,7 @@
         </div>
 
         <!-- CPI Details -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="section-title">🔄 CPI Breakdown</div>
 
           <div class="formula-box">
@@ -410,7 +532,7 @@
         </div>
 
         <!-- Amdahl's Law -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="section-title">🎯 Amdahl's Law</div>
 
           <div class="key-point">
@@ -437,7 +559,7 @@
         </div>
 
         <!-- Benchmarking -->
-        <div class="section benchmark-section">
+        <div class="section benchmark-section quiz-flip">
           <div class="section-title">📈 Benchmarking (SPEC)</div>
 
           <div class="two-col">
@@ -479,7 +601,7 @@
         </div>
 
         <!-- Fallacies & Pitfalls -->
-        <div class="section fallacy-section">
+        <div class="section fallacy-section quiz-flip">
           <div class="section-title">⚠️ Fallacies & Pitfalls</div>
 
           <div class="key-point">
@@ -520,22 +642,65 @@
           style="text-align: center; margin-bottom: 10px"
         >
           ⚡ QUICK FORMULA REFERENCE ⚡
+          <button id="qrToggleAll" class="qr-toggle-btn" type="button">
+            Flip all
+          </button>
         </div>
         <div class="formula-grid">
-          <div class="mini-formula">CPU Time = IC × CPI × Cycle Time</div>
-          <div class="mini-formula">CPU Time = (IC × CPI) / Clock Rate</div>
-          <div class="mini-formula">CPU Cycles = IC × CPI<sub>avg</sub></div>
-          <div class="mini-formula">
+          <div class="mini-formula quiz-flip">CPU Time = IC × CPI × Cycle Time</div>
+          <div class="mini-formula quiz-flip">CPU Time = (IC × CPI) / Clock Rate</div>
+          <div class="mini-formula quiz-flip">CPU Cycles = IC × CPI<sub>avg</sub></div>
+          <div class="mini-formula quiz-flip">
             CPI = Σ(CPI<sub>i</sub> × C<sub>i</sub>) / IC
           </div>
-          <div class="mini-formula">Energy ∝ C<sub>load</sub> × V²</div>
-          <div class="mini-formula">Power ∝ ½ × C<sub>load</sub> × V² × f</div>
-          <div class="mini-formula">
+          <div class="mini-formula quiz-flip">Energy ∝ C<sub>load</sub> × V²</div>
+          <div class="mini-formula quiz-flip">Power ∝ ½ × C<sub>load</sub> × V² × f</div>
+          <div class="mini-formula quiz-flip">
             SPECratio = Time<sub>ref</sub> / Time<sub>measured</sub>
           </div>
-          <div class="mini-formula">Geo Mean = ⁿ√(∏ Ratio<sub>i</sub>)</div>
+          <div class="mini-formula quiz-flip">Geo Mean = ⁿ√(∏ Ratio<sub>i</sub>)</div>
         </div>
       </div>
     </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Simple click-to-flip functionality
+        document.addEventListener("click", (e) => {
+          // Don't flip if clicking the quick-ref toggle button
+          if (e.target.closest("#qrToggleAll")) return;
+
+          const card = e.target.closest(".quiz-flip");
+          if (!card) return;
+
+          card.classList.toggle("is-flipped");
+        });
+
+        // Quick Reference: flip/unflip all ref items
+        const btn = document.getElementById("qrToggleAll");
+        const refCards = Array.from(
+          document.querySelectorAll(".formula-grid .mini-formula.quiz-flip")
+        );
+
+        const anyUnflipped = () =>
+          refCards.some((c) => !c.classList.contains("is-flipped"));
+
+        const syncBtn = () => {
+          if (!btn) return;
+          btn.textContent = anyUnflipped() ? "Flip all" : "Unflip all";
+        };
+
+        if (btn) {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const flipTo = anyUnflipped();
+            refCards.forEach((c) => c.classList.toggle("is-flipped", flipTo));
+            syncBtn();
+          });
+          syncBtn();
+        }
+      });
+    </script>
   </body>
 </html>

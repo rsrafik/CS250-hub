@@ -166,6 +166,18 @@
         z-index: 1;
       }
 
+      /* Responsive: when it gets tight, reflow into fewer columns (wrap) */
+      @media (max-width: 1200px) {
+        .grid {
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+      }
+      @media (max-width: 720px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
       .section {
         background: var(--card);
         border: 2px solid rgba(102, 231, 255, 0.3);
@@ -300,6 +312,27 @@
         margin-bottom: 10px;
         text-align: center;
         text-shadow: 0 0 14px rgba(255, 119, 200, 0.35);
+        position: relative;
+      }
+
+      /* Quick-ref button (top right) */
+      .qr-toggle-btn {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        border: 1px solid var(--accent);
+        background: rgba(0, 0, 0, 0.4);
+        color: var(--accent);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.6em;
+        padding: 6px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .qr-toggle-btn:hover {
+        box-shadow: 0 0 10px rgba(255, 119, 200, 0.35);
       }
 
       .ref-grid {
@@ -362,7 +395,7 @@
         }
         .wide,
         .full {
-          grid-column: span 1;
+          grid-column: span 1 !important;
         }
         .ref-grid {
           grid-template-columns: repeat(2, 1fr);
@@ -370,6 +403,86 @@
         .cols {
           grid-template-columns: 1fr;
         }
+      }
+      @media (max-width: 720px) {
+        .ref-grid {
+          grid-template-columns: 1fr;
+        }
+        .wide,
+        .full {
+          grid-column: span 1 !important;
+        }
+      }
+
+      /* Inline-grid responsiveness (overrides inline template cols on narrow screens) */
+      @media (max-width: 1200px) {
+        div[style*="display: grid"][style*="grid-template-columns"] {
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+        }
+      }
+      @media (max-width: 720px) {
+        div[style*="display: grid"][style*="grid-template-columns"] {
+          grid-template-columns: 1fr !important;
+        }
+      }
+
+      /* ============================
+         ✅ FLIP CARD WITH BLANK BACK
+         - Entire card flips in 3D
+         - Back side is completely blank
+         ============================ */
+      .quiz-flip {
+        cursor: pointer;
+        user-select: none;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+      }
+
+      .quiz-flip.is-flipped {
+        transform: rotateY(180deg);
+      }
+
+      /* Front content - participates in 3D flip but hidden when facing back */
+      .quiz-flip > * {
+        backface-visibility: hidden;
+        transform: rotateY(0deg);
+        transform-style: preserve-3d;
+        opacity: 1;
+      }
+
+      /* When flipping to back, fade out content early */
+      .quiz-flip.is-flipped > * {
+        opacity: 0;
+        transition: opacity 0.2s ease-out 0s;
+      }
+
+      /* When unflipping, delay content appearance until halfway through */
+      .quiz-flip:not(.is-flipped) > * {
+        transition: opacity 0.25s ease-in 0.2s;
+      }
+
+      /* Blank back side - covers the content when flipped */
+      .quiz-flip::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: inherit;
+        border-radius: inherit;
+        transform: rotateY(180deg);
+        backface-visibility: hidden;
+        pointer-events: auto;
+        transform-style: preserve-3d;
+      }
+
+      /* Only apply hover effect when NOT flipped */
+      .quiz-flip:not(.is-flipped):hover {
+        filter: brightness(1.05);
+      }
+
+      /* Ensure flipped cards maintain proper appearance on hover */
+      .quiz-flip.is-flipped:hover > * {
+        backface-visibility: hidden;
       }
 
       @media print {
@@ -434,7 +547,7 @@
 
       <div class="grid">
         <!-- 🧩 Signals / combinational vs sequential / truth tables -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="title">
             <span class="emoji">🧩</span>Signals & Logic Types
           </div>
@@ -458,7 +571,7 @@
         </div>
 
         <!-- 🔣 Boolean / NAND NOR / DeMorgan / SOP -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="title">
             <span class="emoji">🔣</span>Boolean + Universal Gates
           </div>
@@ -481,7 +594,7 @@
         </div>
 
         <!-- 🧰 Decoder/Encoder/MUX/Bus -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="title">
             <span class="emoji">🧰</span>Decoder • Encoder • MUX
           </div>
@@ -504,7 +617,7 @@
         </div>
 
         <!-- 🧾 PLA / ROM / PROM / Don't cares / K-maps -->
-        <div class="section wide">
+        <div class="section wide quiz-flip">
           <div class="title">
             <span class="emoji">🧾</span>PLA • ROM • Don’t Cares
           </div>
@@ -533,7 +646,7 @@
         </div>
 
         <!-- 🚌 Tri-state -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="title"><span class="emoji">🚌</span>3-State Buffers</div>
           <div class="line">
             Outputs: 0, 1, or <strong>high-Z</strong> (electrically
@@ -549,7 +662,7 @@
         </div>
 
         <!-- ➕ Adders + equations + subtraction -->
-        <div class="section wide">
+        <div class="section wide quiz-flip">
           <div class="title">
             <span class="emoji">➕</span>Full Adder + Subtraction
           </div>
@@ -568,7 +681,7 @@
         </div>
 
         <!-- 🚀 Carry lookahead -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="title"><span class="emoji">🚀</span>Carry-Lookahead</div>
           <div class="line">
             <span class="tag">generate</span>
@@ -593,7 +706,7 @@
         </div>
 
         <!-- 🧮 ALU (64-bit LEGv8) -->
-        <div class="section wide">
+        <div class="section wide quiz-flip">
           <div class="title">
             <span class="emoji">🧮</span>LEGv8 ALU (1-bit → 64-bit)
           </div>
@@ -633,7 +746,7 @@
         </div>
 
         <!-- 🎛️ ALU control -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="title">
             <span class="emoji">🎛️</span>ALU Control (Idea)
           </div>
@@ -650,7 +763,7 @@
         </div>
 
         <!-- 🕒 Clocking + setup/hold -->
-        <div class="section wide">
+        <div class="section wide quiz-flip">
           <div class="title">
             <span class="emoji">🕒</span>Clocking + Setup/Hold
           </div>
@@ -673,7 +786,7 @@
         </div>
 
         <!-- 🧷 Latches/Flip-flops + master-slave + JK -->
-        <div class="section wide">
+        <div class="section wide quiz-flip">
           <div class="title">
             <span class="emoji">🧷</span>Latches • Flip-Flops • Glitches
           </div>
@@ -701,7 +814,7 @@
         </div>
 
         <!-- 🧾 Verilog -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="title">
             <span class="emoji">🧾</span>Verilog (Seq vs Comb)
           </div>
@@ -723,7 +836,7 @@
         </div>
 
         <!-- 🗃️ Register file -->
-        <div class="section wide">
+        <div class="section wide quiz-flip">
           <div class="title"><span class="emoji">🗃️</span>Register File</div>
           <div class="line">
             State element containing multiple registers addressed by register
@@ -742,7 +855,7 @@
         </div>
 
         <!-- 💾 SRAM / DRAM -->
-        <div class="section full">
+        <div class="section full quiz-flip">
           <div class="title">
             <span class="emoji">💾</span>SRAM vs DRAM (must-know details)
           </div>
@@ -802,7 +915,7 @@
         </div>
 
         <!-- 🛡️ ECC -->
-        <div class="section wide">
+        <div class="section wide quiz-flip">
           <div class="title">
             <span class="emoji">🛡️</span>Parity + Hamming (ECC)
           </div>
@@ -820,7 +933,7 @@
         </div>
 
         <!-- 🗺️ FSM -->
-        <div class="section wide">
+        <div class="section wide quiz-flip">
           <div class="title">
             <span class="emoji">🗺️</span>Finite-State Machines (FSM)
           </div>
@@ -862,34 +975,36 @@
 
       <!-- ✅ QUICK REFERENCE MUST BE AT THE BOTTOM (like your other guides) -->
       <div class="accent-card" style="margin-top: 18px">
-        <h3>Quick Reference</h3>
+        <h3>Quick Reference <button id="qrToggleAll" class="qr-toggle-btn" type="button">
+          Flip all
+        </button></h3>
         <div class="ref-grid">
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Truth table</div>
             <div>
               <code>2<sup>n</sup></code> rows
             </div>
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Decoder</div>
             <div>
               <code>2<sup>n</sup></code> outputs
             </div>
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">MUX select</div>
             <div><code>⌈log<sub>2</sub>(n)⌉</code></div>
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Tri-state</div>
             <div>0 / 1 / High-Z</div>
           </div>
 
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Subtract</div>
             <div><code>a + (~b) + 1</code></div>
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">CLA carry</div>
             <div>
               <code
@@ -899,31 +1014,31 @@
               >
             </div>
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Zero flag</div>
             <div><code>~(OR Result bits)</code></div>
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Overflow</div>
             <div>+/+→− or −/−→+</div>
           </div>
 
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Setup/Hold</div>
             <div>
               <code>t<sub>setup</sub></code
               >, <code>t<sub>hold</sub></code>
             </div>
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Latch vs FF</div>
             <div>level vs edge</div>
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">SRAM vs DRAM</div>
             <div>static/fast vs refresh/dense</div>
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">FSM</div>
             <div>Moore vs Mealy</div>
           </div>
@@ -931,5 +1046,45 @@
       </div>
     </div>
     <!-- /container -->
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Simple click-to-flip functionality
+        document.addEventListener("click", (e) => {
+          // Don't flip if clicking the quick-ref toggle button
+          if (e.target.closest("#qrToggleAll")) return;
+
+          const card = e.target.closest(".quiz-flip");
+          if (!card) return;
+
+          card.classList.toggle("is-flipped");
+        });
+
+        // Quick Reference: flip/unflip all ref items
+        const btn = document.getElementById("qrToggleAll");
+        const refCards = Array.from(
+          document.querySelectorAll(".ref-grid .ref-item.quiz-flip")
+        );
+
+        const anyUnflipped = () =>
+          refCards.some((c) => !c.classList.contains("is-flipped"));
+
+        const syncBtn = () => {
+          if (!btn) return;
+          btn.textContent = anyUnflipped() ? "Flip all" : "Unflip all";
+        };
+
+        if (btn) {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const flipTo = anyUnflipped();
+            refCards.forEach((c) => c.classList.toggle("is-flipped", flipTo));
+            syncBtn();
+          });
+          syncBtn();
+        }
+      });
+    </script>
   </body>
 </html>

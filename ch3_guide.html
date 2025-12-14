@@ -98,6 +98,26 @@
         margin-bottom: 18px;
       }
 
+      /* Responsive: when it gets tight, reflow into fewer columns (wrap) */
+      @media (max-width: 1200px) {
+        .grid {
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        .wide-section,
+        .full-width {
+          grid-column: span 1 !important;
+        }
+      }
+      @media (max-width: 720px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .wide-section,
+        .full-width {
+          grid-column: span 1 !important;
+        }
+      }
+
       .section {
         background: rgba(0, 0, 0, 0.5);
         border: 2px solid var(--color-secondary);
@@ -229,6 +249,18 @@
         gap: 10px;
       }
 
+      /* Responsive wrap for quick ref */
+      @media (max-width: 1200px) {
+        .ref-grid {
+          grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        }
+      }
+      @media (max-width: 720px) {
+        .ref-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
       .ref-item {
         background: rgba(0, 0, 0, 0.5);
         padding: 8px;
@@ -241,6 +273,42 @@
         color: var(--color-warning);
         font-weight: 600;
         margin-bottom: 3px;
+      }
+
+      /* Inline-grid responsiveness (pipeline stages, etc.) */
+      @media (max-width: 1200px) {
+        div[style*="display: grid"][style*="grid-template-columns"] {
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+        }
+      }
+      @media (max-width: 720px) {
+        div[style*="display: grid"][style*="grid-template-columns"] {
+          grid-template-columns: 1fr !important;
+        }
+      }
+
+      /* Quick-ref button (top right) */
+      .qr-toggle-btn {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        border: 1px solid var(--color-accent);
+        background: rgba(0, 0, 0, 0.4);
+        color: var(--color-accent);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.6em;
+        padding: 6px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .qr-toggle-btn:hover {
+        box-shadow: 0 0 10px rgba(236, 72, 153, 0.35);
+      }
+
+      .quick-ref-title {
+        position: relative;
       }
 
       .highlight-orange {
@@ -258,6 +326,65 @@
       .highlight-warn {
         color: var(--color-warning);
         font-weight: 600;
+      }
+
+      /* ============================
+         ✅ FLIP CARD WITH BLANK BACK
+         - Entire card flips in 3D
+         - Back side is completely blank
+         ============================ */
+      .quiz-flip {
+        cursor: pointer;
+        user-select: none;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+      }
+
+      .quiz-flip.is-flipped {
+        transform: rotateY(180deg);
+      }
+
+      /* Front content - participates in 3D flip but hidden when facing back */
+      .quiz-flip > * {
+        backface-visibility: hidden;
+        transform: rotateY(0deg);
+        transform-style: preserve-3d;
+        opacity: 1;
+      }
+
+      /* When flipping to back, fade out content early */
+      .quiz-flip.is-flipped > * {
+        opacity: 0;
+        transition: opacity 0.2s ease-out 0s;
+      }
+
+      /* When unflipping, delay content appearance until halfway through */
+      .quiz-flip:not(.is-flipped) > * {
+        transition: opacity 0.25s ease-in 0.2s;
+      }
+
+      /* Blank back side - covers the content when flipped */
+      .quiz-flip::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: inherit;
+        border-radius: inherit;
+        transform: rotateY(180deg);
+        backface-visibility: hidden;
+        pointer-events: auto;
+        transform-style: preserve-3d;
+      }
+
+      /* Only apply hover effect when NOT flipped */
+      .quiz-flip:not(.is-flipped):hover {
+        filter: brightness(1.05);
+      }
+
+      /* Ensure flipped cards maintain proper appearance on hover */
+      .quiz-flip.is-flipped:hover > * {
+        backface-visibility: hidden;
       }
 
       @media print {
@@ -307,6 +434,7 @@
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px">
           <div
+            class="quiz-flip"
             style="
               background: rgba(0, 0, 0, 0.4);
               padding: 12px;
@@ -333,6 +461,7 @@
           </div>
 
           <div
+            class="quiz-flip"
             style="
               background: rgba(0, 0, 0, 0.4);
               padding: 12px;
@@ -373,6 +502,7 @@
         </div>
 
         <div
+          class="quiz-flip"
           style="
             background: rgba(0, 0, 0, 0.5);
             padding: 15px;
@@ -430,6 +560,7 @@
           "
         >
           <div
+            class="quiz-flip"
             style="
               background: rgba(16, 185, 129, 0.1);
               padding: 12px;
@@ -459,6 +590,7 @@
           </div>
 
           <div
+            class="quiz-flip"
             style="
               background: rgba(255, 159, 28, 0.1);
               padding: 12px;
@@ -487,6 +619,7 @@
         </div>
 
         <div
+          class="quiz-flip"
           style="
             background: rgba(0, 0, 0, 0.5);
             padding: 15px;
@@ -526,7 +659,7 @@
 
       <div class="grid">
         <!-- LEGv8 Multiply Instructions -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="section-title">💻 Multiply Instructions</div>
           <div class="register-table">
             <div class="register-row">
@@ -551,7 +684,7 @@
         </div>
 
         <!-- Division Basics -->
-        <div class="section wide-section">
+        <div class="section wide-section quiz-flip">
           <div class="section-title">➗ Binary Division</div>
           <div class="code-block">
             <span class="highlight-orange">Division Equation:</span><br />
@@ -591,7 +724,7 @@
         </div>
 
         <!-- Division Instructions -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="section-title">💻 Divide Instructions</div>
           <div class="register-table">
             <div class="register-row">
@@ -649,7 +782,7 @@
 
         <div class="grid">
           <!-- Format -->
-          <div class="section full-width">
+          <div class="section full-width quiz-flip">
             <div class="section-title">🔬 Format & Formula</div>
             <div class="code-block">
               <span class="highlight-orange">General Form:</span><br />
@@ -708,7 +841,7 @@
           </div>
 
           <!-- Special Values -->
-          <div class="section">
+          <div class="section quiz-flip">
             <div class="section-title">✨ Special Values</div>
             <div class="register-table">
               <div class="register-row">
@@ -735,7 +868,7 @@
           </div>
 
           <!-- Exponent Bias -->
-          <div class="section">
+          <div class="section quiz-flip">
             <div class="section-title">⚖️ Exponent Bias</div>
             <div class="key-point">
               <strong>Why bias?</strong><br />
@@ -755,7 +888,7 @@
           </div>
 
           <!-- IEEE Design -->
-          <div class="section">
+          <div class="section quiz-flip">
             <div class="section-title">🎨 Design Rationale</div>
             <ul style="list-style: none; font-size: 0.85em; line-height: 1.8">
               <li>
@@ -809,6 +942,7 @@
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px">
           <div
+            class="quiz-flip"
             style="
               background: rgba(0, 0, 0, 0.4);
               padding: 12px;
@@ -847,6 +981,7 @@
           </div>
 
           <div
+            class="quiz-flip"
             style="
               background: rgba(0, 0, 0, 0.4);
               padding: 12px;
@@ -877,7 +1012,7 @@
 
       <div class="grid">
         <!-- Rounding Modes -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="section-title">🎯 Rounding Modes</div>
           <div class="register-table">
             <div class="register-row">
@@ -905,7 +1040,7 @@
         </div>
 
         <!-- Accuracy -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="section-title">📏 Accuracy</div>
           <div class="code-block">
             <span class="highlight-orange">ulp</span> = Units in Last Place<br />
@@ -920,7 +1055,7 @@
         </div>
 
         <!-- SIMD -->
-        <div class="section">
+        <div class="section quiz-flip">
           <div class="section-title">🚀 SIMD Parallelism</div>
           <div class="key-point">
             <strong>Subword Parallelism:</strong><br />
@@ -944,106 +1079,151 @@
 
       <!-- Quick Reference -->
       <div class="quick-ref">
-        <div class="quick-ref-title">⚡ QUICK REFERENCE ⚡</div>
+        <div class="quick-ref-title">
+          ⚡ QUICK REFERENCE ⚡
+          <button id="qrToggleAll" class="qr-toggle-btn" type="button">
+            Flip all
+          </button>
+        </div>
         <div class="ref-grid">
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Overflow Add</div>
             Same signs → diff sign<br />YES overflow
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Multiply Size</div>
             n-bit × m-bit<br />= (n+m)-bit
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">LEGv8 Multiply</div>
             MUL, SMULH<br />UMULH
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Division Rule</div>
             Remainder sign<br />= Dividend sign
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">LEGv8 Divide</div>
             SDIV (signed)<br />UDIV (unsigned)
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">FP Formula</div>
             (-1)^S × (1+F)<br />× 2^(E-Bias)
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Single Precision</div>
             32-bit: 1+8+23<br />Bias = 127
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Double Precision</div>
             64-bit: 1+11+52<br />Bias = 1023
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Hidden Bit</div>
             Implicit leading 1<br />24/53 bits total
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">±∞</div>
             E = all 1s<br />F = 0
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">NaN</div>
             E = all 1s<br />F ≠ 0
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">FP Add Steps</div>
             Align → Add → Norm<br />Round → Check
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">FP Multiply</div>
             Add Exp → Mult Sig<br />Norm → Round
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Rounding</div>
             To nearest (default)<br />Guard & Round bits
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Accuracy</div>
             ulp = bits in error<br />IEEE: ≤ 0.5 ulp
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">SIMD</div>
             Subword parallelism<br />Same op on multiple
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">ARMv8 SIMD</div>
             V0-V31 (128-bit)<br />.B .H .S .D
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Saturation</div>
             Overflow → max/min<br />Media operations
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">2's Complement</div>
             Negate: ~x + 1<br />Invert + Add 1
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Fast Multiply</div>
             Parallel adders<br />Tree: log₂(64)=6
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Fast Divide</div>
             SRT: 4 bits/step<br />Nonrestoring
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Denormalized</div>
             E=0, F≠0<br />Gradual underflow
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">Bias Formula</div>
             2^(bits-1) - 1<br />Centers range
           </div>
-          <div class="ref-item">
+          <div class="ref-item quiz-flip">
             <div class="ref-label">FP Approximation</div>
             Not exact!<br />Rounding errors
           </div>
         </div>
       </div>
     </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Simple click-to-flip functionality
+        document.addEventListener("click", (e) => {
+          // Don't flip if clicking the quick-ref toggle button
+          if (e.target.closest("#qrToggleAll")) return;
+
+          const card = e.target.closest(".quiz-flip");
+          if (!card) return;
+
+          card.classList.toggle("is-flipped");
+        });
+
+        // Quick Reference: flip/unflip all ref items
+        const btn = document.getElementById("qrToggleAll");
+        const refCards = Array.from(
+          document.querySelectorAll(".ref-grid .ref-item.quiz-flip")
+        );
+
+        const anyUnflipped = () =>
+          refCards.some((c) => !c.classList.contains("is-flipped"));
+
+        const syncBtn = () => {
+          if (!btn) return;
+          btn.textContent = anyUnflipped() ? "Flip all" : "Unflip all";
+        };
+
+        if (btn) {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const flipTo = anyUnflipped();
+            refCards.forEach((c) => c.classList.toggle("is-flipped", flipTo));
+            syncBtn();
+          });
+          syncBtn();
+        }
+      });
+    </script>
   </body>
 </html>
