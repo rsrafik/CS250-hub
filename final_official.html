@@ -324,6 +324,22 @@
         border: 1px solid rgba(148, 163, 184, 0.25);
         background: rgba(10, 14, 39, 0.25);
       }
+      /* tighten spacing between Correct / Your answer / Explanation */
+.result .answer {
+  margin-bottom: 6px;
+}
+
+.result .your-answer {
+  margin: 0 0 6px 0; /* reduce the gap under "Your answer" */
+}
+
+.result .explain {
+  margin: 0;
+  padding: 0;
+  line-height: 1.45; /* slightly tighter, optional */
+}
+
+      
       .result .answer {
         font-family: "Roboto Mono", monospace;
         font-weight: 700;
@@ -333,6 +349,8 @@
       .result .explain {
         color: var(--color-text-dim);
         font-size: 0.98em;
+        white-space: pre-wrap;
+        line-height: 1.6;
       }
 
       .bottom-actions {
@@ -415,6 +433,9 @@
           justify-content: center;
         }
       }
+
+      
+
     </style>
   </head>
 
@@ -496,7 +517,7 @@
       "Temporal locality means that if a machine instruction or a data item is accessed, then other instructions or data items nearby in the address space are likely to be accessed soon.",
     choices: ["The statement is false.", "The statement is true."],
     correctIndex: 0,
-    explanation: "This describes spacial (spatial) locality, not temporal locality."
+    explanation: "**Why it's false:** This describes **spatial locality**, not temporal locality.\n\n**Key Concepts:**\n- **Temporal locality**: If you access something NOW, you'll likely access that SAME thing again SOON (same address, repeated access over time)\n- **Spatial locality**: If you access something NOW, you'll likely access NEARBY things SOON (adjacent addresses in the address space)\n\n**How to distinguish:** The statement says 'nearby in the address space' which is the defining characteristic of spatial locality. Temporal locality is about TIME (re-accessing the same location repeatedly), not SPACE (accessing nearby/adjacent locations).\n\n**Memory example:** \n- Temporal: Accessing variable 'counter' repeatedly in a loop → same address, multiple times\n- Spatial: Accessing array elements array[0], array[1], array[2] → nearby addresses, sequential access"
   },
   {
     id: "pf02_lru_longest_resident",
@@ -504,7 +525,7 @@
       "Given an LRU policy, the block to be replaced is the one in the set that has been resident in the cache for the longest time.",
     choices: ["The statement is false.", "The statement is true."],
     correctIndex: 0,
-    explanation: "LRU replaces the least recently used block, not the oldest-resident block."
+    explanation: "**Why it's false:** LRU (Least Recently Used) replaces the **least recently used** block, NOT the block that has been resident the longest.\n\n**Key Distinction:**\n- **LRU tracks**: When was each block LAST accessed (most recent use time)\n- **Statement describes**: How long each block has been in the cache (residence time)\n\n**Example showing they're different:**\nSuppose 4 blocks enter cache at times: A(t=0), B(t=1), C(t=2), D(t=3)\nThen at t=10, you access A again.\n\n- **Longest resident**: A (in cache since t=0, resident for 10 time units)\n- **Least recently used**: D (last accessed at t=3, while A was just accessed at t=10)\n\n**LRU would evict D**, even though A has been resident longer!\n\n**Key concept:** LRU cares about WHEN you last touched it (recency), not HOW LONG it's been sitting there (residence duration)."
   },
   {
     id: "pf03_multiple_vm_spaces",
@@ -512,7 +533,7 @@
       "There may exist multiple virtual memory address spaces at the same time in a running computer.",
     choices: ["The statement is false.", "The statement is true."],
     correctIndex: 1,
-    explanation: "Multiple processes can exist simultaneously, each with its own virtual address space."
+    explanation: "**Why it's true:** Multiple processes can execute simultaneously on a computer, and each process has its own independent virtual address space.\n\n**How virtual memory enables this:**\n1. **Each process gets its own virtual address space** (e.g., 0x00000000 to 0xFFFFFFFF on a 32-bit system)\n2. **The OS and hardware (MMU) translate** each process's virtual addresses to different physical addresses\n3. **Processes are isolated** - Process A accessing virtual address 0x1000 goes to a different physical location than Process B accessing 0x1000\n\n**Real-world example:**\nYou're running: Chrome, VS Code, and Spotify simultaneously\n- All 3 can use virtual address 0x00400000 for their code\n- The MMU maps each to different physical RAM locations\n- They coexist without conflicting\n\n**Key concept:** Virtual memory provides **isolation and protection** - each process operates in its own \"universe\" of addresses, mapped independently to physical memory."
   },
   {
     id: "pf04_hardware_lock_shared_variable",
@@ -520,14 +541,14 @@
       "A hardware lock can be used to enforce one program at a time write access to a shared variable.",
     choices: ["The statement is false.", "The statement is true."],
     correctIndex: 1,
-    explanation: "Locks enforce mutual exclusion on shared data."
+    explanation: "**Why it's true:** Hardware locks enforce **mutual exclusion**, ensuring only one thread/program can write to a shared variable at a time.\n\n**How hardware locks work:**\n1. **Before writing**, a program must **acquire the lock** (using atomic instructions like test-and-set, compare-and-swap)\n2. **While locked**, no other program can acquire that lock - they must wait\n3. **After writing**, the program **releases the lock**, allowing others to proceed\n\n**Why this is necessary - the race condition problem:**\nWithout locks:\n- Thread A reads counter=5, computes 5+1=6\n- Thread B reads counter=5 (before A writes!), computes 5+1=6  \n- Both write 6 → counter=6 (should be 7!)\n\nWith locks:\n- Thread A locks, reads 5, writes 6, unlocks\n- Thread B waits for lock, then reads 6, writes 7, unlocks → counter=7 ✓\n\n**Key concept:** Hardware provides **atomic operations** (indivisible, all-or-nothing) that make lock implementation possible. Software alone cannot reliably implement locks without hardware support."
   },
   {
     id: "pf05_mimd_comm_minor",
     text: "Communication time is always a minor overhead of MIMD computing.",
     choices: ["The statement is false.", "The statement is true."],
     correctIndex: 0,
-    explanation: "Communication overhead can be large in MIMD systems."
+    explanation: "**Why it's false:** Communication overhead can be **significant and sometimes dominant** in MIMD (Multiple Instruction, Multiple Data) systems, not always minor.\n\n**Why communication can be expensive:**\n1. **Network latency**: Sending data between processors takes time (microseconds to milliseconds)\n2. **Bandwidth limits**: Network has finite capacity - congestion slows everything down\n3. **Synchronization overhead**: Processors must coordinate and wait for each other\n4. **Cache coherence traffic**: Keeping caches consistent across processors requires messages\n\n**When communication dominates:**\n- **Fine-grained parallelism**: If processors communicate after every small computation, communication time >> computation time\n- **Poor load balancing**: Some processors finish early and idle, waiting for data from others\n- **Small problem size**: Communication overhead becomes larger fraction of total time\n\n**Amdahl's Law impact:** If communication is 20% of execution time, even with infinite processors, you can't get more than 5× speedup!\n\n**Key concept:** Efficient parallel programming requires **minimizing communication** through careful algorithm design, larger grain sizes, and good data locality."
   },
   {
     id: "pf06_track_hw_changes",
@@ -535,7 +556,7 @@
       "It is useful for software developers to track hardware technology changes because applications that are not feasible today due to hardware limitations may become feasible in the future.",
     choices: ["This statement is false.", "This statement is true"],
     correctIndex: 1,
-    explanation: "Hardware improvements can enable new software capabilities."
+    explanation: "**Why it's true:** Tracking hardware evolution is crucial because today's hardware limitations often become tomorrow's solved problems.\n\n**Historical examples proving this:**\n1. **Smartphone AI** (2010 vs 2025):\n   - 2010: Speech recognition required server farms\n   - 2025: Real-time on-device AI with neural engines\n   - Same algorithms, feasible now due to hardware advances\n\n2. **Virtual Reality** (1990s vs 2020s):\n   - 1990s: VR existed but caused motion sickness (low frame rates, high latency)\n   - 2020s: Smooth VR experiences (powerful GPUs, low-latency displays)\n\n3. **Real-time Ray Tracing**:\n   - Pre-2018: Only in pre-rendered movie CGI\n   - Post-2018: Real-time in games (dedicated RT cores in GPUs)\n\n**Why developers should track:**\n- **Plan ahead**: Design software architecture anticipating future hardware\n- **Optimize wisely**: Know when to wait vs. optimize heavily\n- **New markets**: Hardware breakthroughs create new product opportunities\n\n**Key concept:** Moore's Law (transistors doubling ~every 2 years) means hardware constraints are temporary - yesterday's impossible becomes today's routine."
   },
   {
     id: "pf07_special_purpose_hw",
@@ -543,14 +564,14 @@
       "Special purpose hardware is faster and uses less energy than does the same function implemented in software executed by a general purpose CPU.",
     choices: ["The statement is false.", "The statement is true."],
     correctIndex: 1,
-    explanation: "Specialized hardware is optimized for one function, boosting speed/efficiency."
+    explanation: "**Why it's true:** Specialized hardware outperforms general-purpose CPUs in both speed and energy efficiency for specific tasks.\n\n**Why specialized hardware is faster:**\n1. **No instruction fetch/decode overhead** - hardwired datapath, not programmable\n2. **Optimized circuit design** - only the logic needed for one task\n3. **Parallel execution** - can process multiple data elements simultaneously\n4. **Custom data paths** - sized exactly for the problem (e.g., 8-bit for images, not 64-bit)\n\n**Why it uses less energy:**\n1. **Fewer transistors switching** - no instruction cache, decode logic, branch prediction\n2. **Lower voltage/frequency** - can run slower since datapath is optimal\n3. **No wasted work** - CPU does many operations per instruction; ASIC does only what's needed\n\n**Real example - Video encoding:**\n- **CPU**: 100W, encodes 30 fps video\n- **Dedicated encoder chip**: 5W, encodes 60 fps video\n- **Why**: Encoder has hardwired H.264 algorithms vs CPU running millions of general instructions\n\n**Tradeoff:** Flexibility vs. efficiency. Special-purpose = fast & efficient but inflexible.\n\n**Key concept:** Specialization wins when one task is done frequently enough to justify dedicated hardware (GPUs for graphics, crypto accelerators, AI tensor cores, etc.)."
   },
   {
     id: "pf08_cam_power2",
     text: "CAM must contain a power of 2 number of storage locations.",
     choices: ["The statement is false.", "The statement is true."],
     correctIndex: 0,
-    explanation: "CAM size does not inherently need to be a power of two."
+    explanation: "**Why it's false:** CAM (Content Addressable Memory) does NOT require a power-of-2 number of storage locations.\n\n**What is CAM:**\n- **Normal memory (RAM)**: You provide an ADDRESS, get back DATA at that address\n- **CAM**: You provide DATA (search key), get back whether it's present (and where)\n- **Use case**: Fast lookups - routing tables, cache tags, translation buffers\n\n**Why power-of-2 is NOT required:**\n1. **CAM is parallel hardware** - each entry has its own comparator\n2. **Not addressed by binary index** - no address decoding needed\n3. **Can have any number of entries** - 17 entries? 100 entries? All valid!\n\n**Contrast with regular memory:**\n- **RAM with 3-bit address**: MUST have 2³=8 locations (addresses 000-111)\n- **CAM with 3-bit data**: Can have any number of comparison circuits\n\n**Why this matters:**\n- **TLB (Translation Lookaside Buffer)**: Might have 48 entries (not a power of 2)\n- **Fully-associative cache**: Size determined by design needs, not binary constraints\n\n**Key concept:** CAM uses **parallel comparison**, not **binary addressing**, so it's freed from power-of-2 constraints."
   },
   {
     id: "pf09_cam_search_steps",
@@ -558,7 +579,7 @@
       "The greater the number of items stored in a content addressable memory, the greater the number of search steps needed to determine if a key is present in that CAM.",
     choices: ["The statement if false.", "The statement is true."],
     correctIndex: 0,
-    explanation: "CAM compares in parallel, so it doesn’t require more sequential search steps."
+    explanation: "**Why it's false:** CAM (Content Addressable Memory) performs **parallel comparison**, so search time is constant regardless of the number of items stored.\n\n**How CAM search works:**\n1. **Input**: Broadcast search key to ALL entries simultaneously\n2. **Compare**: Every entry compares itself to the key IN PARALLEL (all at once)\n3. **Output**: Any matches report back immediately (within one clock cycle)\n4. **Time**: O(1) - constant time, independent of CAM size!\n\n**Contrast with sequential search (e.g., in RAM):**\n- **10 items**: Check item 1, then 2, then 3... average 5 comparisons\n- **1000 items**: Average 500 comparisons\n- **Time**: O(n) - linear growth with size\n\n**Why CAM is different:**\n- **Hardware parallelism**: Each entry has dedicated comparator circuit\n- **All check simultaneously**: Not one-by-one like software search\n- **Cost tradeoff**: More hardware (expensive) for faster search\n\n**Real-world analogy:**\n- **Sequential**: Teacher calls names one-by-one until student responds\n- **CAM**: Teacher shouts name once, all students check simultaneously, matching student raises hand instantly\n\n**Key concept:** CAM trades **silicon area** (more comparators) for **speed** (constant-time lookup)."
   },
   {
     id: "pf10_full_adder_change",
@@ -572,7 +593,7 @@
       "None of the other answers is correct."
     ],
     correctIndex: 2,
-    explanation: "After worst-case delay, a change can propagate through and change Sum."
+    explanation: "**Why 'the Sum output has changed' is correct:** After the worst-case propagation delay, changing ANY input will change the Sum output (though Carry_out may or may not change).\n\n**Full adder truth table logic:**\nA full adder computes: Sum = A ⊕ B ⊕ Cin (XOR of all 3 inputs)\n\n**Why Sum ALWAYS changes when one input flips:**\n- **XOR property**: Flipping any input to XOR flips the output\n- **Example**: If A=0, B=0, Cin=0 → Sum=0\n  - Flip A to 1: Sum = 1⊕0⊕0 = 1 (changed!)\n- **Example**: If A=1, B=1, Cin=0 → Sum=0  \n  - Flip Cin to 1: Sum = 1⊕1⊕1 = 1 (changed!)\n\n**Why Carry_out does NOT always change:**\n- **Carry = (A AND B) OR (A AND Cin) OR (B AND Cin)** (majority function)\n- **Example**: A=1, B=1, Cin=0 → Carry=1\n  - Flip Cin to 1: Carry still = 1 (no change!)\n\n**Why other options are wrong:**\n- \"Carry_out has changed\" - FALSE (counterexample above)\n- \"Carry_out equals 0\" - FALSE (could be 0 or 1)\n- \"Sum output equals 1\" - FALSE (could be 0 or 1, but it DID change)\n\n**Key concept:** XOR is **sensitive to every input** - any flip propagates. Majority functions are more **stable**."
   },
 
   // 11 (short → MC)
@@ -582,7 +603,7 @@
       "[Write your answer as a decimal integer only. No word(s).]\nHow many Mebibits is 2^23 bytes?",
     choices: ["16", "32", "64", "128", "256"],
     correctIndex: 2,
-    explanation: "2^23 bytes = 2^26 bits; 2^26 / 2^20 = 2^6 = 64 Mebibits."
+    explanation: "**Step-by-step calculation:**\n\n**1. Convert bytes to bits:**\n- Given: 2²³ bytes\n- 1 byte = 8 bits = 2³ bits\n- 2²³ bytes × 2³ bits/byte = 2²³⁺³ = 2²⁶ bits\n\n**2. Convert bits to Mebibits:**\n- 1 Mebibit (Mib) = 2²⁰ bits (NOT 10⁶!)\n- 2²⁶ bits ÷ 2²⁰ bits/Mib = 2²⁶⁻²⁰ = 2⁶ = 64 Mib\n\n**Key concepts to remember:**\n\n**Binary prefixes (IEC standard):**\n- **Kibi** (Ki) = 2¹⁰ = 1,024\n- **Mebi** (Mi) = 2²⁰ = 1,048,576  \n- **Gibi** (Gi) = 2³⁰ = 1,073,741,824\n\n**Decimal prefixes (SI standard):**\n- **Kilo** (K) = 10³ = 1,000\n- **Mega** (M) = 10⁶ = 1,000,000\n- **Giga** (G) = 10⁹ = 1,000,000,000\n\n**Common mistake:** Confusing Mebibit (Mib, binary) with Megabit (Mb, decimal). Computer memory uses BINARY units!\n\n**Exponent arithmetic shortcut:**\n- Multiplying powers: Add exponents (2ᵃ × 2ᵇ = 2ᵃ⁺ᵇ)\n- Dividing powers: Subtract exponents (2ᵃ ÷ 2ᵇ = 2ᵃ⁻ᵇ)"
   },
 
   {
@@ -591,7 +612,7 @@
       "Which of these assembly language instructions replaces the default next instruction pointer with a pointer that has been stored?",
     choices: ["Branch", "Return", "Jump", "All of the above", "None of the above"],
     correctIndex: 1,
-    explanation: "Return uses a stored return address to set the next instruction pointer."
+    explanation: "**Why 'Return' is correct:** A return instruction retrieves a previously stored return address and uses it to replace the instruction pointer.\n\n**How each instruction type works:**\n\n**Return:**\n1. **Before function call**: Return address is STORED (usually on stack or in link register)\n2. **During function**: Executes function code\n3. **Return instruction**: LOADS the stored return address → replaces instruction pointer\n4. **Result**: Execution continues after the original call\n\n**Branch:**\n- **Uses**: Condition test + offset calculation\n- **Does NOT use stored pointer**: Computes target from current PC + offset\n\n**Jump:**\n- **Uses**: Immediate value or register value (but not a STORED return address)\n- **Does NOT retrieve stored value**: Target is encoded in instruction or register\n\n**Key distinction:**\n- **Branch/Jump**: Target is COMPUTED or IMMEDIATE (known at compile time or in register)\n- **Return**: Target was STORED earlier (by the call instruction) and now RETRIEVED\n\n**Real example:**\n```\nmain:  CALL foo      // stores return address (address of next line)\n       ADD r1, r2    // ← return address points here\n       ...\nfoo:   SUB r3, r4\n       RETURN        // loads stored address, jumps back to ADD instruction\n```\n\n**Key concept:** Returns implement the **call stack** - they must restore the previously saved location to properly unwind nested function calls."
   },
 
   // 13 (short → MC)
@@ -601,7 +622,7 @@
       "A multiplexer has a total of 17 input and output buses. How many bits wide is its address bus?",
     choices: ["3", "4", "5", "16"],
     correctIndex: 1,
-    explanation: "The provided correct answer is 4."
+    explanation: "**Step-by-step solution:**\n\n**Multiplexer structure:**\n- **Total buses**: 17 (input + output)\n- **Input buses**: 16 (one will be selected)\n- **Output bus**: 1 (shows the selected input)\n- **Address bus**: ??? (this is what we need to find)\n\n**How multiplexer addressing works:**\n- Address bus selects which input appears at output\n- With n address bits, you can select from 2ⁿ inputs\n- Need enough address bits to uniquely identify each input\n\n**Calculation:**\n- **16 inputs** require how many address bits?\n- 2³ = 8 inputs (not enough)\n- 2⁴ = 16 inputs (exactly right!)\n- **Answer: 4 bits**\n\n**Verification:**\n- 4-bit addresses: 0000, 0001, 0010, ..., 1111 (16 unique values)\n- Each address selects one of 16 inputs\n- Total buses: 16 inputs + 1 output = 17 ✓\n\n**General formula:**\nFor a multiplexer with N inputs:\n- Address bits needed = ⌈log₂(N)⌉ (ceiling of log base 2)\n- 16 inputs → log₂(16) = 4 bits\n\n**Key concept:** The address bus width determines the maximum number of inputs: 2^(address_bits) = max_inputs."
   },
 
   {
@@ -609,7 +630,7 @@
     text: "Which circuit implements the pointing function?",
     choices: ["binary counter", "decoder", "multiplexer", "register", "None of the other answers is correct."],
     correctIndex: 1,
-    explanation: "A decoder selects (points to) one output line based on the input code."
+    explanation: "**Why 'decoder' is correct:** A decoder implements the **pointing function** by selecting (activating) exactly one output line based on the binary input code.\n\n**What is the pointing function:**\n- **Input**: Binary code (e.g., 3 bits)\n- **Output**: Activates ONE specific line out of many\n- **Purpose**: \"Point to\" or \"select\" one thing from a set\n\n**How a decoder works:**\n- **n-bit input** → **2ⁿ output lines**\n- **Exactly one output is HIGH** (1), rest are LOW (0)\n- **Example**: 3-to-8 decoder\n  - Input: 101 (binary 5)\n  - Output: 00100000 (only line 5 is active)\n\n**Why other circuits DON'T point:**\n\n**Binary counter:**\n- Generates sequence of numbers (0, 1, 2, 3...)\n- Doesn't select/point - just counts\n\n**Multiplexer:**\n- USES pointing (address points to an input)\n- But the MUX itself doesn't implement pointing - it USES a decoder internally!\n\n**Register:**\n- Stores data\n- No selection/pointing function\n\n**Real-world applications:**\n- **Memory addressing**: Address decoder points to one memory row\n- **Chip select**: Decoder points to which peripheral device to activate\n- **7-segment display**: Decoder points to which segments to light\n\n**Key concept:** Decoder converts **binary code** (compressed representation) to **one-hot encoding** (exactly one bit set) - this IS pointing!"
   },
   {
     id: "pf15_bitstring_to_hex",
@@ -622,7 +643,7 @@
       "The question makes no sense because 8-bit strings have no inherent meaning."
     ],
     correctIndex: 2,
-    explanation: "01011010₂ = 0x5A."
+    explanation: "**Step-by-step conversion:**\n\n**Binary to Hexadecimal conversion:**\n1. **Group bits into sets of 4** (from right to left)\n   - 01011010 → 0101 1010\n\n2. **Convert each 4-bit group to hex digit:**\n   - 0101₂ = 5₁₆\n   - 1010₂ = A₁₆ (10 in decimal)\n\n3. **Combine**: 0x5A\n\n**Why 4 bits = 1 hex digit:**\n- 4 bits can represent 0-15 (16 values)\n- Hex digits: 0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F (16 values)\n- Perfect 1-to-1 mapping!\n\n**Binary to hex conversion table:**\n- 0000=0, 0001=1, 0010=2, 0011=3\n- 0100=4, 0101=5, 0110=6, 0111=7\n- 1000=8, 1001=9, 1010=A, 1011=B\n- 1100=C, 1101=D, 1110=E, 1111=F\n\n**Why other answers are wrong:**\n- **0x1122**: Would be 00010001 00100010 (16 bits, not 8)\n- **0x01011010**: Not valid hex (has digits > F)\n- **0xA5**: Would be 10100101 (bits reversed)\n- **Makes no sense**: FALSE - bit strings can absolutely be interpreted as hex!\n\n**Key concept:** Hex is a **shorthand for binary** - each hex digit = exactly 4 bits. This makes long binary numbers readable."
   },
   {
     id: "pf16_ascii_criterion",
@@ -635,7 +656,7 @@
       "The question makes no sense because ASCII was not designed, it is a standard."
     ],
     correctIndex: 3,
-    explanation: "ASCII choices were guided by ease of machine use."
+    explanation: "**Why 'Ease of machine use' is correct:** ASCII was deliberately designed with bit patterns that make hardware operations simpler.\n\n**Examples of machine-friendly ASCII design:**\n\n**1. Upper/lowercase conversion (single bit flip):**\n- 'A' = 0x41 = 0100**0**001\n- 'a' = 0x61 = 0110**0**001\n- Only bit 5 differs! Toggle one bit to convert case\n- Hardware: Just XOR with 0x20 (or flip bit 5)\n\n**2. Digits are sequential and machine-friendly:**\n- '0' = 0x30 = 0011**0000**\n- '1' = 0x31 = 0011**0001**\n- '9' = 0x39 = 0011**1001**\n- Lower 4 bits = actual numeric value!\n- Convert '7' to number: AND with 0x0F → 0x07\n\n**3. Letters are alphabetically ordered:**\n- 'A'=65, 'B'=66, 'C'=67... makes sorting trivial\n- Can compare letters with simple numeric comparison\n\n**Why other answers are wrong:**\n\n**\"Making full use of one byte\":**\n- FALSE - ASCII only uses 7 bits (0-127), wastes bit 7!\n- This was intentional - left room for extensions\n\n**\"NULL as string terminator\":**\n- That's a C language convention, not ASCII design\n\n**\"Not designed, it's a standard\":**\n- FALSE - standards ARE designed! ASCII had careful design choices.\n\n**Key concept:** Good encoding design makes common operations **cheap in hardware** (bit manipulations vs complex logic)."
   },
   {
     id: "pf17_fetch_execute_next_instruction",
@@ -649,7 +670,7 @@
       "is an unlimited quantity of data to process."
     ],
     correctIndex: 3,
-    explanation: "The processor must always have a next instruction to fetch."
+    explanation: "**Why 'is always a next instruction' is correct:** The processor continuously executes the fetch-execute cycle when powered on, so software MUST ensure there's always a valid instruction pointer.\n\n**The fetch-execute cycle (runs continuously):**\n1. **Fetch**: Load instruction from memory at address in instruction pointer (IP)\n2. **Decode**: Determine what the instruction does\n3. **Execute**: Perform the operation\n4. **Update IP**: Point to next instruction\n5. **Repeat**: Go back to step 1 (IMMEDIATELY!)\n\n**What happens if there's no next instruction:**\n- **Processor doesn't stop** - it's a hardware circuit, keeps running!\n- **Fetches random memory** - whatever garbage is at the IP address\n- **Executes garbage** - likely crashes or corrupts data\n- **This is catastrophic!**\n\n**How software ensures there's always a next instruction:**\n- **Infinite loops**: OS idle loop when no work to do\n- **Jump to self**: Last instruction of ROM bootloader: `jmp $` (jump to self)\n- **Interrupt handlers**: Always return to valid code\n- **Exception handlers**: Catch errors, don't leave IP dangling\n\n**Why other answers are wrong:**\n- **Electrical power**: Hardware's job, not software's\n- **Rest periods**: Processors don't need cooling breaks (they throttle automatically)\n- **OS present**: Not required - bare metal code runs without OS\n- **Unlimited data**: Many programs process finite data\n\n**Key concept:** The fetch-execute cycle is **unstoppable hardware** - software must accommodate this by ensuring the IP always points to valid code."
   },
 
   // 18 (short → MC)  ✅ you mentioned this one
@@ -659,7 +680,7 @@
       "Write the result of sign-extending the bit string 0x7f to 16 bits. Use\nhexadecimal notation for your answer.",
     choices: ["0xff7f", "0x007f", "0x7f00", "0xffff", "0x00ff"],
     correctIndex: 1,
-    explanation: "0x7F is positive, so sign-extension pads with 0s → 0x007f."
+    explanation: "**Step-by-step sign extension:**\n\n**1. Analyze the original value (0x7F in 8 bits):**\n- 0x7F = 0111 1111 in binary\n- **Sign bit** (MSB) = 0 → This is a POSITIVE number\n- Value: +127 in decimal\n\n**2. Sign extension rule:**\n- **Copy the sign bit** (MSB) to fill the new upper bits\n- **Preserve the magnitude** bits exactly\n- **Goal**: Keep the same numeric value in more bits\n\n**3. Extend from 8 bits to 16 bits:**\n- Original: 0111 1111 (8 bits)\n- Sign bit = 0\n- Add 8 more bits, all copied from sign bit (all 0s)\n- Result: **0000 0000** 0111 1111 (16 bits)\n- In hex: **0x007F**\n\n**Why this preserves value:**\n- 0x7F (8-bit) = +127\n- 0x007F (16-bit) = +127\n- Same number, just more bits!\n\n**Contrast with negative number example:**\n- If we had 0x80 (1000 0000 = -128 in 8-bit signed):\n- Sign bit = 1 (negative)\n- Extended: **1111 1111** 1000 0000 = 0xFF80 (still -128!)\n\n**Why other answers are wrong:**\n- **0xFF7F**: Would be extending sign bit = 1 (but our sign bit is 0!)\n- **0x7F00**: This is zero extension then shifting (wrong operation)\n\n**Key concept:** Sign extension maintains the **numeric value** when converting to a larger bit width for signed integers."
   },
 
   {
@@ -673,7 +694,7 @@
       "related to the size of the registers in the register unit."
     ],
     correctIndex: 0,
-    explanation: "Control flow is implemented by computing/updating the instruction pointer."
+    explanation: "**Why 'managed by computation of a pointer' is correct:** Control flow (branching, loops, function calls) is implemented by computing and updating the instruction pointer (IP/PC).\n\n**What is control flow:**\n- **Sequential execution**: IP = IP + 4 (next instruction)\n- **Branches/Jumps**: IP = computed target address\n- **Function calls**: IP = function address (and save return address)\n- **Returns**: IP = saved return address\n\n**How instruction pointer computation works:**\n\n**1. Conditional branch:**\n```\nBEQ R1, R2, offset   // if R1==R2, branch\n```\n- Compute: target = PC + offset\n- Test condition: R1 == R2?\n- If true: IP = target (computed!)\n- If false: IP = PC + 4 (sequential)\n\n**2. Jump to computed address:**\n```\nJR R5   // jump to address in R5\n```\n- IP = R5 (value computed by earlier instructions)\n\n**3. Function call:**\n```\nCALL function_addr\n```\n- Compute return address: return_addr = PC + 4\n- Store return_addr (on stack or link register)\n- IP = function_addr\n\n**Why other answers are wrong:**\n- **\"Performed by ALU\"**: ALU does arithmetic/logic, but IP update is separate (by control unit)\n- **\"Handled by register unit\"**: Registers store data, don't manage control flow\n- **\"Related to register size\"**: Register width doesn't determine control flow mechanism\n- **\"Unimportant until after compilation\"**: FALSE - control flow exists in assembly/machine code!\n\n**Key concept:** All control flow reduces to **pointer arithmetic** - computing the next instruction address."
   },
   {
     id: "pf20_compile_time_operand",
@@ -687,7 +708,7 @@
       "not possible."
     ],
     correctIndex: 2,
-    explanation: "Small compile-time constants can be encoded as immediates."
+    explanation: "**Why 'stored in a machine instruction if its magnitude is small' is correct:** When the compiler knows a value at compile time, and it's small enough, it can encode it directly into the instruction as an **immediate value**.\n\n**What is an immediate/compile-time constant:**\n```c\nint x = 5;        // 5 is known at compile time\nx = x + 10;       // 10 is known at compile time\n```\nThe values 5 and 10 are **literals** - the compiler knows them before the program runs.\n\n**How immediates are stored in instructions:**\n\n**Example instruction encoding (32-bit RISC):**\n```\nADDI R1, R1, #10    // Add immediate 10 to R1\n```\n- **Instruction format**: [opcode: 6 bits][dest reg: 5 bits][src reg: 5 bits][immediate: 16 bits]\n- The value **10 is encoded directly** in the instruction's 16-bit immediate field\n- **No memory access needed** - value is IN the instruction!\n\n**Why \"if magnitude is small\":**\n- **Limited space in instruction**: Only 16 bits for immediate in above example\n- **Range**: Can store -32,768 to +32,767 (16-bit signed)\n- **Large constants**: Won't fit, must be loaded from memory instead\n\n**Example - large constant:**\n```c\nint x = 1000000;   // Too big for 16-bit immediate!\n```\n**Assembly:**\n```\nLUI R1, upper_bits    // Load upper immediate\nORI R1, R1, lower_bits  // OR in lower bits\n```\n(Needs multiple instructions or memory load)\n\n**Why other answers are wrong:**\n- **\"Stored in a register\"**: Register holds runtime values, not the constant itself\n- **\"Output of data memory\"**: Immediates avoid memory access!\n- **\"Increases compilation speed\"**: Irrelevant to how it's stored\n\n**Key concept:** Immediates make programs **faster** (no memory access) and **smaller** (value embedded in instruction)."
   },
   {
     id: "pf21_32bit_instruction",
@@ -700,7 +721,7 @@
       "None of the other answers is correct."
     ],
     correctIndex: 0,
-    explanation: "32 bits equals 4 bytes."
+    explanation: "**Why 'as a 4-byte bit string' is correct:**\n\n**Conversion:**\n- 32 bits ÷ 8 bits/byte = 4 bytes\n- So a 32-bit instruction is exactly 4 bytes\n\n**How instructions are represented:**\n\n**In binary (32 bits):**\n```\n10101100000010010001100000100000\n```\n(Hard to read!)\n\n**In hexadecimal (8 hex digits = 32 bits):**\n```\n0xAC098620\n```\n(Each hex digit = 4 bits, so 8 digits = 32 bits)\n\n**As 4-byte bit string:**\n```\nByte 0: AC (10101100)\nByte 1: 09 (00001001)\nByte 2: 86 (10000110)\nByte 3: 20 (00100000)\n```\n\n**Why other answers are wrong:**\n\n**\"Using 4 hexadecimal digits\":**\n- FALSE - Need 8 hex digits for 32 bits\n- 4 hex digits = 16 bits only\n- Calculation: 4 digits × 4 bits/digit = 16 bits ✗\n\n**\"As an 8-byte string\":**\n- FALSE - 8 bytes = 64 bits (too large!)\n- 32-bit instruction ≠ 64 bits\n\n**Memory representation:**\nIn memory, a 32-bit instruction occupies 4 consecutive byte addresses:\n```\nAddress  | Byte\n---------|-----\n0x1000   | AC\n0x1001   | 09  \n0x1002   | 86\n0x1003   | 20\n```\n\n**Key concept:** \n- **1 byte = 8 bits** (fundamental)\n- **32 bits = 4 bytes** (32÷8=4)\n- **1 hex digit = 4 bits** (so 8 hex digits = 32 bits)"
   },
   {
     id: "pf22_dirty_bit",
@@ -713,7 +734,7 @@
       "None of the other answers is correct."
     ],
     correctIndex: 3,
-    explanation: "A store modifies cache data, making it dirty."
+    explanation: "**Why 'the processor executes a store operation' is correct:** The dirty bit is set when a STORE (write) instruction modifies data in the cache, making the cache copy different from memory.\n\n**What is the dirty bit:**\n- **Purpose**: Track whether a cache block has been MODIFIED\n- **Clean (dirty=0)**: Cache data matches main memory (in sync)\n- **Dirty (dirty=1)**: Cache data was modified, memory is STALE (out of sync)\n\n**When dirty bit is set:**\n```c\nint x = array[5];    // LOAD - brings data to cache, dirty=0 (clean)\narray[5] = 42;       // STORE - modifies cache, dirty=1 (DIRTY!)\n```\nThe STORE makes cache different from memory → set dirty bit.\n\n**Why the dirty bit matters:**\nWhen evicting a dirty block:\n1. **If dirty=1**: Must WRITE BACK to memory first (don't lose changes!)\n2. **If dirty=0**: Can discard (memory already has correct data)\n\n**Why other answers are wrong:**\n\n**\"Time to enforce Rule 1\":**\n- Rule 1 = \"Data in upper levels must be subset of lower levels\"\n- Dirty bit helps enforce this, but isn't SET by this\n\n**\"New block brought into cache\":**\n- FALSE - New blocks start CLEAN (dirty=0)\n- They match memory when first loaded\n\n**\"Accessing for second time\":**\n- FALSE - Multiple READs don't make it dirty\n- Only WRITEs set the dirty bit\n\n**Example timeline:**\n```\nt=0: LOAD x       → Cache clean (dirty=0), matches memory\nt=1: LOAD x       → Still clean (reading doesn't dirty)\nt=2: STORE x=5    → NOW dirty (dirty=1), modified!\nt=3: LOAD x       → Still dirty (reading doesn't clean)\n```\n\n**Key concept:** Dirty bit = \"This cache data is NEWER than memory\" - set ONLY on writes."
   },
 
   // 23 (short → MC)
@@ -723,7 +744,7 @@
       "This data structure, maintained locally in each Processing\nElement of an SIMD computer, allows each PE to correctly\nexecute or ignore computational instructions that are\ncontained in a while statement or an if-else statement.",
     choices: ["program counter", "enable stack", "branch target buffer", "reorder buffer", "page table"],
     correctIndex: 1,
-    explanation: "An enable stack tracks which PEs are enabled/disabled under control flow."
+    explanation: "**Why 'enable stack' is correct:** In SIMD (Single Instruction, Multiple Data) computers, each Processing Element (PE) uses an **enable stack** to track whether it should execute or ignore instructions within conditional statements.\n\n**The SIMD execution problem:**\n- **All PEs execute the SAME instruction simultaneously**\n- **But different PEs may have different data**\n- **What happens with if-else or while loops?**\n\n**Example showing the problem:**\n```c\nif (data > 5) {\n    result = data * 2;  // Some PEs should execute this\n} else {\n    result = data + 1;  // Other PEs should execute this\n}\n```\n\n**How enable stack solves this:**\n\n**Step-by-step execution:**\n```\n1. All PEs evaluate: (data > 5)?\n   PE0: data=3  → FALSE\n   PE1: data=7  → TRUE\n   PE2: data=10 → TRUE\n\n2. Push condition results to enable stack:\n   PE0 stack: [0]  → DISABLED for 'if' body\n   PE1 stack: [1]  → ENABLED for 'if' body\n   PE2 stack: [1]  → ENABLED for 'if' body\n\n3. Execute: result = data * 2\n   PE0: IGNORES (enable=0)\n   PE1: EXECUTES → result=14\n   PE2: EXECUTES → result=20\n\n4. Else block - invert enables:\n   PE0 stack: [1]  → ENABLED for 'else' body\n   PE1 stack: [0]  → DISABLED\n   PE2 stack: [0]  → DISABLED\n\n5. Execute: result = data + 1\n   PE0: EXECUTES → result=4\n   PE1: IGNORES\n   PE2: IGNORES\n```\n\n**Why it's a STACK (not just a bit):**\n- **Nested conditionals**: if inside if, while inside while\n- **Push on entry**: Save current enable state\n- **Pop on exit**: Restore previous enable state\n\n**Why other answers are wrong:**\n- **Program counter**: SIMD has ONE shared PC, not per-PE\n- **Branch target buffer**: For prediction, not selective execution\n- **Reorder buffer**: For out-of-order execution (superscalar)\n- **Page table**: For virtual memory, not control flow\n\n**Key concept:** Enable stack allows SIMD to handle **divergent control flow** where different PEs need different execution paths."
   },
 
   {
@@ -732,7 +753,7 @@
       "Which one quantifies the overall performance improvement of a system when a\nsubset of the system is improved?",
     choices: ["Moore’s Law", "The CPU time equation", "Flynn’s MIMD category", "Amdahl’s Law", "None of the other answers is correct."],
     correctIndex: 3,
-    explanation: "Amdahl’s Law relates partial speedup to overall speedup."
+    explanation: "**Why 'Amdahl's Law' is correct:** Amdahl's Law quantifies how improving part of a system affects the overall performance.\n\n**Amdahl's Law formula:**\n```\nS_overall = 1 / ((1 - f_e) + f_e / S_e)\n```\nWhere:\n- **S_overall** = Overall speedup of the entire system\n- **f_e** = Fraction of execution time that CAN be enhanced (0 to 1)\n- **S_e** = Speedup of the enhanced portion\n\n**Real-world example:**\nYou're optimizing a program that spends:\n- 60% time in matrix multiplication (can be GPU-accelerated 10x faster)\n- 40% time in I/O and setup (cannot be accelerated)\n\n**Calculate overall speedup:**\n- f_e = 0.6 (60% can be enhanced)\n- S_e = 10 (10x faster on GPU)\n- S_overall = 1 / ((1-0.6) + 0.6/10) = 1 / (0.4 + 0.06) = 1 / 0.46 ≈ 2.17x\n\n**Key insight:** Even though one part got 10x faster, overall speedup is only 2.17x because of the unenhanced 40%!\n\n**Amdahl's Law teaches:**\n1. **Diminishing returns**: Optimizing a small fraction doesn't help much\n2. **Bottleneck matters**: The unenhanced portion limits overall speedup\n3. **Upper bound**: Maximum speedup = 1 / (1 - f_e)\n   - If 60% can be enhanced, max speedup = 1/0.4 = 2.5x (even with infinite speedup!)\n\n**Why other answers are wrong:**\n- **Moore's Law**: Transistor count doubles every ~2 years (hardware trend, not performance calculation)\n- **CPU time equation**: Time = Instructions × CPI × Clock_period (measures time, not speedup)\n- **Flynn's MIMD**: Classifies parallel architectures (4 categories: SISD, SIMD, MISD, MIMD)\n\n**Key concept:** Amdahl's Law shows that **the unenhanced portion dominates** - you can't speed up what you can't change!"
   },
 
   // 25 (short → MC)
@@ -741,7 +762,7 @@
     text: "[Answer in the form of a decimal integer.]\nHow many comparators are there in a 64-block fully associative cache?",
     choices: ["1", "8", "16", "64", "128"],
     correctIndex: 3,
-    explanation: "Fully associative compares against all blocks in parallel → 64 comparators."
+    explanation: "**Answer: 64 comparators**\n\n**Why this is correct:**\nIn a fully associative cache, EVERY cache block must be compared against the requested tag simultaneously, so you need one comparator per block.\n\n**Step-by-step reasoning:**\n\n**1. What is fully associative:**\n- **No sets** - the entire cache is one giant set\n- **Any block can go anywhere** - maximum flexibility\n- **Must check ALL blocks** to see if there's a hit\n\n**2. How lookup works:**\n```\nSearch for tag X:\n  Comparator 0: Does block 0's tag == X?\n  Comparator 1: Does block 1's tag == X?\n  Comparator 2: Does block 2's tag == X?\n  ...\n  Comparator 63: Does block 63's tag == X?\n  \nAll comparisons happen IN PARALLEL (same clock cycle)\n```\n\n**3. Calculate number of comparators:**\n- **64 blocks** in cache\n- **Each block needs comparison** against incoming tag\n- **Comparisons are parallel** (all at once)\n- **Answer: 64 comparators** (one per block)\n\n**Contrast with other cache organizations:**\n\n**Direct-mapped (1-way):**\n- Only 1 block per set → **1 comparator**\n- Use index to select block, compare only that one\n\n**4-way set associative with 64 blocks:**\n- 64 blocks ÷ 4 ways = 16 sets\n- Check 4 blocks per set → **4 comparators**\n- Index selects set, compare 4 tags in parallel\n\n**Fully associative (64 blocks):**\n- 1 set with all 64 blocks → **64 comparators**\n- No index, compare all 64 tags in parallel\n\n**Key concept:** Fully associative = **maximum hardware (comparators) for minimum conflict misses** - can place any address anywhere, but expensive in area and power."
   },
 
   // 26 (short → MC)
@@ -751,7 +772,7 @@
       "A 4-way set associative cache has a total of 1024 blocks. Each block is 16\nbytes. Assume that memory is byte addressed and that the cache is accessed\nusing a 32-bit memory address. Bit position 31 of a memory address is the\nMSB and position 0 is the least significant bit. Let the notation “[8-3]” mean\nthe address bits in positions 8 through 3, inclusive.\nWhich bits of a memory address are used as the set number field?",
     choices: ["[15-8]", "[11-4]", "[7-0]", "[31-12]", "[3-0]"],
     correctIndex: 1,
-    explanation: "The provided answer is [11-4]."
+    explanation: "**Answer: [11-4]**\n\n**Step-by-step calculation:**\n\n**Given information:**\n- 4-way set associative cache\n- 1024 total blocks\n- 16 bytes per block\n- 32-bit memory address\n- Byte-addressed memory\n\n**Step 1: Calculate number of sets**\n- Total blocks = Sets × Ways\n- 1024 = Sets × 4\n- **Sets = 256 = 2⁸**\n\n**Step 2: Determine offset bits (within block)**\n- Block size = 16 bytes = 2⁴ bytes\n- **Offset = 4 bits** (bits [3-0])\n- These select which byte within a 16-byte block\n\n**Step 3: Determine set number bits (index)**\n- 256 sets = 2⁸ sets\n- **Index = 8 bits**\n- Need to figure out WHICH 8 bits...\n\n**Step 4: Address breakdown**\n32-bit address format:\n```\n[Tag bits | Index bits | Offset bits]\n[Tag      | 8 bits     | 4 bits     ]\n```\n\n**Step 5: Position the fields**\n- **Offset**: Bits [3-0] (rightmost, select byte within block)\n- **Index**: Bits [11-4] (next 8 bits, select which set)\n- **Tag**: Bits [31-12] (remaining bits, stored in cache for comparison)\n\n**Why this arrangement:**\n- **Offset is always rightmost** (byte addressing)\n- **Index comes next** (middle field)\n- **Tag is leftmost** (what remains)\n\n**Bit positions:**\n```\nBit: 31.....................12 11.........4  3......0\n     [     Tag (20 bits)    ] [Index 8b] [Offset 4b]\n```\n\n**Answer: Bits [11-4]** are used as the set number field.\n\n**Key concept:** Cache address fields are always ordered: **Tag | Index | Offset** (left to right), with offset being the rightmost bits."
   },
 
   // 27 (short → MC)
@@ -760,7 +781,7 @@
     text: "What is the 4-bit binary sign magnitude representation for decimal integer (-2)?",
     choices: ["0010", "1010", "1101", "1001", "1110"],
     correctIndex: 1,
-    explanation: "Sign bit 1 and magnitude 2 (010) → 1010."
+    explanation: "**Answer: 1010**\n\n**Step-by-step conversion:**\n\n**What is sign-magnitude representation:**\n- **First bit (MSB)**: Sign bit (0=positive, 1=negative)\n- **Remaining bits**: Magnitude (absolute value in binary)\n\n**Convert -2 to 4-bit sign-magnitude:**\n\n**Step 1: Determine sign**\n- Number is -2 (negative)\n- **Sign bit = 1**\n\n**Step 2: Find magnitude (absolute value)**\n- |-2| = 2\n- 2 in binary = 10\n- In 3 bits: **010**\n\n**Step 3: Combine sign + magnitude**\n```\n[Sign bit | Magnitude]\n[   1     |   010    ]\n    1010\n```\n\n**Answer: 1010**\n\n**Verification:**\n- Bit 3 (MSB) = 1 → negative ✓\n- Bits [2-0] = 010 = 2 → magnitude is 2 ✓\n- Result: -2 ✓\n\n**Sign-magnitude table (4-bit):**\n```\n0000 = +0    1000 = -0 (weird!)\n0001 = +1    1001 = -1\n0010 = +2    1010 = -2  ← our answer\n0011 = +3    1011 = -3\n0100 = +4    1100 = -4\n0101 = +5    1101 = -5\n0110 = +6    1110 = -6\n0111 = +7    1111 = -7\n```\n\n**Why other answers are wrong:**\n- **0010**: This is +2 (sign bit 0 = positive)\n- **1101**: This is -5 (magnitude 101 = 5)\n- **1001**: This is -1 (magnitude 001 = 1)\n- **1110**: This is -6 (magnitude 110 = 6)\n\n**Key concept:** Sign-magnitude is simple: **flip sign bit to negate** (unlike two's complement which requires inversion + 1)."
   },
 
   // 28 (short → MC)
@@ -770,7 +791,7 @@
       "A program instruction sequence has no branches in, except to the\nfirst instruction, and only one branch out, which is the last\ninstruction of the sequence. What is the name for this program\nstructure?",
     choices: ["pipeline", "basic block", "function prologue", "interrupt handler", "microcode routine"],
     correctIndex: 1,
-    explanation: "A basic block has one entry and one exit."
+    explanation: "**Answer: basic block**\n\n**Why this is correct:**\nA **basic block** is a fundamental program structure with strict control flow properties: single entry, single exit, straight-line execution.\n\n**Definition of basic block:**\n1. **One entry point**: Only the first instruction can be entered (no branches INTO the middle)\n2. **One exit point**: Only the last instruction can exit (only ONE branch OUT, at the end)\n3. **Sequential execution**: Instructions execute in order (no internal branches)\n\n**Example basic block:**\n```assembly\n       ; Entry point (first instruction)\n       LOAD R1, [R2]      \n       ADD R3, R1, R4     ; Sequential execution\n       MUL R5, R3, #2     ; No branches in/out here\n       STORE R5, [R6]     \n       BEQ R5, R0, label  ; Exit point (last instruction, ONE branch out)\n```\n\n**Why it matters:**\n- **Optimization**: Compiler can optimize entire block together\n- **Analysis**: Easy to analyze data flow within block\n- **Scheduling**: Can reorder instructions within block safely\n- **Branch prediction**: One prediction per block (at exit)\n\n**What breaks a basic block:**\nNew basic block starts after:\n- **Branch/jump target** (potential entry)\n- **Branch/jump instruction** (exit point)\n- **Function call/return** (control transfer)\n\n**Example - multiple basic blocks:**\n```assembly\nBB1:   LOAD R1, [R2]     ; Block 1: Entry\n       ADD R3, R1, R4    \n       BEQ R3, R0, BB3   ; Block 1: Exit (branch)\n       \nBB2:   SUB R5, R3, R1   ; Block 2: Entry (fall-through target)\n       JUMP BB4          ; Block 2: Exit\n       \nBB3:   MUL R6, R3, #2   ; Block 3: Entry (branch target)\n       ; ...             ; Block 3 continues\n```\n\n**Why other answers are wrong:**\n- **Pipeline**: Hardware structure for overlapping instructions\n- **Function prologue**: Entry code for functions (setup stack frame)\n- **Interrupt handler**: Special code for handling interrupts\n- **Microcode routine**: Low-level instruction implementation\n\n**Key concept:** Basic blocks are the **atomic units of control flow** - indivisible sequences that always execute together."
   },
 
   // 29 (short → MC)
@@ -780,7 +801,7 @@
       "A computer has 10 processors that work together as a team to solve large\nproblems. What is the Flynn parallelism category that describes this\ncomputer?",
     choices: ["SISD", "SIMD", "MISD", "MIMD"],
     correctIndex: 3,
-    explanation: "Multiple processors executing multiple instruction streams → MIMD."
+    explanation: "**Answer: MIMD**\n\n**Why MIMD is correct:**\nA computer with 10 processors working together falls into Flynn's **MIMD** (Multiple Instruction, Multiple Data) category.\n\n**Flynn's Taxonomy (4 categories):**\n\n**1. SISD (Single Instruction, Single Data):**\n- **1 processor**, **1 instruction stream**\n- Traditional sequential computer\n- Example: Early CPUs executing one instruction at a time\n\n**2. SIMD (Single Instruction, Multiple Data):**\n- **Multiple processors**, **1 shared instruction stream**\n- All processors execute SAME instruction on DIFFERENT data\n- Example: GPU executing pixel shader on 1000s of pixels simultaneously\n\n**3. MISD (Multiple Instruction, Single Data):**\n- **Multiple processors**, **Same data**, different instructions\n- Rare in practice (mostly theoretical)\n- Example: Fault-tolerant systems running different algorithms on same data\n\n**4. MIMD (Multiple Instruction, Multiple Data):**\n- **Multiple processors**, **Multiple instruction streams**\n- Each processor runs DIFFERENT program on DIFFERENT data\n- **This matches the question!**\n- Example: Multi-core CPU, cluster computing, cloud servers\n\n**Why this problem is MIMD:**\n- **10 processors** = Multiple processors ✓\n- **Work together as team** = Independent but cooperating ✓\n- **Solve large problems** = Each works on different part ✓\n- **Different instruction streams** = Each can execute different code ✓\n\n**Real-world MIMD examples:**\n- **Your laptop**: 8-core CPU, each core runs different thread\n- **Server farm**: 1000s of servers processing different requests\n- **Supercomputer**: 100,000s of processors simulating weather\n\n**Key differences:**\n- **SIMD**: All processors march in lockstep (same instruction)\n- **MIMD**: Each processor independent (different instructions)\n\n**Key concept:** MIMD is the most **flexible and common** parallel architecture - each processor is autonomous and can run any code."
   },
 
   // 30 (short → MC)
@@ -789,7 +810,7 @@
     text: "What is reported as the result of a response-type SPEC benchmark?",
     choices: ["CPI", "geometric mean IPC", "elapsed time or wall clock time", "clock frequency", "cache miss rate"],
     correctIndex: 2,
-    explanation: "Response-type SPEC reports elapsed (wall-clock) time."
+    explanation: "**Answer: elapsed time or wall clock time**\n\n**Why this is correct:**\nResponse-type SPEC benchmarks measure the **total time** from start to finish as experienced by a user - this is elapsed/wall-clock time.\n\n**What is SPEC:**\n- **SPEC** = Standard Performance Evaluation Corporation\n- Creates standardized benchmarks to compare computer systems\n- Two main categories: **throughput** and **response**\n\n**Response-type benchmarks:**\n- **Measure**: How long to complete ONE task\n- **Metric**: Elapsed time (seconds, minutes)\n- **Example**: \"How long to compress this file?\"\n- **User perspective**: \"How fast is my computer?\"\n\n**Elapsed time / Wall-clock time:**\n- **Definition**: Total time from start to finish (as measured by a wall clock)\n- **Includes**: CPU time + I/O time + OS overhead + idle time\n- **What user experiences**: Real waiting time\n\n**Example:**\n```\nStart time: 10:00:00\nEnd time:   10:00:45\nElapsed time = 45 seconds\n```\n\n**Why other metrics are NOT reported:**\n\n**CPI (Cycles Per Instruction):**\n- Microarchitecture metric, not end-user metric\n- Doesn't account for different instruction mixes\n\n**Geometric mean IPC:**\n- Used for throughput benchmarks (multiple programs)\n- Not for single-task response time\n\n**Clock frequency:**\n- Hardware specification, not performance measurement\n- Higher frequency ≠ faster execution\n\n**Cache miss rate:**\n- Low-level metric, doesn't directly translate to user experience\n\n**Contrast with throughput benchmarks:**\n- **Throughput**: Jobs per hour (e.g., \"1000 transactions/second\")\n- **Response**: Time per job (e.g., \"45 seconds per task\")\n\n**Key concept:** Response time measures **latency** (how long you wait), while throughput measures **bandwidth** (how much work per unit time). Different questions, different metrics!"
   },
 
   {
@@ -798,7 +819,7 @@
       "The company AMD claims for their Zen3 processor architecture that for a set of\nbenchmark programs the geometric mean of the number of instructions issued to the\nprocessor backend is improved by 19% with respect to the same benchmarks\nexecuted by the AMD Zen2 architecture. This statement means that, overall, the\nnumber of instructions issued by the Zen3 design during each clock cycle when\ncompared to the Zen2 design is",
     choices: ["increased.", "decreased.", "the same.", "not comparable.", "None of the other answers is correct."],
     correctIndex: 0,
-    explanation: "Improved issued-to-backend implies more issued per cycle overall."
+    explanation: "**Answer: increased**\n\n**Why 'increased' is correct:**\nAn improvement (19% increase) in instructions issued to the backend means MORE instructions are being issued per cycle.\n\n**Understanding the statement:**\n- **\"Improved by 19%\"** = 19% increase (better performance)\n- **\"Instructions issued to backend\"** = How many instructions per cycle enter the execution stage\n- **\"Geometric mean\"** = Average across multiple benchmarks\n\n**What \"19% improvement\" means:**\n```\nZen2: Issues 4.0 instructions/cycle on average\nZen3: Issues 4.76 instructions/cycle on average (19% more)\n\nCalculation: 4.0 × 1.19 = 4.76\n```\n\n**Why more issued = better:**\n- **Instruction-level parallelism (ILP)**: More instructions executing simultaneously\n- **Better utilization**: Execution units stay busier\n- **Higher throughput**: More work per cycle = faster programs\n\n**Processor pipeline context:**\n```\nFetch → Decode → Issue → Backend (Execute) → Retire\n                   ↑\n            This is what improved\n```\n\n**What \"improved\" could mean (all lead to MORE instructions):**\n1. **Wider issue**: Can issue more instructions per cycle (e.g., 4→6 wide)\n2. **Better scheduling**: Finds more independent instructions to issue\n3. **Reduced stalls**: Fewer bubbles, more productive cycles\n4. **Better branch prediction**: Less time wasted on wrong paths\n\n**Why NOT decreased:**\n- \"Improved\" in performance context = better = more work done\n- Decreased would be regression (worse performance)\n- 19% improvement ≠ 19% reduction\n\n**Analogy:**\n- Factory \"improves production by 19%\"\n- Does this mean produces MORE or LESS?\n- Obviously MORE!\n\n**Key concept:** In processor performance, **more instructions issued/executed per cycle = better performance** (assuming same instruction set)."
   },
 
   // 32 (short → MC)
@@ -808,7 +829,7 @@
       "[Answer “yes” or “no”.]\nThe equation for average memory access time, AMAT, is\nAMAT = Hit_rate x Hit_time + (1-Hit_rate) x Miss_time .\nDesigners of a processor decide to increase the capacity of the L1 data cache. This\ncauses hit time for this cache to increase due to the larger SRAM array necessary\nto increase capacity. The designers change nothing else about the memory\nhierarchy of this processor.\nBecause Hit_time has increased, must Average_Memory_Access_Time\nincrease when executing a given set of benchmark programs?",
     choices: ["yes", "no"],
     correctIndex: 1,
-    explanation: "AMAT could still drop if miss behavior improves enough; thus it does not have to increase."
+    explanation: "**Answer: no**\n\n**Why AMAT does NOT have to increase:**\nEven though Hit_time increased, the **overall AMAT could actually DECREASE** if the larger cache improves the hit rate enough to compensate.\n\n**AMAT equation:**\n```\nAMAT = Hit_rate × Hit_time + (1 - Hit_rate) × Miss_time\n```\n\n**Example showing AMAT can decrease despite higher Hit_time:**\n\n**Original L1 (smaller):**\n- Hit_rate = 0.90 (90%)\n- Hit_time = 1 cycle\n- Miss_time = 100 cycles\n- **AMAT = 0.90×1 + 0.10×100 = 0.9 + 10 = 10.9 cycles**\n\n**New L1 (larger, slower):**\n- Hit_rate = 0.95 (95% - larger cache has fewer misses!)\n- Hit_time = 2 cycles (slower due to larger SRAM array)\n- Miss_time = 100 cycles (unchanged)\n- **AMAT = 0.95×2 + 0.05×100 = 1.9 + 5 = 6.9 cycles**\n\n**Result: AMAT DECREASED** from 10.9 to 6.9 cycles, even though Hit_time doubled!\n\n**Why this happens:**\n- **Miss penalty is huge** (100 cycles vs 1-2 cycles)\n- **Reducing misses** (10%→5%) saves 5× the expensive 100-cycle penalty\n- **Increasing hit time** (1→2) only costs 1 extra cycle on hits\n- **Net effect**: Big savings on misses >> small cost on hits\n\n**The tradeoff:**\n- ↑ Capacity → ↑ Hit_rate (good!) but ↑ Hit_time (bad)\n- ↑ Hit_rate → Fewer expensive misses (major win)\n- ↑ Hit_time → Slightly slower hits (minor loss)\n- **Net effect depends on magnitudes**\n\n**When would AMAT increase?**\nIf Hit_time increased A LOT but Hit_rate improved only slightly:\n```\nHit_time: 1→10 cycles (10× slower!)\nHit_rate: 0.90→0.91 (barely better)\nAMAT would likely increase\n```\n\n**Key concept:** Cache design is about **balancing tradeoffs**. Larger caches reduce misses (good) but increase access time (bad). The **dominant factor** (misses vs hits) determines whether AMAT improves."
   },
 
   // 33 (short → MC)
@@ -818,7 +839,7 @@
       "Amdahl’s Law models overall speedup, Soverall , due to an enhancement that\nprovides a speedup, Se , and that can be used a fraction, fe , of the original\n(unenhanced) execution time. Amdahl’s Law is\n'\n𝑆!\"#$%&& =\n(')* !) - .\"!\n#!/ .\nThe equation for average memory access time, AMAT, is\nAMAT = Hit_rate x Hit_time + (1-Hit_rate) x Miss_time .\nWhich variable in the AMAT equation corresponds to fe in Amdahl’s Law?",
     choices: ["Hit_rate", "Hit_time", "Miss_time", "(1-Hit_rate)", "AMAT"],
     correctIndex: 0,
-    explanation: "fe is the fraction of time in the enhanced part; in AMAT that aligns with Hit_rate."
+    explanation: "**Answer: Hit_rate**\n\n**Why Hit_rate corresponds to f_e:**\nBoth represent the **fraction of time spent in the enhanced/fast portion** of the operation.\n\n**Amdahl's Law:**\n```\nS_overall = 1 / ((1 - f_e) + f_e / S_e)\n```\nWhere **f_e** = fraction of execution time that CAN be enhanced (uses the fast path)\n\n**AMAT equation:**\n```\nAMAT = Hit_rate × Hit_time + (1 - Hit_rate) × Miss_time\n```\n\n**The parallel:**\n\n**In Amdahl's Law:**\n- **f_e** = fraction of time using the ENHANCED (fast) part\n- **(1 - f_e)** = fraction of time using the UNENHANCED (slow) part\n\n**In AMAT:**\n- **Hit_rate** = fraction of accesses using the FAST path (cache hit)\n- **(1 - Hit_rate)** = fraction of accesses using the SLOW path (cache miss)\n\n**Direct mapping:**\n- **f_e ↔ Hit_rate** (fraction using fast path)\n- **S_e ↔ Miss_time / Hit_time** (speedup of enhancement)\n- **(1 - f_e) ↔ (1 - Hit_rate)** (fraction using slow path)\n\n**Example to illustrate:**\nSuppose Hit_rate = 0.90 (90% of accesses hit in cache):\n- **90% of time**: Use fast path (cache, Hit_time)\n- **10% of time**: Use slow path (memory, Miss_time)\n\nThis is exactly like Amdahl's f_e = 0.90:\n- **90% of time**: Use enhanced (fast) version\n- **10% of time**: Use original (slow) version\n\n**Rewriting AMAT in Amdahl's form:**\n```\nAMAT = Hit_rate × Hit_time + (1 - Hit_rate) × Miss_time\n\nLet f_e = Hit_rate, then:\nAMAT = f_e × Hit_time + (1 - f_e) × Miss_time\n```\n\nSame structure as Amdahl's Law!\n\n**Key concept:** Both equations describe **weighted averages** where one path is fast (enhanced/hit) and occurs with probability f_e/Hit_rate, while the other is slow (unenhanced/miss) and occurs with probability (1-f_e)/(1-Hit_rate)."
   },
 
   // 34 (short → MC)
@@ -828,7 +849,7 @@
       "The speedup provided by an enhancement is H. What is the upper bound\non the overall speedup possible for a system due to this enhancement?",
     choices: ["1", "H", "H^2", "1/H", "H/(H+1)"],
     correctIndex: 1,
-    explanation: "Overall speedup cannot exceed the enhancement speedup H."
+    explanation: "**Answer: H**\n\n**Why H is the upper bound:**\nNo matter what fraction of the program uses the enhancement, the overall speedup can NEVER exceed H (the speedup of the enhanced portion).\n\n**Amdahl's Law formula:**\n```\nS_overall = 1 / ((1 - f_e) + f_e / S_e)\n```\nWhere:\n- **S_e = H** (the enhancement provides speedup H)\n- **f_e** = fraction that can use the enhancement\n\n**Finding the upper bound:**\nWhat if **100% of the program** can use the enhancement? (Best case: f_e = 1)\n\n```\nS_overall = 1 / ((1 - 1) + 1 / H)\n          = 1 / (0 + 1/H)\n          = 1 / (1/H)\n          = H\n```\n\n**Upper bound = H** (achieved only when f_e = 1, i.e., EVERYTHING can be enhanced)\n\n**Why it can't exceed H:**\n- **Best case**: Entire program uses enhancement → speedup = H\n- **Realistic case**: Only part uses enhancement → speedup < H (diluted by unenhanced portion)\n- **Impossible**: Speedup > H (can't go faster than the enhancement itself!)\n\n**Example:**\nSuppose you have an enhancement that makes a function **10× faster** (H = 10):\n\n**Scenario 1: Function is 100% of runtime** (f_e = 1)\n- Overall speedup = 10× ✓ (equals H)\n\n**Scenario 2: Function is 50% of runtime** (f_e = 0.5)\n- S_overall = 1 / (0.5 + 0.5/10) = 1 / 0.55 ≈ 1.82×\n- Overall speedup < 10× ✗ (less than H)\n\n**Scenario 3: Function is 10% of runtime** (f_e = 0.1)\n- S_overall = 1 / (0.9 + 0.1/10) = 1 / 0.91 ≈ 1.10×\n- Overall speedup << 10× ✗ (much less than H)\n\n**Why other answers are wrong:**\n- **1**: Too pessimistic (we can do better than no speedup!)\n- **H²**: Impossible (can't amplify speedup beyond the enhancement)\n- **1/H**: This would be a slowdown, not speedup!\n- **H/(H+1)**: This is less than 1 for H>0 (slowdown)\n\n**Key concept:** The **enhanced portion's speedup H** sets the ceiling - you can't make the whole program faster than the best part."
   },
 
   // 35 (short → MC)
@@ -838,7 +859,7 @@
       "[Express your answer as C language keyword(s) only.]\nConsider the following assembly language level code snippet.\nhere: instruction to compute a condition\nbranch to there if condition is false\ninstructions to compute statement body\njump to here\nthere: instruction for next statement\nWhat high-level language statement is expressed by the assembly\nlanguage program?",
     choices: ["if", "for", "while", "switch", "do"],
     correctIndex: 2,
-    explanation: "Condition check then body then jump back matches a while loop."
+    explanation: "**Answer: while**\n\n**Why 'while' is correct:**\nThe assembly pattern shows: test condition FIRST, execute body if true, then JUMP BACK to test again. This is a **while loop**.\n\n**Assembly pattern analysis:**\n```\nhere:  instruction to compute a condition\n       branch to there if condition is false\n       instructions to compute statement body\n       jump to here\nthere: instruction for next statement\n```\n\n**Structure breakdown:**\n1. **Label 'here'**: Loop entry point\n2. **Compute condition**: Evaluate loop test\n3. **Branch if false**: Exit loop if condition fails\n4. **Execute body**: Run loop body if condition true\n5. **Jump to 'here'**: Repeat from step 1\n6. **Label 'there'**: After loop\n\n**This matches C 'while' loop:**\n```c\nwhile (condition) {    // ← test BEFORE body\n    body;              // ← execute if true\n}                      // ← jump back to test\nnext_statement;        // ← continue after loop\n```\n\n**Assembly translation:**\n```\nhere:  CMP R1, R2           // compute condition (R1 == R2?)\n       BEQ there            // if false (not equal), exit loop\n       ADD R3, R3, #1       // body: increment R3\n       STORE R3, [R4]       // body: save result\n       JUMP here            // repeat\nthere: LOAD R5, [R6]        // next statement after loop\n```\n\n**Why NOT other loop types:**\n\n**'for' loop:**\n- Typically has initialization, test, and increment parts\n- More complex pattern with iterator update\n- Assembly would have additional increment code\n\n**'do' loop (do-while):**\n- Tests condition AFTER body (body always executes once)\n- Pattern would be:\n```\nhere:  instructions for body\n       compute condition\n       branch to here if condition is true  ← Different!\nthere: next statement\n```\n- Notice: body comes BEFORE condition test\n\n**'if' statement:**\n- No jump back! Executes once, not a loop\n- No label at top to jump back to\n\n**'switch' statement:**\n- Multiple branches to different cases\n- Uses jump table or chain of comparisons\n- No single loop-back structure\n\n**Key difference - while vs do-while:**\n- **while**: Test FIRST, body might not execute (0+ iterations)\n- **do-while**: Body FIRST, test after (1+ iterations, always at least once)\n\n**Key concept:** The **position of the condition test** (before vs after body) determines the loop type. Test-first = while, test-last = do-while."
   },
 
   // 36 (short → MC)
@@ -848,7 +869,7 @@
       "[Express your answer in the form of a decimal integer.]\nConsider the following assembly language code snippet.\nLOAD R4, R1+0 ;R4 ß value at address R1 + 0\nADD R6, R4, R5 ;R6 ß R4 + R5\nSTORE R6, R1+0 ;Store R6 at address R1 + 0\nADDI R1, R1, #4 ;R1 ß R1 + 4\nAn anti-dependence is when a location holds a data value that the program reads and\nthen later writes. How many anti-dependences appear in this code snippet?",
     choices: ["0", "1", "2", "3", "4"],
     correctIndex: 3,
-    explanation: "The provided solution states there are 3 anti-dependences."
+    explanation: "**Answer: 3**\n\n**What is an anti-dependence:**\nAn **anti-dependence** (also called write-after-read or WAR) occurs when:\n1. An instruction **READS** from a location\n2. A later instruction **WRITES** to that same location\n\n**The code:**\n```assembly\nLOAD R4, R1+0   ;R4 ← value at address R1 + 0\nADD R6, R4, R5  ;R6 ← R4 + R5\nSTORE R6, R1+0  ;Store R6 at address R1 + 0\nADDI R1, R1, #4 ;R1 ← R1 + 4\n```\n\n**Finding all anti-dependences (READ then WRITE):**\n\n**Anti-dependence #1: R4**\n- Instruction 2 **READS R4**: `ADD R6, R4, R5`\n- Instruction 1 **WRITES R4**: `LOAD R4, R1+0` (wait, this is earlier!)\n- Actually: Instruction 1 WRITES R4, Instruction 2 READS R4\n- Need: READ first, then WRITE to same location\n- Let me reconsider...\n\n**Actually, let's find where we READ then later WRITE:**\n\n**Anti-dependence #1: R1 (read by LOAD, written by ADDI)**\n- Instruction 1 **READS R1**: `LOAD R4, R1+0` (uses R1 as address)\n- Instruction 4 **WRITES R1**: `ADDI R1, R1, #4`\n- READ → WRITE to R1 ✓\n\n**Anti-dependence #2: R1 (read by STORE, written by ADDI)**\n- Instruction 3 **READS R1**: `STORE R6, R1+0` (uses R1 as address)\n- Instruction 4 **WRITES R1**: `ADDI R1, R1, #4`\n- READ → WRITE to R1 ✓\n\n**Anti-dependence #3: Memory location [R1+0]**\n- Instruction 1 **READS [R1+0]**: `LOAD R4, R1+0`\n- Instruction 3 **WRITES [R1+0]**: `STORE R6, R1+0`\n- READ → WRITE to memory ✓\n\n**Total: 3 anti-dependences**\n\n**Why anti-dependences matter:**\nThey prevent reordering:\n- **Can't move WRITE before READ**: Would read wrong (new) value!\n- **Example**: Can't execute ADDI before LOAD - would use wrong address!\n\n**Key concept:** Anti-dependences constrain **instruction scheduling** - the WRITE must wait for all READs to complete, even though there's no data flow from READ to WRITE."
   },
 
   // 37 (short → MC)
@@ -858,7 +879,7 @@
       "[Express your answer in the form of a decimal integer.]\nConsider the following assembly language code snippet.\nLOAD R4, R1+0 ;R4 ß value at address R1 + 0\nADD R6, R4, R5 ;R6 ß R4 + R5\nSTORE R6, R1+0 ;Store R6 at address R1 + 0\nADDI R1, R1, #4 ;R1 ß R1 + 4\nAn output dependence is when a program writes a result to a location and later writes\nto that location again. How many output dependences appear in this code snippet?",
     choices: ["0", "1", "2", "3"],
     correctIndex: 0,
-    explanation: "No location is written more than once → 0 output dependences."
+    explanation: "**Answer: 0**\n\n**What is an output dependence:**\nAn **output dependence** (also called write-after-write or WAW) occurs when:\n1. An instruction **WRITES** to a location\n2. A later instruction **WRITES** to that SAME location again\n\n**The code:**\n```assembly\nLOAD R4, R1+0   ;R4 ← value at address R1 + 0\nADD R6, R4, R5  ;R6 ← R4 + R5\nSTORE R6, R1+0  ;Store R6 at address R1 + 0\nADDI R1, R1, #4 ;R1 ← R1 + 4\n```\n\n**Analyzing all WRITE operations:**\n\n**Instruction 1 WRITES:**\n- **R4** (destination register)\n\n**Instruction 2 WRITES:**\n- **R6** (destination register)\n\n**Instruction 3 WRITES:**\n- **Memory location [R1+0]**\n\n**Instruction 4 WRITES:**\n- **R1** (destination register)\n\n**Checking for duplicate writes:**\n- **R4**: Written only once (instruction 1) ✗\n- **R6**: Written only once (instruction 2) ✗\n- **[R1+0]**: Written only once (instruction 3) ✗\n- **R1**: Written only once (instruction 4) ✗\n\n**No location is written multiple times → 0 output dependences**\n\n**Example with output dependence:**\nIf the code were:\n```assembly\nLOAD R4, R1+0   ;R4 ← ... (WRITE R4)\nADD R4, R2, R3  ;R4 ← ... (WRITE R4 again!)\n```\nThis would have 1 output dependence on R4.\n\n**Why output dependences matter:**\n- **Can't reorder writes**: Final value must be from the last write!\n- **Example**: If we have `R1 ← A; R1 ← B`, we can't execute them out of order - R1 must end with B\n- **Hurts parallelism**: Can't execute both writes simultaneously\n\n**Contrast with anti-dependence:**\n- **Anti-dependence (WAR)**: READ then WRITE to same location\n- **Output dependence (WAW)**: WRITE then WRITE to same location\n- **True dependence (RAW)**: WRITE then READ from same location\n\n**Key concept:** Output dependences are **name dependences** (not true data flow) - we could eliminate them by **register renaming** (use different registers for different writes)."
   },
 
   // 38 (short → MC)
@@ -868,7 +889,7 @@
       "[Express your answer as a decimal integer.]\nA 64-bit computer uses 4 Kibibyte pages and 64-bit virtual addresses. This\ncomputer divides the virtual page number into 4 equally-size bit strings to then store\npage tables as 4-level trees. A pointer to a child node in a page table tree is stored in\n8 bytes. A virtual page table entry is stored using 8 bytes.\nAssume that some program uses a total of 7 virtual pages in the virtual memory\naddress space. For this program, the best-case total size of the tree-structured page\ntable in bytes is a power of 2. What is this exponent?",
     choices: ["16", "17", "18", "19", "20"],
     correctIndex: 2,
-    explanation: "The provided solution concludes the best-case size is 2^18 bytes."
+    explanation: "**Answer: 18**\n\n**Step-by-step calculation:**\n\n**Given information:**\n- 64-bit virtual addresses\n- 4 KiB pages (4096 bytes = 2¹² bytes)\n- 4-level page table tree (VPN split into 4 equal parts)\n- 8 bytes per pointer (to child node)\n- 8 bytes per page table entry (PTE)\n- Program uses 7 virtual pages\n\n**Step 1: Calculate offset bits**\n- Page size = 4 KiB = 2¹² bytes\n- **Offset = 12 bits** (selects byte within page)\n\n**Step 2: Calculate VPN bits**\n- 64-bit address - 12-bit offset = **52-bit VPN**\n\n**Step 3: Divide VPN into 4 levels**\n- 52 bits ÷ 4 levels = **13 bits per level**\n- Each level indexes into a table with 2¹³ = 8192 entries\n\n**Step 4: Best-case tree for 7 pages**\n\n**Assume 7 pages are clustered** (consecutive or nearby addresses):\n\nBest case structure:\n```\nLevel 0 (root): 1 table  = 8192 entries × 8 bytes = 64 KiB = 2¹⁶ bytes\nLevel 1:        1 table  = 8192 entries × 8 bytes = 64 KiB = 2¹⁶ bytes  \nLevel 2:        1 table  = 8192 entries × 8 bytes = 64 KiB = 2¹⁶ bytes\nLevel 3 (leaf): 1 table  = 8192 entries × 8 bytes = 64 KiB = 2¹⁶ bytes\n```\n\n**Total: 4 tables × 2¹⁶ bytes = 4 × 65536 = 262,144 bytes = 2¹⁸ bytes**\n\n**Why 4 tables minimum:**\n- Need 1 root table (level 0)\n- Need path to reach leaf tables (levels 1, 2, 3)\n- If all 7 pages share same level-0, level-1, level-2 indices, need only 1 table per level\n- This is the **best case** (maximum clustering)\n\n**Exponent:**\n2¹⁸ = 262,144 bytes\n**Answer: 18**\n\n**Worst case (for comparison):**\nIf 7 pages are maximally scattered:\n- Could need up to 7 complete paths = 7×4 = 28 tables\n- But question asks for BEST case\n\n**Key concept:** Tree-structured page tables trade space for sparsity - best case is when entries cluster (share upper-level tables), worst case is when they're scattered (each needs separate path)."
   },
 
   // 39 (short → MC)
@@ -878,7 +899,7 @@
       "The target of a particular assembly language branch instruction is\nlocated closer to the first instruction of the assembly program than\nis the branch instruction. When predicting this branch instruction\nwhat is the best fixed branch prediction to use?",
     choices: ["predict not taken", "predict taken", "always alternate", "use a 2-bit predictor", "no prediction is possible"],
     correctIndex: 1,
-    explanation: "A backward branch usually indicates a loop; fixed prediction ‘taken’ is best."
+    explanation: "**Answer: predict taken**\n\n**Why 'predict taken' is correct:**\nA branch that jumps **backward** (to an earlier address) is almost always a **loop**, and loops typically execute many iterations, so the branch is usually **taken**.\n\n**Understanding the scenario:**\n- **Branch instruction location**: Some address in the program\n- **Branch target location**: Earlier address (closer to first instruction)\n- **Direction**: Target < Branch → **backward branch**\n\n**Why backward branches are loops:**\n```assembly\nAddress  Instruction\n0x1000:  LOAD R1, [R2]     ← Target (loop top)\n0x1004:  ADD R3, R1, R4\n0x1008:  STORE R3, [R5]\n0x100C:  ADDI R2, R2, #4\n0x1010:  BLT R2, R6, 0x1000  ← Branch backward to 0x1000\n```\nThis is a loop! Branch goes back to repeat.\n\n**Loop behavior:**\n- Suppose loop runs 100 iterations\n- Branch **taken** 99 times (to repeat loop)\n- Branch **not taken** 1 time (to exit loop)\n- **99% taken!**\n\n**Static prediction strategies:**\n\n**Predict taken (for backward branches):**\n- **Accuracy**: ~90% (loops dominate backward branches)\n- **Wrong**: Only on final loop exit\n- **Right**: All iterations except last\n\n**Predict not taken (bad for backward):**\n- **Accuracy**: ~10% (wrong most of the time!)\n- **Wrong**: Every iteration\n- **Right**: Only final exit\n\n**Contrast with forward branches:**\nForward branch (target > branch address):\n```assembly\n0x2000:  BEQ R1, R2, 0x2020  ← Forward branch (if statement)\n0x2004:  ADD R3, R4, R5      ← Fall-through path\n...\n0x2020:  LOAD R6, [R7]      ← Target\n```\nFor forward branches (if statements), **predict not taken** is often better.\n\n**Fixed prediction rule of thumb:**\n- **Backward branch** → Predict **taken** (loops iterate)\n- **Forward branch** → Predict **not taken** (if statements often false)\n\n**Why other options are wrong:**\n- **Predict not taken**: Terrible for loops (wrong 99% of time)\n- **Always alternate**: No better than random (50% accuracy)\n- **2-bit predictor**: Not a fixed prediction (it's dynamic/adaptive)\n- **No prediction possible**: FALSE - we can always make a guess!\n\n**Key concept:** **Static branch prediction** uses simple rules based on branch direction. **Backward = taken** exploits the fact that loops dominate backward branches and execute many times before exiting."
   },
 
   // 40 (short → MC)
@@ -888,7 +909,7 @@
       "The execution trace of a for loop of N iterations includes execution of N branch\ninstructions. Now the loop is unrolled k times where k divides N. The execution trace\nof the unrolled loop includes just 20% as many branch instructions as without\nunrolling. What is the value of k?",
     choices: ["2", "4", "5", "10", "20"],
     correctIndex: 2,
-    explanation: "20% means 1/5 as many branches → k = 5."
+    explanation: "**Answer: k = 5**\n\n**Step-by-step solution:**\n\n**Given information:**\n- Original loop: N iterations, N branch instructions\n- Unrolled loop: k-way unrolling, only 20% as many branches\n- k divides N evenly\n\n**Understanding loop unrolling:**\n\n**Original loop (N=100 iterations):**\n```c\nfor (i = 0; i < 100; i++) {\n    body;\n}\n```\n- **100 iterations** → **100 branch instructions** (one per iteration)\n\n**After k-way unrolling:**\n```c\nfor (i = 0; i < 100; i += k) {\n    body;  // iteration i\n    body;  // iteration i+1\n    body;  // iteration i+2\n    ...\n    body;  // iteration i+(k-1)\n}\n```\n- **100/k iterations** → **100/k branch instructions**\n\n**Setting up the equation:**\n- Original branches: N\n- Unrolled branches: N/k\n- Reduction: (N/k) / N = 1/k of original\n- Given: Only 20% remain → 1/k = 0.20 = 1/5\n\n**Solving:**\n```\n1/k = 0.20\n1/k = 1/5\nk = 5\n```\n\n**Verification:**\n- Original: 100 branches\n- 5-way unrolled: 100/5 = 20 branches\n- 20 is 20% of 100 ✓\n\n**What 5-way unrolling looks like:**\n```c\n// Original loop\nfor (i = 0; i < 100; i++) {\n    a[i] = b[i] + c[i];\n}\n\n// 5-way unrolled\nfor (i = 0; i < 100; i += 5) {\n    a[i]   = b[i]   + c[i];    // No branch\n    a[i+1] = b[i+1] + c[i+1];  // No branch\n    a[i+2] = b[i+2] + c[i+2];  // No branch\n    a[i+3] = b[i+3] + c[i+3];  // No branch\n    a[i+4] = b[i+4] + c[i+4];  // No branch\n}  // Branch here (only once per 5 iterations!)\n```\n\n**Benefits of unrolling:**\n- **Fewer branches** → Less branch prediction overhead\n- **More ILP** → More instructions available for parallel execution\n- **Less loop overhead** → Fewer increment/compare operations\n\n**Tradeoffs:**\n- **Code size increases** → k× larger loop body\n- **Register pressure** → May need more registers\n\n**Key concept:** k-way unrolling reduces branch count by factor of k (from N to N/k branches), trading code size for fewer branch penalties."
   },
 
   {
@@ -902,7 +923,7 @@
       "None of the other answers is correct."
     ],
     correctIndex: 0,
-    explanation: "Saving pushes updates through to non-volatile storage → write-through (as given)."
+    explanation: "**Answer: Write through**\n\n**Why 'Write through' is correct:**\nWhen you save/commit your work, you're forcing the modified data in cache to be **immediately written through** to permanent storage (disk), just like write-through cache policy.\n\n**Cache write policies:**\n\n**1. Write-through:**\n- **Writes go to BOTH cache AND next level** (immediately)\n- **Benefit**: Data is always consistent (cache = memory)\n- **Cost**: Slower writes (must wait for memory/disk)\n\n**2. Write-back:**\n- **Writes go ONLY to cache** (mark as dirty)\n- **Later**: Write to next level when block is evicted\n- **Benefit**: Faster writes (cache speed)\n- **Cost**: Data inconsistent until write-back\n\n**The analogy:**\n\n**Editing without saving (write-back):**\n- **Type in editor** → Changes in RAM (L1/L2 cache)\n- **Not saved to disk** → Disk has old version (like main memory)\n- **Fast** → No waiting for disk I/O\n- **Risk** → Power loss = data loss!\n\n**Saving/Committing (write-through):**\n- **Save to disk** → Force write to permanent storage\n- **Now consistent** → Disk and RAM have same version\n- **Slower** → Must wait for disk write to complete\n- **Safe** → Data persists even if crash\n\n**Real-world example:**\n```\nTime 0: Edit file.txt (changes in RAM only) - write-back\nTime 1: Keep editing (still just in RAM) - write-back  \nTime 2: Ctrl+S / git commit (flush to disk!) - WRITE-THROUGH\nTime 3: Now disk has latest version - consistent\n```\n\n**Why not write-back:**\nSaving IS the write-back action, but the question asks what policy you've performed when you save. The act of saving = forcing write to lower level = write-through behavior.\n\n**GitHub commit parallel:**\n- **Local edits**: Write-back (changes only in local cache/memory)\n- **Git commit + push**: Write-through (propagate to remote/permanent storage)\n\n**Key concept:** **Write-through** = immediate propagation to durable storage. Saving/committing is **explicitly forcing persistence**, which matches write-through semantics (ensure lower level is updated NOW, not later)."
   },
 
   {
@@ -916,7 +937,7 @@
       "There is insufficient information given to answer the question asked."
     ],
     correctIndex: 2,
-    explanation: "Page tables don’t store the offset; thus option C is the provided answer."
+    explanation: "**Answer: Each of the above answers names a part of a virtual address not stored in a single-level page table.**\n\n**Why both VPN and offset are NOT stored:**\n\n**Virtual address structure:**\n```\n[Virtual Page Number (VPN) | Offset]\n[    Used as INDEX         | Not stored]\n```\n\n**How single-level page table works:**\n\n**1. Virtual address arrives:**\n```\nVirtual Address = [VPN | Offset]\nExample: 0x12345678\n- VPN: 0x12345 (upper bits)\n- Offset: 0x678 (lower bits)\n```\n\n**2. Use VPN to index into page table:**\n```\nPage Table[VPN] = Physical Page Number (PPN)\n```\n- **VPN is the INDEX** (like array index)\n- **Not stored IN the table** (implicit from position)\n\n**3. What IS stored in page table:**\n- **Physical Page Number (PPN)** - where the page lives in physical memory\n- **Valid bit** - is this page in memory?\n- **Permission bits** - read/write/execute\n- **Dirty bit** - has page been modified?\n- **Reference bit** - has page been accessed?\n\n**4. Offset is NEVER stored:**\n- Offset is **passed through unchanged**\n- Works the same for virtual and physical addresses\n- Only page number needs translation\n\n**Complete translation:**\n```\nVirtual Address:  [VPN     | Offset]\n                     ↓         |\n              Page Table        |\n                     ↓         |\nPhysical Address: [PPN     | Offset] (same offset!)\n```\n\n**Why VPN is not stored:**\n- **Implicit in table position**: Entry 0 is for VPN=0, Entry 1 is for VPN=1, etc.\n- **Like array**: `table[5]` - we don't store \"5\" inside the array element\n\n**Why offset is not stored:**\n- **Not needed for translation**: Offset is identical in virtual and physical\n- **Page table translates pages, not bytes**: Works at page granularity\n\n**Example:**\n```\nPage size = 4KB = 2^12 bytes (12-bit offset)\n32-bit address = [20-bit VPN | 12-bit offset]\n\nPage Table (simplified):\nIndex  |  PPN\n-------|------\n0      |  47\n1      |  23  \n2      |  91\n...\n```\n\nNotice: VPN and offset are NOT in the table!\n\n**Key concept:** Page tables store **mappings** (VPN → PPN), not the virtual address components themselves. VPN is the lookup key (index), offset passes through unchanged."
   },
 
   // 43–45 (already MC, keep correct answer)
@@ -926,7 +947,7 @@
       "A first-generation processor has a register unit constructed with 32-bit registers. The\nnext generation of the processor replaces each 32-bit register in the register unit with\na 64-bit register.\nConsider a machine instruction that sources both operands from the register unit\nand stores their sum in the register unit. How many more bits does the next-\ngeneration processor machine instruction require to specify three registers than the\nfirst-generation machine instruction?\n[State your answer as a decimal integer. Do not include the word “bits”. Thank you.]",
     choices: ["0.", "3.", "32.", "96."],
     correctIndex: 0,
-    explanation: "Register identifier bits don’t change just because register width changes."
+    explanation: "**Answer: 0**\n\n**Why zero additional bits are needed:**\nRegister **identifier** bits (which register to use) are determined by the **number of registers**, NOT the **width of each register**.\n\n**Understanding register encoding:**\n\n**First generation (32-bit registers):**\n- Suppose 32 registers: R0, R1, R2, ..., R31\n- Need **5 bits** to identify a register (2⁵ = 32)\n- Instruction format: [opcode | src1: 5 bits | src2: 5 bits | dest: 5 bits | ...]\n- **Total for 3 registers: 15 bits**\n\n**Second generation (64-bit registers):**\n- **Still 32 registers**: R0, R1, R2, ..., R31 (same count!)\n- Still need **5 bits** to identify a register\n- Instruction format: [opcode | src1: 5 bits | src2: 5 bits | dest: 5 bits | ...]\n- **Total for 3 registers: 15 bits** (same!)\n\n**Difference: 15 - 15 = 0 bits**\n\n**What changed vs what didn't:**\n\n**Changed:**\n- **Register width**: 32 bits → 64 bits\n- **Data capacity**: Each register holds more data\n- **Datapath**: Wider ALU, wider buses\n\n**Did NOT change:**\n- **Number of registers**: Still 32 registers\n- **Bits to encode register ID**: Still 5 bits per register\n- **Instruction encoding**: Register fields are same size\n\n**Analogy:**\nIt's like going from:\n- **32 small boxes** (32-bit registers)\nto:\n- **32 large boxes** (64-bit registers)\n\nYou still have 32 boxes, so you still need the same number of bits to say \"use box #7\" or \"use box #23\".\n\n**When would register bits change:**\nIf the next generation had **64 registers instead of 32**:\n- Need 6 bits per register (2⁶ = 64)\n- 3 registers × 6 bits = 18 bits\n- vs original 15 bits\n- **Difference: 3 more bits**\n\nBut question says they just made registers wider, not more numerous!\n\n**Key concept:** **Register width** (how many bits each register holds) is separate from **register count** (how many registers exist). Instruction encoding depends on COUNT, not WIDTH."
   },
   {
     id: "pf44_alu_output_select",
@@ -934,7 +955,7 @@
       "This digital logic circuit is used to ignore all ALU function\nunit outputs except the one specified by the opcode.",
     choices: ["decoder.", "multiplexer.", "register.", "comparator."],
     correctIndex: 1,
-    explanation: "A multiplexer selects exactly one ALU output based on opcode/control."
+    explanation: "**Answer: multiplexer**\n\n**Why 'multiplexer' is correct:**\nA multiplexer (MUX) selects exactly ONE output from multiple ALU function units based on the opcode control signal.\n\n**ALU architecture:**\n\n**Modern ALUs have multiple function units:**\n```\nOperands A, B\n    ↓       ↓\n    |-------|-------|-------|-------|\n    |       |       |       |       |\n   ADD     SUB     AND     OR      XOR   ← All compute in parallel\n    |       |       |       |       |\n    v       v       v       v       v\n[Result] [Result] [Result] [Result] [Result]\n    \\       |       |       |      /\n     \\      |       |       |     /\n      \\     |       |       |    /\n       \\    |       |       |   /\n        \\   |       |       |  /\n         \\  |       |       | /\n          \\ |       |       |/\n        MULTIPLEXER (controlled by opcode)\n               |\n               v\n          Final Result\n```\n\n**How the MUX works:**\n\n**1. All function units compute simultaneously:**\n- Adder computes: A + B\n- Subtractor computes: A - B  \n- AND gate computes: A AND B\n- OR gate computes: A OR B\n- XOR gate computes: A XOR B\n\n**2. Opcode selects which result to use:**\n```\nOpcode = 000 → Select ADD output\nOpcode = 001 → Select SUB output\nOpcode = 010 → Select AND output\nOpcode = 011 → Select OR output\nOpcode = 100 → Select XOR output\n```\n\n**3. Multiplexer passes selected output:**\n- **Input**: 5 results + 3-bit opcode (selector)\n- **Output**: 1 result (the one selected by opcode)\n- **Ignores**: All other 4 results\n\n**Why other circuits are wrong:**\n\n**Decoder:**\n- Converts binary code to one-hot signal\n- ACTIVATES outputs, doesn't SELECT from inputs\n- Used to enable function units, not choose result\n\n**Register:**\n- Stores a value\n- Doesn't select between multiple inputs\n\n**Comparator:**\n- Compares two values (A > B, A == B, etc.)\n- Doesn't select from multiple inputs\n- Could be ONE of the ALU function units!\n\n**Real example - 4-bit ALU:**\n```assembly\nADD R1, R2, R3  ; opcode = 0010 (ADD)\n```\n\n**Execution:**\n1. R2 = 0x5, R3 = 0x7\n2. All ALU units compute:\n   - ADD: 0x5 + 0x7 = 0xC ✓ (this one selected!)\n   - SUB: 0x5 - 0x7 = 0xFE (ignored)\n   - AND: 0x5 & 0x7 = 0x5 (ignored)\n   - OR:  0x5 | 0x7 = 0x7 (ignored)\n3. Opcode = ADD → MUX selects 0xC\n4. R1 ← 0xC\n\n**Key concept:** ALUs typically compute **all functions in parallel** (fast but wasteful of power), then use a **multiplexer to select the desired result** based on the instruction's opcode. This is faster than computing only one function sequentially."
   },
   {
     id: "pf45_parallel_absence_dependency",
@@ -942,7 +963,7 @@
       "To execute two machine instructions at the same time requires an\nabsence of what between the two instructions?",
     choices: ["latency", "pipelines", "dependence or dependency.", "registers", "instructions"],
     correctIndex: 2,
-    explanation: "Dependences prevent safe parallel execution."
+    explanation: "**Answer: dependence or dependency**\n\n**Why 'dependence' is correct:**\nTo execute two instructions simultaneously (in parallel), there must be **NO dependence** between them. Dependences force sequential execution.\n\n**What is a dependence:**\nA dependence exists when one instruction relies on the result of another, creating an execution order constraint.\n\n**Three types of dependences:**\n\n**1. True dependence (Read-After-Write / RAW):**\n```assembly\nADD R1, R2, R3   ; R1 ← R2 + R3 (WRITES R1)\nSUB R4, R1, R5   ; R4 ← R1 - R5 (READS R1)\n```\n- **SUB needs ADD's result** → Can't execute in parallel!\n- Must wait for ADD to finish before SUB can read R1\n\n**2. Anti-dependence (Write-After-Read / WAR):**\n```assembly\nADD R4, R1, R2   ; READS R1\nSUB R1, R5, R6   ; WRITES R1\n```\n- **SUB would overwrite R1 before ADD reads it** → Can't reorder!\n- ADD must read R1 before SUB writes it\n\n**3. Output dependence (Write-After-Write / WAW):**\n```assembly\nADD R1, R2, R3   ; WRITES R1\nSUB R1, R4, R5   ; WRITES R1 again\n```\n- **Both write R1** → Final value must be from SUB!\n- Can't execute out of order or simultaneously\n\n**Example - NO dependence (can parallelize):**\n```assembly\nADD R1, R2, R3   ; R1 ← R2 + R3\nSUB R4, R5, R6   ; R4 ← R5 - R6\n```\n- **Different registers** → No data conflict\n- **Independent** → Can execute simultaneously! ✓\n\n**Example - HAS dependence (can't parallelize):**\n```assembly\nADD R1, R2, R3   ; R1 ← R2 + R3\nMUL R4, R1, R5   ; R4 ← R1 × R5 (needs R1 from ADD!)\n```\n- **MUL depends on ADD** → Must wait\n- **True dependence** → Can't execute in parallel ✗\n\n**Why other options are wrong:**\n\n**Latency:**\n- Latency is the TIME an operation takes\n- Doesn't prevent parallelism - two slow operations can still run in parallel\n\n**Pipelines:**\n- Pipelines ENABLE parallelism (overlap instruction stages)\n- Not something to avoid!\n\n**Registers:**\n- Need registers to execute instructions\n- More registers = more parallelism opportunities!\n\n**Instructions:**\n- Need instructions to execute!\n- Absurd to say \"absence of instructions\"\n\n**Dependence graph example:**\n```\nCode:              Dependencies:\n1. LOAD R1, [X]    \n2. ADD R2, R1, R3  ────→ Depends on 1 (needs R1)\n3. SUB R4, R5, R6      (independent!)\n4. MUL R7, R2, R4  ─┬─→ Depends on 2 (needs R2)\n                     └─→ Depends on 3 (needs R4)\n```\n\n**Can parallelize:** Instructions 2 and 3 (no dependence)\n**Can't parallelize:** Instructions 2 and 4 (4 depends on 2)\n\n**Key concept:** **Data dependences** (RAW, WAR, WAW) are the fundamental constraint on parallel execution. Without dependences, instructions are **independent** and can execute simultaneously to exploit **instruction-level parallelism (ILP)**."
   }
 ];
 
@@ -961,6 +982,12 @@
       const scoreValueEl = document.getElementById("scoreValue");
       const scoreNoteEl = document.getElementById("scoreNote");
       const gradedPillEl = document.getElementById("gradedPill");
+
+      function formatExplanation(text) {
+        if (!text) return '';
+        // Replace **text** with <strong>text</strong>
+        return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      }
 
       function render() {
         quizEl.innerHTML = "";
@@ -1038,7 +1065,7 @@
             result.style.display = "block";
             result.innerHTML = `
             <div class="answer">Not graded</div>
-            <div class="explain">${q.explanation}</div>
+            <div class="explain">${formatExplanation(q.explanation)}</div>
           `;
             return;
           }
@@ -1059,15 +1086,23 @@
           result.style.display = "block";
           result.innerHTML = `
           <div class="answer">Correct: ${correctText}</div>
-          <div class="explain">
-            <span style="font-family:'Roboto Mono', monospace; color: var(--color-text); font-weight:700;">Your answer:</span>
-            <span style="font-family:'Roboto Mono', monospace; color: ${
-              picked === q.correctIndex
-                ? "var(--color-primary)"
-                : "var(--color-error)"
-            }; font-weight:700;">${pickedText}</span>
-            <div style="margin-top:8px;">${q.explanation}</div>
-          </div>
+          <div class="your-answer">
+  <span style="font-family:'Roboto Mono', monospace; color: var(--color-text); font-weight:700;">
+    Your answer:
+  </span>
+  <span style="font-family:'Roboto Mono', monospace; color: ${
+    picked === q.correctIndex
+      ? "var(--color-primary)"
+      : "var(--color-error)"
+  }; font-weight:700;">
+    ${pickedText}
+  </span>
+</div>
+
+<div class="explain">
+${formatExplanation(q.explanation)}
+</div>
+
         `;
         });
 

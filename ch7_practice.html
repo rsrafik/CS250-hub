@@ -166,8 +166,10 @@
         margin: 10px 0;
         font-family: "IBM Plex Mono", monospace;
         color: var(--pink-2);
-        white-space: pre;
-        overflow-x: auto;
+        white-space: pre-wrap;      /* preserves line breaks but allows wrapping */
+        overflow-x: hidden;         /* no horizontal scrollbar */
+        overflow-wrap: anywhere;    /* wraps long tokens if needed */
+        word-break: break-word;     /* fallback */
         font-size: 0.92em;
       }
 
@@ -248,8 +250,10 @@
         margin: 10px 0;
         font-family: "IBM Plex Mono", monospace;
         color: var(--ok);
-        white-space: pre;
-        overflow-x: auto;
+        white-space: pre-wrap;      /* preserves line breaks but allows wrapping */
+        overflow-x: hidden;         /* no horizontal scrollbar */
+        overflow-wrap: anywhere;    /* wraps long tokens if needed */
+        word-break: break-word;     /* fallback */
         font-size: 0.92em;
       }
 

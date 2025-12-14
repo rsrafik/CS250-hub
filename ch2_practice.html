@@ -126,8 +126,10 @@
         margin: 10px 0;
         font-family: "IBM Plex Mono", monospace;
         color: #00d4ff;
-        white-space: pre;
-        overflow-x: auto;
+        white-space: pre-wrap;      /* preserves line breaks but allows wrapping */
+        overflow-x: hidden;         /* no horizontal scrollbar */
+        overflow-wrap: anywhere;    /* wraps long tokens if needed */
+        word-break: break-word;     /* fallback */
       }
 
       .solution {
@@ -175,8 +177,10 @@
         margin: 10px 0;
         font-family: "IBM Plex Mono", monospace;
         color: #10b981;
-        white-space: pre;
-        overflow-x: auto;
+        white-space: pre-wrap;      /* preserves line breaks but allows wrapping */
+        overflow-x: hidden;         /* no horizontal scrollbar */
+        overflow-wrap: anywhere;    /* wraps long tokens if needed */
+        word-break: break-word;     /* fallback */
       }
 
       .answer-box {
@@ -308,9 +312,8 @@
         </button>
         <div class="solution" id="solution-2">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            ADD X9, X20, X21 // temp = b + c SUB X19, X9, X22 // a = temp - d
-          </div>
+          <div class="code-solution">ADD X9, X20, X21 // temp = b + c
+SUB X19, X9, X22 // a = temp - d</div>
           <div class="answer-box">
             Need temporary register (X9) for intermediate result
           </div>
@@ -338,11 +341,10 @@
           <div class="solution-step">
             Calculate offsets: A[2] is at offset 16, A[5] at 40, A[8] at 64
           </div>
-          <div class="code-solution">
-            LDUR X9, [X22, #16] // Load A[2] LDUR X10, [X22, #40] // Load A[5]
-            ADD X11, X9, X10 // temp = A[2] + A[5] STUR X11, [X22, #64] // A[8]
-            = temp
-          </div>
+          <div class="code-solution">LDUR X9, [X22, #16] // Load A[2]
+LDUR X10, [X22, #40] // Load A[5]
+ADD X11, X9, X10 // temp = A[2] + A[5]
+STUR X11, [X22, #64] // A[8] = temp</div>
           <div class="answer-box">
             3 memory operations + 1 arithmetic = 4 instructions
           </div>
@@ -488,12 +490,15 @@
         </button>
         <div class="solution" id="solution-8">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            leaf_proc: SUBI SP, SP, #8 ; Make room on stack STUR X19, [SP, #0] ;
-            Save X19 ADD X19, X0, X1 ; X19 = a + b SUB X19, X19, X2 ; X19 =
-            (a+b) - c ADD X0, X19, XZR ; Return f in X0 LDUR X19, [SP, #0] ;
-            Restore X19 ADDI SP, SP, #8 ; Pop stack BR LR ; Return
-          </div>
+          <div class="code-solution">leaf_proc:
+    SUBI SP, SP, #8       ; Make room on stack
+    STUR X19, [SP, #0]    ; Save X19
+    ADD X19, X0, X1       ; X19 = a + b
+    SUB X19, X19, X2      ; X19 = (a+b) - c
+    ADD X0, X19, XZR      ; Return f in X0
+    LDUR X19, [SP, #0]    ; Restore X19
+    ADDI SP, SP, #8       ; Pop stack
+    BR LR                 ; Return</div>
           <div class="answer-box">
             Must save/restore callee-saved register X19
           </div>
@@ -520,13 +525,15 @@
         </button>
         <div class="solution" id="solution-9">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            caller: SUBI SP, SP, #8 ; Make room for LR STUR LR, [SP, #0] ; Save
-            return address ADDI X0, X0, #5 ; x = x + 5 BL callee ; Call callee
-            (result in X0) ; X0 already has return value from callee LDUR LR,
-            [SP, #0] ; Restore return address ADDI SP, SP, #8 ; Pop stack BR LR
-            ; Return to original caller
-          </div>
+          <div class="code-solution">caller:
+    SUBI SP, SP, #8       ; Make room for LR
+    STUR LR, [SP, #0]     ; Save return address
+    ADDI X0, X0, #5       ; x = x + 5
+    BL callee             ; Call callee (result in X0)
+    ; X0 already has return value from callee
+    LDUR LR, [SP, #0]     ; Restore return address
+    ADDI SP, SP, #8       ; Pop stack
+    BR LR                 ; Return to original caller</div>
           <div class="answer-box">
             Critical: Save LR before BL, restore before returning
           </div>
@@ -550,17 +557,17 @@
         </button>
         <div class="solution" id="solution-10">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            SUBS XZR, X9, X10 ; Set flags: i - j B.NE Skip ; If not equal, skip
-            ADDI X9, X9, #1 ; i = i + 1 Skip:
-          </div>
+          <div class="code-solution">    SUBS XZR, X9, X10     ; Set flags: i - j
+    B.NE Skip             ; If not equal, skip
+    ADDI X9, X9, #1       ; i = i + 1
+Skip:</div>
           <div class="solution-step">
             Alternative using CBZ/CBNZ (if comparing to zero):
           </div>
-          <div class="code-solution">
-            SUB X11, X9, X10 ; temp = i - j CBNZ X11, Skip ; If temp ≠ 0, skip
-            ADDI X9, X9, #1 ; i = i + 1 Skip:
-          </div>
+          <div class="code-solution">    SUB X11, X9, X10      ; temp = i - j
+    CBNZ X11, Skip        ; If temp ≠ 0, skip
+    ADDI X9, X9, #1       ; i = i + 1
+Skip:</div>
           <div class="answer-box">
             Two approaches: condition codes or CBZ/CBNZ
           </div>
@@ -584,12 +591,15 @@
         </button>
         <div class="solution" id="solution-11">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            ADD X9, XZR, XZR ; i = 0 ADD X19, XZR, XZR ; sum = 0 Loop: SUBS XZR,
-            X9, X10 ; Set flags: i - n B.GE Done ; If i >= n, exit loop ADD X19,
-            X19, X9 ; sum = sum + i ADDI X9, X9, #1 ; i = i + 1 B Loop ; Jump
-            back to loop start Done:
-          </div>
+          <div class="code-solution">    ADD X9, XZR, XZR      ; i = 0
+    ADD X19, XZR, XZR     ; sum = 0
+Loop:
+    SUBS XZR, X9, X10     ; Set flags: i - n
+    B.GE Done             ; If i >= n, exit loop
+    ADD X19, X19, X9      ; sum = sum + i
+    ADDI X9, X9, #1       ; i = i + 1
+    B Loop                ; Jump back to loop start
+Done:</div>
           <div class="answer-box">
             Pattern: test condition, branch if false, body, branch back
           </div>
@@ -675,15 +685,11 @@
           <div class="solution-step">
             Step 1: Shift right by 8 to move bits 8-15 to positions 0-7
           </div>
-          <div class="code-solution">
-            LSR X10, X9, #8 ; Shift right 8 positions
-          </div>
+          <div class="code-solution">LSR X10, X9, #8           ; Shift right 8 positions</div>
           <div class="solution-step">
             Step 2: Mask to keep only the rightmost 8 bits (0xFF)
           </div>
-          <div class="code-solution">
-            ANDI X10, X10, #0xFF ; AND with 00...011111111
-          </div>
+          <div class="code-solution">ANDI X10, X10, #0xFF      ; AND with 00...011111111</div>
           <div class="answer-box">LSR to position, then AND to mask</div>
         </div>
       </div>
@@ -708,9 +714,7 @@
           <div class="solution-step">
             Create mask with bit 5 set: 2⁵ = 32 = 0x20
           </div>
-          <div class="code-solution">
-            ORRI X9, X9, #0x20 ; OR with 00...00100000
-          </div>
+          <div class="code-solution">ORRI X9, X9, #0x20        ; OR with 00...00100000</div>
           <div class="solution-step">
             OR operation: 0|1=1, 1|1=1, so bit 5 becomes 1 regardless
           </div>
@@ -749,10 +753,8 @@
             • Bits [47:32] = 0xABCD (position 32)<br />
             • Bits [63:48] = 0x0000 (position 48)
           </div>
-          <div class="code-solution">
-            MOVZ X9, #0x1234, LSL #0 ; Load 0x1234, zero rest MOVK X9, #0xABCD,
-            LSL #32 ; Keep existing, load 0xABCD at bit 32
-          </div>
+          <div class="code-solution">MOVZ X9, #0x1234, LSL #0  ; Load 0x1234, zero rest
+MOVK X9, #0xABCD, LSL #32 ; Keep existing, load 0xABCD at bit 32</div>
           <div class="solution-step">
             We can skip the zero chunks (positions 16 and 48)
           </div>
@@ -806,13 +808,16 @@
         </button>
         <div class="solution" id="solution-21">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            ADDI X11, XZR, #1 ; X11 = 1 (locked value) TryLock: LDXR X10, [X20,
-            #0] ; Load exclusive from lock CBNZ X10, TryLock ; If already
-            locked, retry STXR X11, X9, [X20] ; Try to store 1 CBNZ X9, TryLock
-            ; If store failed, retry ; Lock acquired! ; ... critical section ...
-            ; Release lock: STUR XZR, [X20, #0] ; Write 0 = unlock
-          </div>
+          <div class="code-solution">    ADDI X11, XZR, #1     ; X11 = 1 (locked value)
+TryLock:
+    LDXR X10, [X20, #0]   ; Load exclusive from lock
+    CBNZ X10, TryLock     ; If already locked, retry
+    STXR X11, X9, [X20]   ; Try to store 1
+    CBNZ X9, TryLock      ; If store failed, retry
+    ; Lock acquired!
+    ; ... critical section ...
+    ; Release lock:
+    STUR XZR, [X20, #0]   ; Write 0 = unlock</div>
           <div class="solution-step">
             LDXR marks memory location for exclusive access
           </div>
@@ -841,9 +846,7 @@
             MOV is a pseudoinstruction - not real hardware instruction
           </div>
           <div class="solution-step">To copy X10 to X9, use: X9 = 0 OR X10</div>
-          <div class="code-solution">
-            ORR X9, XZR, X10 ; X9 = XZR | X10 = 0 | X10 = X10
-          </div>
+          <div class="code-solution">ORR X9, XZR, X10          ; X9 = XZR | X10 = 0 | X10 = X10</div>
           <div class="solution-step">
             Uses XZR (always 0) to create the copy
           </div>
@@ -921,10 +924,8 @@
           <div class="solution-step">
             The trick: negative numbers are HUGE when interpreted as unsigned
           </div>
-          <div class="code-solution">
-            SUBS XZR, X20, X11 ; Compare index to size B.HS IndexOutOfBounds ;
-            Branch if Higher or Same (unsigned)
-          </div>
+          <div class="code-solution">    SUBS XZR, X20, X11    ; Compare index to size
+    B.HS IndexOutOfBounds ; Branch if Higher or Same (unsigned)</div>
           <div class="solution-step">Why this works:</div>
           <div class="solution-step">
             • If X20 < 0: Interpreted as huge unsigned → HS is true → branch<br />
@@ -956,20 +957,23 @@
           <div class="solution-step">
             <strong>Array indexing version (6 instructions/iteration):</strong>
           </div>
-          <div class="code-solution">
-            Loop: LSL X10, X9, #3 ; Offset = i × 8 ADD X11, X0, X10 ; Address =
-            base + offset STUR XZR, [X11, #0] ; Store 0 ADDI X9, X9, #1 ; i++
-            SUBS XZR, X9, X1 ; Compare i to n B.LT Loop ; Branch if i < n
-          </div>
+          <div class="code-solution">Loop:
+    LSL X10, X9, #3       ; Offset = i × 8
+    ADD X11, X0, X10      ; Address = base + offset
+    STUR XZR, [X11, #0]   ; Store 0
+    ADDI X9, X9, #1       ; i++
+    SUBS XZR, X9, X1      ; Compare i to n
+    B.LT Loop             ; Branch if i < n</div>
           <div class="solution-step">
             <strong>Pointer version (4 instructions/iteration):</strong>
           </div>
-          <div class="code-solution">
-            LSL X11, X1, #3 ; End = base + (n × 8) ADD X11, X0, X11 ; (calculate
-            once!) Loop: STUR XZR, [X9, #0] ; Store 0 ADDI X9, X9, #8 ; ptr += 8
-            SUBS XZR, X9, X11 ; Compare ptr to end B.LT Loop ; Branch if ptr <
-            end
-          </div>
+          <div class="code-solution">    LSL X11, X1, #3       ; End = base + (n × 8)
+    ADD X11, X0, X11      ; (calculate once!)
+Loop:
+    STUR XZR, [X9, #0]    ; Store 0
+    ADDI X9, X9, #8       ; ptr += 8
+    SUBS XZR, X9, X11     ; Compare ptr to end
+    B.LT Loop             ; Branch if ptr < end</div>
           <div class="answer-box">
             <strong>Winner:</strong> Pointer version (33% fewer instructions)<br />
             Moved address calculation outside loop
@@ -997,11 +1001,14 @@
           <div class="solution-step">
             Solution: Invert condition and use unconditional branch
           </div>
-          <div class="code-solution">
-            ; Original (won't work): CBZ X19, FarAway ; Fixed version: CBNZ X19,
-            Skip ; If NOT zero, skip B FarAway ; Unconditional (±128MB range)
-            Skip: ; Continue here if X19 was not zero
-          </div>
+          <div class="code-solution">    ; Original (won't work):
+    CBZ X19, FarAway
+
+    ; Fixed version:
+    CBNZ X19, Skip        ; If NOT zero, skip
+    B FarAway             ; Unconditional (±128MB range)
+Skip:
+    ; Continue here if X19 was not zero</div>
           <div class="solution-step">
             <strong>Key insight:</strong> B instruction has ±128MB range
           </div>
@@ -1032,22 +1039,16 @@
           <div class="solution-step">
             <strong>Step 1:</strong> Convert hex to binary
           </div>
-          <div class="code-solution">
-            8b050000 hex = 10001011 00000101 00000000 00000000 binary
-          </div>
+          <div class="code-solution">8b050000 hex = 10001011 00000101 00000000 00000000 binary</div>
           <div class="solution-step">
             <strong>Step 2:</strong> Extract opcode (first 11 bits)
           </div>
-          <div class="code-solution">
-            10001011000 = 1112 decimal = ADD instruction
-          </div>
+          <div class="code-solution">10001011000 = 1112 decimal = ADD instruction</div>
           <div class="solution-step">
             <strong>Step 3:</strong> Determine format → R-format
           </div>
-          <div class="code-solution">
-            R-format: opcode(11) | Rm(5) | shamt(6) | Rn(5) | Rd(5) 10001011000
-            | 00101 | 000000 | 00000 | 00000
-          </div>
+          <div class="code-solution">R-format: opcode(11) | Rm(5) | shamt(6) | Rn(5) | Rd(5)
+           10001011000 | 00101 | 000000 | 00000 | 00000</div>
           <div class="solution-step">
             Parse fields: Rm=5, shamt=0, Rn=0, Rd=0
           </div>
@@ -1072,17 +1073,16 @@
           <div class="solution-step">
             <strong>Pre-indexed (update FIRST, then load):</strong>
           </div>
-          <div class="code-solution">
-            LDR X10, [X11, #16]! ; Step 1: X11 = X11 + 16 ; Step 2: X10 =
-            memory[X11] ; The "!" means write-back
-          </div>
+          <div class="code-solution">LDR X10, [X11, #16]!
+    ; Step 1: X11 = X11 + 16
+    ; Step 2: X10 = memory[X11]
+    ; The "!" means write-back</div>
           <div class="solution-step">
             <strong>Post-indexed (load FIRST, then update):</strong>
           </div>
-          <div class="code-solution">
-            LDR X10, [X11], #16 ; Step 1: X10 = memory[X11] ; Step 2: X11 = X11
-            + 16
-          </div>
+          <div class="code-solution">LDR X10, [X11], #16
+    ; Step 1: X10 = memory[X11]
+    ; Step 2: X11 = X11 + 16</div>
           <div class="solution-step">
             <strong>Use cases:</strong>
           </div>
@@ -1209,13 +1209,19 @@
           <div class="solution-step">
             ARM needs multiple steps (load/store architecture):
           </div>
-          <div class="code-solution">
-            ; Assume: X0=EBX, X1=ECX, X2=EAX ; Step 1: Calculate ECX*4 LSL X10,
-            X1, #2 ; X10 = ECX × 4 ; Step 2: Add to EBX ADD X10, X0, X10 ; X10 =
-            EBX + (ECX × 4) ; Step 3: Add displacement ADDI X10, X10, #20 ; X10
-            = EBX + ECX×4 + 20 ; Step 4: Load from memory LDUR X2, [X10, #0] ;
-            EAX = memory[address]
-          </div>
+          <div class="code-solution">    ; Assume: X0=EBX, X1=ECX, X2=EAX
+
+    ; Step 1: Calculate ECX*4
+    LSL X10, X1, #2       ; X10 = ECX × 4
+
+    ; Step 2: Add to EBX
+    ADD X10, X0, X10      ; X10 = EBX + (ECX × 4)
+
+    ; Step 3: Add displacement
+    ADDI X10, X10, #20    ; X10 = EBX + ECX×4 + 20
+
+    ; Step 4: Load from memory
+    LDUR X2, [X10, #0]    ; EAX = memory[address]</div>
           <div class="answer-box">4 ARM instructions vs 1 x86 instruction</div>
         </div>
       </div>
@@ -1325,14 +1331,20 @@
         </button>
         <div class="solution" id="solution-17">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            swap: SUBI SP, SP, #8 ; Save X19 STUR X19, [SP, #0] LSL X1, X1, #3 ;
-            i = i × 8 (byte offset) LSL X2, X2, #3 ; j = j × 8 (byte offset) ADD
-            X9, X0, X1 ; X9 = address of A[i] ADD X10, X0, X2 ; X10 = address of
-            A[j] LDUR X19, [X9, #0] ; temp = A[i] LDUR X11, [X10, #0] ; X11 =
-            A[j] STUR X11, [X9, #0] ; A[i] = A[j] STUR X19, [X10, #0] ; A[j] =
-            temp LDUR X19, [SP, #0] ; Restore X19 ADDI SP, SP, #8 BR LR
-          </div>
+          <div class="code-solution">swap:
+    SUBI SP, SP, #8       ; Save X19
+    STUR X19, [SP, #0]
+    LSL X1, X1, #3        ; i = i × 8 (byte offset)
+    LSL X2, X2, #3        ; j = j × 8 (byte offset)
+    ADD X9, X0, X1        ; X9 = address of A[i]
+    ADD X10, X0, X2       ; X10 = address of A[j]
+    LDUR X19, [X9, #0]    ; temp = A[i]
+    LDUR X11, [X10, #0]   ; X11 = A[j]
+    STUR X11, [X9, #0]    ; A[i] = A[j]
+    STUR X19, [X10, #0]   ; A[j] = temp
+    LDUR X19, [SP, #0]    ; Restore X19
+    ADDI SP, SP, #8
+    BR LR</div>
           <div class="answer-box">
             Key: Calculate addresses, use temp variable, save/restore
           </div>
@@ -1363,16 +1375,27 @@
         </button>
         <div class="solution" id="solution-18">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            sum_array: SUBI SP, SP, #16 ; Save 2 registers STUR X19, [SP, #0] ;
-            Save sum STUR X20, [SP, #8] ; Save i ADD X19, XZR, XZR ; sum = 0 ADD
-            X20, XZR, XZR ; i = 0 Loop: SUBS XZR, X20, X1 ; Compare i and n B.GE
-            Done ; If i >= n, exit LSL X9, X20, #3 ; X9 = i × 8 (byte offset)
-            ADD X9, X0, X9 ; X9 = address of A[i] LDUR X10, [X9, #0] ; Load A[i]
-            ADD X19, X19, X10 ; sum += A[i] ADDI X20, X20, #1 ; i++ B Loop Done:
-            ADD X0, X19, XZR ; Return sum in X0 LDUR X19, [SP, #0] ; Restore
-            registers LDUR X20, [SP, #8] ADDI SP, SP, #16 BR LR
-          </div>
+          <div class="code-solution">sum_array:
+    SUBI SP, SP, #16      ; Save 2 registers
+    STUR X19, [SP, #0]    ; Save sum
+    STUR X20, [SP, #8]    ; Save i
+    ADD X19, XZR, XZR     ; sum = 0
+    ADD X20, XZR, XZR     ; i = 0
+Loop:
+    SUBS XZR, X20, X1     ; Compare i and n
+    B.GE Done             ; If i >= n, exit
+    LSL X9, X20, #3       ; X9 = i × 8 (byte offset)
+    ADD X9, X0, X9        ; X9 = address of A[i]
+    LDUR X10, [X9, #0]    ; Load A[i]
+    ADD X19, X19, X10     ; sum += A[i]
+    ADDI X20, X20, #1     ; i++
+    B Loop
+Done:
+    ADD X0, X19, XZR      ; Return sum in X0
+    LDUR X19, [SP, #0]    ; Restore registers
+    LDUR X20, [SP, #8]
+    ADDI SP, SP, #16
+    BR LR</div>
           <div class="answer-box">
             Complete procedure with loop, array access, and proper conventions
           </div>

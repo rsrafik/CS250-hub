@@ -126,8 +126,10 @@
         margin: 10px 0;
         font-family: "IBM Plex Mono", monospace;
         color: #ff9f1c;
-        white-space: pre;
-        overflow-x: auto;
+        white-space: pre-wrap;      /* preserves line breaks but allows wrapping */
+        overflow-x: hidden;         /* no horizontal scrollbar */
+        overflow-wrap: anywhere;    /* wraps long tokens if needed */
+        word-break: break-word;     /* fallback */
       }
 
       .solution {
@@ -175,8 +177,10 @@
         margin: 10px 0;
         font-family: "IBM Plex Mono", monospace;
         color: #10b981;
-        white-space: pre;
-        overflow-x: auto;
+        white-space: pre-wrap;      /* preserves line breaks but allows wrapping */
+        overflow-x: hidden;         /* no horizontal scrollbar */
+        overflow-wrap: anywhere;    /* wraps long tokens if needed */
+        word-break: break-word;     /* fallback */
       }
 
       .answer-box {
@@ -290,10 +294,10 @@
         <div class="solution" id="solution-1">
           <div class="solution-header">✓ Solution</div>
           <div class="solution-step">Add the numbers bit by bit</div>
-          <div class="code-solution">
-            01101100 (108 decimal) + 00110101 (53 decimal) ---------- 10100001
-            (-95 in two's complement)
-          </div>
+          <div class="code-solution">  01101100  (108 decimal)
++ 00110101  (53 decimal)
+----------
+  10100001  (-95 in two's complement)</div>
           <div class="solution-step">
             Both operands are positive (MSB = 0), but result is negative (MSB =
             1)
@@ -326,9 +330,10 @@
           <div class="solution-step">
             Overflow occurs when: adding another positive makes sum > 127
           </div>
-          <div class="code-solution">
-            90 + x > 127 x > 37 Maximum we can add: 127 - 90 = 37
-          </div>
+          <div class="code-solution">90 + x > 127
+x > 37
+
+Maximum we can add: 127 - 90 = 37</div>
           <div class="solution-step">
             No overflow with negative numbers (different signs can't overflow on
             addition)
@@ -366,22 +371,27 @@
             <strong>Initial:</strong> Multiplicand=00000101, Multiplier=0011,
             Product=00000000
           </div>
-          <div class="code-solution">
-            <strong>Iteration 1:</strong> Multiplier₀ = 1 → Add Product =
-            00000000 + 00000101 = 00000101 Shift Multiplicand LEFT: 00001010
-            Shift Multiplier RIGHT: 0001
+          <div class="code-solution"><strong>Iteration 1:</strong>
+Multiplier₀ = 1 → Add
+Product = 00000000 + 00000101 = 00000101
+Shift Multiplicand LEFT: 00001010
+Shift Multiplier RIGHT: 0001
 
-            <strong>Iteration 2:</strong> Multiplier₀ = 1 → Add Product =
-            00000101 + 00001010 = 00001111 Shift Multiplicand LEFT: 00010100
-            Shift Multiplier RIGHT: 0000
+<strong>Iteration 2:</strong>
+Multiplier₀ = 1 → Add
+Product = 00000101 + 00001010 = 00001111
+Shift Multiplicand LEFT: 00010100
+Shift Multiplier RIGHT: 0000
 
-            <strong>Iteration 3:</strong> Multiplier₀ = 0 → Just shift Product =
-            00001111 (no add) Shift Multiplicand LEFT: 00101000 Shift Multiplier
-            RIGHT: 0000
+<strong>Iteration 3:</strong>
+Multiplier₀ = 0 → Just shift
+Product = 00001111 (no add)
+Shift Multiplicand LEFT: 00101000
+Shift Multiplier RIGHT: 0000
 
-            <strong>Iteration 4:</strong> Multiplier₀ = 0 → Just shift Done
-            (multiplier = 0)
-          </div>
+<strong>Iteration 4:</strong>
+Multiplier₀ = 0 → Just shift
+Done (multiplier = 0)</div>
           <div class="answer-box">Final Product: 00001111 = 15 decimal ✓</div>
         </div>
       </div>
@@ -405,10 +415,8 @@
             MUL only gives lower 64 bits. To detect overflow, we need SMULH to
             get upper 64 bits.
           </div>
-          <div class="code-solution">
-            MUL X5, X10, X11 // Lower 64 bits SMULH X6, X10, X11 // Upper 64
-            bits (signed)
-          </div>
+          <div class="code-solution">MUL   X5, X10, X11    // Lower 64 bits
+SMULH X6, X10, X11    // Upper 64 bits (signed)</div>
           <div class="solution-step">
             Result in X5: 0xFFFFFFFF80000000 (negative, MSB=1)
           </div>
@@ -419,10 +427,9 @@
           <div class="solution-step">
             Since lower is negative, upper should be all 1s (0xFFFFFFFFFFFFFFFF)
           </div>
-          <div class="code-solution">
-            // Check for overflow: ADDS XZR, X6, #1 // If X6 = -1, result is 0
-            B.NE overflow_handler // If not 0, overflow occurred
-          </div>
+          <div class="code-solution">// Check for overflow:
+ADDS XZR, X6, #1         // If X6 = -1, result is 0
+B.NE overflow_handler    // If not 0, overflow occurred</div>
           <div class="answer-box">
             Use SMULH and check if upper 64 bits = sign extension of lower<br />Negative
             lower → upper should be all 1s
@@ -453,30 +460,33 @@
         </button>
         <div class="solution" id="solution-5">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>Iteration 1:</strong>
-            Remainder = 00000111 - 00100000 = 11100111 (negative!) Restore:
-            Remainder = 00000111 Quotient = 0000 << 1 | 0 = 0000 Divisor >> 1:
-            00010000
+          <div class="code-solution"><strong>Iteration 1:</strong>
+Remainder = 00000111 - 00100000 = 11100111 (negative!)
+Restore: Remainder = 00000111
+Quotient = 0000 << 1 | 0 = 0000
+Divisor >> 1: 00010000
 
-            <strong>Iteration 2:</strong>
-            Remainder = 00000111 - 00010000 = 11110111 (negative!) Restore:
-            Remainder = 00000111 Quotient = 0000 << 1 | 0 = 0000 Divisor >> 1:
-            00001000
+<strong>Iteration 2:</strong>
+Remainder = 00000111 - 00010000 = 11110111 (negative!)
+Restore: Remainder = 00000111
+Quotient = 0000 << 1 | 0 = 0000
+Divisor >> 1: 00001000
 
-            <strong>Iteration 3:</strong>
-            Remainder = 00000111 - 00001000 = 11111111 (negative!) Restore:
-            Remainder = 00000111 Quotient = 0000 << 1 | 0 = 0000 Divisor >> 1:
-            00000100
+<strong>Iteration 3:</strong>
+Remainder = 00000111 - 00001000 = 11111111 (negative!)
+Restore: Remainder = 00000111
+Quotient = 0000 << 1 | 0 = 0000
+Divisor >> 1: 00000100
 
-            <strong>Iteration 4:</strong>
-            Remainder = 00000111 - 00000100 = 00000011 (positive!) Don't restore
-            Quotient = 0000 << 1 | 1 = 0001 Divisor >> 1: 00000010
+<strong>Iteration 4:</strong>
+Remainder = 00000111 - 00000100 = 00000011 (positive!)
+Don't restore
+Quotient = 0000 << 1 | 1 = 0001
+Divisor >> 1: 00000010
 
-            <strong>Iteration 5:</strong>
-            Remainder = 00000011 - 00000010 = 00000001 (positive!) Quotient =
-            0001 << 1 | 1 = 0011
-          </div>
+<strong>Iteration 5:</strong>
+Remainder = 00000011 - 00000010 = 00000001 (positive!)
+Quotient = 0001 << 1 | 1 = 0011</div>
           <div class="answer-box">
             Quotient = 0011 (3), Remainder = 0001 (1)<br />Check: 3×2 + 1 = 7 ✓
           </div>
@@ -503,11 +513,11 @@
           <div class="solution-step">
             Two mathematically valid options exist
           </div>
-          <div class="code-solution">
-            Option 1: Quotient = -4, Remainder = +1 Check: -4 × 2 + 1 = -8 + 1 =
-            -7 ✓ Option 2: Quotient = -3, Remainder = -1 Check: -3 × 2 + (-1) =
-            -6 - 1 = -7 ✓
-          </div>
+          <div class="code-solution">Option 1: Quotient = -4, Remainder = +1
+Check: -4 × 2 + 1 = -8 + 1 = -7 ✓
+
+Option 2: Quotient = -3, Remainder = -1
+Check: -3 × 2 + (-1) = -6 - 1 = -7 ✓</div>
           <div class="solution-step">
             <strong>Rule:</strong> Remainder sign = Dividend sign
           </div>
@@ -544,10 +554,9 @@
           <div class="solution-step">
             <strong>Step 1:</strong> Convert to binary
           </div>
-          <div class="code-solution">
-            Integer: 118 = 1110110 Fraction: 0.625 = 0.101 (5/8) Result:
-            1110110.101
-          </div>
+          <div class="code-solution">Integer: 118 = 1110110
+Fraction: 0.625 = 0.101 (5/8)
+Result: 1110110.101</div>
           <div class="solution-step">
             <strong>Step 2:</strong> Normalize to 1.xxx × 2^exp
           </div>
@@ -588,22 +597,21 @@
             <strong>Parse fields:</strong> S=0, E=10000010,
             F=01100000000000000000000
           </div>
-          <div class="code-solution">
-            Exponent = 10000010₂ = 130₁₀ Actual exponent = 130 - 127 = 3
-          </div>
+          <div class="code-solution">Exponent = 10000010₂ = 130₁₀
+Actual exponent = 130 - 127 = 3</div>
           <div class="solution-step">
             <strong>Reconstruct significand</strong> (add hidden 1)
           </div>
-          <div class="code-solution">
-            Significand = 1.011₂ = 1 + 0×2⁻¹ + 1×2⁻² + 1×2⁻³ = 1 + 0 + 0.25 +
-            0.125 = 1.375
-          </div>
+          <div class="code-solution">Significand = 1.011₂
+           = 1 + 0×2⁻¹ + 1×2⁻² + 1×2⁻³
+           = 1 + 0 + 0.25 + 0.125
+           = 1.375</div>
           <div class="solution-step">
             <strong>Apply formula:</strong> (-1)^S × Significand × 2^exp
           </div>
-          <div class="code-solution">
-            = (-1)⁰ × 1.375 × 2³ = 1 × 1.375 × 8 = 11.0
-          </div>
+          <div class="code-solution">= (-1)⁰ × 1.375 × 2³
+= 1 × 1.375 × 8
+= 11.0</div>
           <div class="answer-box">Decimal value: 11.0</div>
         </div>
       </div>
@@ -625,20 +633,21 @@
           <div class="solution-step">
             <strong>Largest normalized:</strong> Max exponent, max fraction
           </div>
-          <div class="code-solution">
-            S = 0 E = 11111110 (254, not 255 which is reserved) F =
-            11111111111111111111111 Actual exponent = 254 - 127 = 127
-            Significand ≈ 2.0 (as fraction approaches 1) Value = 2.0 × 2¹²⁷ ≈
-            3.4 × 10³⁸
-          </div>
+          <div class="code-solution">S = 0
+E = 11111110 (254, not 255 which is reserved)
+F = 11111111111111111111111
+Actual exponent = 254 - 127 = 127
+Significand ≈ 2.0 (as fraction approaches 1)
+Value = 2.0 × 2¹²⁷ ≈ 3.4 × 10³⁸</div>
           <div class="solution-step">
             <strong>Smallest normalized:</strong> Min exponent, min fraction
           </div>
-          <div class="code-solution">
-            S = 0 E = 00000001 (1, not 0 which is reserved) F =
-            00000000000000000000000 Actual exponent = 1 - 127 = -126 Significand
-            = 1.0 Value = 1.0 × 2⁻¹²⁶ ≈ 1.2 × 10⁻³⁸
-          </div>
+          <div class="code-solution">S = 0
+E = 00000001 (1, not 0 which is reserved)
+F = 00000000000000000000000
+Actual exponent = 1 - 127 = -126
+Significand = 1.0
+Value = 1.0 × 2⁻¹²⁶ ≈ 1.2 × 10⁻³⁸</div>
           <div class="answer-box">
             Largest: ≈ 3.4 × 10³⁸<br />Smallest: ≈ 1.2 × 10⁻³⁸
           </div>
@@ -661,19 +670,18 @@
         </button>
         <div class="solution" id="solution-10">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>(a) Positive zero (+0):</strong>
-            S = 0, E = 00000000, F = 00000000000000000000000 Bit pattern: 0
-            00000000 00000000000000000000000
+          <div class="code-solution"><strong>(a) Positive zero (+0):</strong>
+S = 0, E = 00000000, F = 00000000000000000000000
+Bit pattern: 0 00000000 00000000000000000000000
 
-            <strong>(b) Negative infinity (-∞):</strong>
-            S = 1, E = 11111111, F = 00000000000000000000000 Bit pattern: 1
-            11111111 00000000000000000000000
+<strong>(b) Negative infinity (-∞):</strong>
+S = 1, E = 11111111, F = 00000000000000000000000
+Bit pattern: 1 11111111 00000000000000000000000
 
-            <strong>(c) Not a Number (NaN):</strong>
-            S = 0 or 1, E = 11111111, F ≠ 0 Bit pattern: 0 11111111
-            10000000000000000000000 (or any with E=all 1s and F≠0)
-          </div>
+<strong>(c) Not a Number (NaN):</strong>
+S = 0 or 1, E = 11111111, F ≠ 0
+Bit pattern: 0 11111111 10000000000000000000000
+(or any with E=all 1s and F≠0)</div>
           <div class="answer-box">
             +0: All zeros<br />-∞: S=1, E=all 1s, F=0<br />NaN: E=all 1s, F≠0
           </div>
@@ -697,20 +705,19 @@
           <div class="solution-step">
             <strong>Definition:</strong> E=0 but F≠0, NO hidden 1 bit
           </div>
-          <div class="code-solution">
-            Formula: (-1)^S × (0 + Fraction) × 2^(1-Bias) For single: (-1)^S ×
-            (0.fraction) × 2⁻¹²⁶
-          </div>
+          <div class="code-solution">Formula: (-1)^S × (0 + Fraction) × 2^(1-Bias)
+For single: (-1)^S × (0.fraction) × 2⁻¹²⁶</div>
           <div class="solution-step">
             <strong>When used:</strong> Gradual underflow to zero
           </div>
           <div class="solution-step">
             Fills gap between 0 and smallest normalized number
           </div>
-          <div class="code-solution">
-            <strong>Example:</strong> S = 0, E = 00000000, F =
-            10000000000000000000000 Value = 0.1₂ × 2⁻¹²⁶ = 2⁻¹ × 2⁻¹²⁶ = 2⁻¹²⁷
-          </div>
+          <div class="code-solution"><strong>Example:</strong>
+S = 0, E = 00000000, F = 10000000000000000000000
+Value = 0.1₂ × 2⁻¹²⁶
+      = 2⁻¹ × 2⁻¹²⁶
+      = 2⁻¹²⁷</div>
           <div class="answer-box">
             Denormalized: E=0, F≠0, no hidden 1<br />Purpose: Gradual underflow,
             reduce noise
@@ -737,13 +744,15 @@
           <div class="solution-step">
             <strong>Step 1: Align exponents</strong> (shift smaller)
           </div>
-          <div class="code-solution">
-            1.0 × 10² has larger exponent -9.9 × 10¹ = -0.99 × 10²
-          </div>
+          <div class="code-solution">1.0 × 10² has larger exponent
+-9.9 × 10¹ = -0.99 × 10²</div>
           <div class="solution-step">
             <strong>Step 2: Add significands</strong>
           </div>
-          <div class="code-solution">1.00 + (-0.99) -------- 0.01</div>
+          <div class="code-solution">  1.00
++ (-0.99)
+--------
+  0.01</div>
           <div class="solution-step">
             <strong>Step 3: Normalize</strong>
           </div>
@@ -774,15 +783,15 @@
           <div class="solution-step">
             Guard & Round bits keep precision during intermediate calculations
           </div>
-          <div class="code-solution">
-            <strong>Without guard bits:</strong>
-            Add: 1.000 × 10⁰ + 0.005 × 10⁰ (3 digit precision) = 1.005 →
-            truncate to 1.00 Lost the 0.005!
+          <div class="code-solution"><strong>Without guard bits:</strong>
+Add: 1.000 × 10⁰ + 0.005 × 10⁰  (3 digit precision)
+   = 1.005 → truncate to 1.00
+Lost the 0.005!
 
-            <strong>With 2 guard bits:</strong>
-            Compute with 5 digits: 1.0000 + 0.0050 = 1.0050 Round to 3 digits:
-            1.01 × 10⁰ Much more accurate!
-          </div>
+<strong>With 2 guard bits:</strong>
+Compute with 5 digits: 1.0000 + 0.0050 = 1.0050
+Round to 3 digits: 1.01 × 10⁰
+Much more accurate!</div>
           <div class="solution-step">
             IEEE 754 uses Guard and Round bits (2 extra bits)
           </div>
@@ -808,25 +817,24 @@
         </button>
         <div class="solution" id="solution-14">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>Step 1: Add exponents</strong>
-            Exp₁ = 1, Exp₂ = 2 Sum = 1 + 2 = 3
+          <div class="code-solution"><strong>Step 1: Add exponents</strong>
+Exp₁ = 1, Exp₂ = 2
+Sum = 1 + 2 = 3
 
-            <strong>Step 2: Multiply significands</strong>
-            1.5 × 2.0 = 3.0
+<strong>Step 2: Multiply significands</strong>
+1.5 × 2.0 = 3.0
 
-            <strong>Step 3: Normalize</strong>
-            3.0 × 10³ (already normalized)
+<strong>Step 3: Normalize</strong>
+3.0 × 10³ (already normalized)
 
-            <strong>Step 4: Determine sign</strong>
-            Both positive → result positive
+<strong>Step 4: Determine sign</strong>
+Both positive → result positive
 
-            <strong>Step 5: Round</strong>
-            3.0 (already rounded)
+<strong>Step 5: Round</strong>
+3.0 (already rounded)
 
-            <strong>Step 6: Check overflow/underflow</strong>
-            None
-          </div>
+<strong>Step 6: Check overflow/underflow</strong>
+None</div>
           <div class="answer-box">Result: 3.0 × 10³ = 3000</div>
         </div>
       </div>
@@ -847,19 +855,17 @@
         </button>
         <div class="solution" id="solution-15">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>1. Round to nearest (even):</strong>
-            Round to closest value; tie → round to even LSB
+          <div class="code-solution"><strong>1. Round to nearest (even):</strong>
+   Round to closest value; tie → round to even LSB
 
-            <strong>2. Round toward +∞:</strong>
-            Always round up (toward positive infinity)
+<strong>2. Round toward +∞:</strong>
+   Always round up (toward positive infinity)
 
-            <strong>3. Round toward -∞:</strong>
-            Always round down (toward negative infinity)
+<strong>3. Round toward -∞:</strong>
+   Always round down (toward negative infinity)
 
-            <strong>4. Round toward 0:</strong>
-            Truncate (chop off bits), reduces magnitude
-          </div>
+<strong>4. Round toward 0:</strong>
+   Truncate (chop off bits), reduces magnitude</div>
           <div class="solution-step">
             <strong>Default: Round to nearest</strong>
           </div>
@@ -893,11 +899,12 @@
           <div class="solution-step">
             Measures error in least significant bits of significand
           </div>
-          <div class="code-solution">
-            <strong>Example with 4-bit significand:</strong> True value: 1.0110
-            × 2³ Computed value: 1.1000 × 2³ LSB difference: 1000₂ - 0110₂ =
-            0010₂ = 2₁₀ Error = 2 ulp
-          </div>
+          <div class="code-solution"><strong>Example with 4-bit significand:</strong>
+True value:     1.0110 × 2³
+Computed value: 1.1000 × 2³
+
+LSB difference: 1000₂ - 0110₂ = 0010₂ = 2₁₀
+Error = 2 ulp</div>
           <div class="solution-step">
             IEEE 754 guarantee: ≤ 0.5 ulp (best possible rounding)
           </div>
@@ -923,18 +930,20 @@
         </button>
         <div class="solution" id="solution-17">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            Register width = 128 bits Data width = 16 bits Operations = 128 ÷ 16
-            = 8
-          </div>
+          <div class="code-solution">Register width = 128 bits
+Data width = 16 bits
+Operations = 128 ÷ 16 = 8</div>
           <div class="solution-step">
             <strong>Instruction:</strong> ADD V0.8H, V1.8H, V2.8H
           </div>
-          <div class="code-solution">
-            • V0, V1, V2 = 128-bit SIMD registers • .8H = eight 16-bit halfwords
-            • Performs 8 parallel additions V0[0] = V1[0] + V2[0] V0[1] = V1[1]
-            + V2[1] ... V0[7] = V1[7] + V2[7]
-          </div>
+          <div class="code-solution">• V0, V1, V2 = 128-bit SIMD registers
+• .8H = eight 16-bit halfwords
+• Performs 8 parallel additions
+
+V0[0] = V1[0] + V2[0]
+V0[1] = V1[1] + V2[1]
+...
+V0[7] = V1[7] + V2[7]</div>
           <div class="answer-box">
             8 operations in parallel<br />ADD V0.8H, V1.8H, V2.8H
           </div>
@@ -957,18 +966,22 @@
           <div class="solution-step">
             SIMD performs same operation on many independent data elements
           </div>
-          <div class="code-solution">
-            <strong>Task:</strong> Brighten 4 pixels by adding 20 to each RGB
-            Pixel format: [R G B A] (8-bit each) 4 pixels = 16 bytes = 128 bits
+          <div class="code-solution"><strong>Task:</strong> Brighten 4 pixels by adding 20 to each RGB
+Pixel format: [R G B A] (8-bit each)
+4 pixels = 16 bytes = 128 bits
 
-            <strong>Without SIMD (scalar):</strong>
-            For each of 4 pixels: R = R + 20 G = G + 20 B = B + 20 Total: 12
-            operations
+<strong>Without SIMD (scalar):</strong>
+For each of 4 pixels:
+  R = R + 20
+  G = G + 20
+  B = B + 20
+Total: 12 operations
 
-            <strong>With SIMD:</strong>
-            Load 4 pixels into V1.16B Load constant +20 into V2.16B ADD V0.16B,
-            V1.16B, V2.16B Total: 1 operation (16 additions in parallel!)
-          </div>
+<strong>With SIMD:</strong>
+Load 4 pixels into V1.16B
+Load constant +20 into V2.16B
+ADD V0.16B, V1.16B, V2.16B
+Total: 1 operation (16 additions in parallel!)</div>
           <div class="answer-box">
             SIMD: 1 instruction = 16 additions<br />Speedup: ~16× for this
             operation
@@ -996,13 +1009,19 @@
         </button>
         <div class="solution" id="solution-19">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            // X10, X11 = operands // X12 = result (lower 64) // X13 = overflow
-            flag (0=no, 1=yes) MUL X12, X10, X11 // Lower 64 bits SMULH X9, X10,
-            X11 // Upper 64 bits // Create sign extension of lower bits ASR X20,
-            X12, #63 // All 0s or 1s (sign) // Compare upper with sign extension
-            SUBS XZR, X9, X20 // Set flags CSET X13, NE // X13=1 if Not Equal
-          </div>
+          <div class="code-solution">// X10, X11 = operands
+// X12 = result (lower 64)
+// X13 = overflow flag (0=no, 1=yes)
+
+MUL   X12, X10, X11       // Lower 64 bits
+SMULH X9, X10, X11        // Upper 64 bits
+
+// Create sign extension of lower bits
+ASR   X20, X12, #63       // All 0s or 1s (sign)
+
+// Compare upper with sign extension
+SUBS  XZR, X9, X20        // Set flags
+CSET  X13, NE             // X13=1 if Not Equal</div>
           <div class="solution-step">
             ASR #63 copies sign bit to all positions
           </div>
@@ -1032,24 +1051,25 @@
           <div class="solution-step">
             IEEE 754 bit layout: S(1) E(8) F(23) from MSB to LSB
           </div>
-          <div class="code-solution">
-            <strong>1. Sign bit first (MSB):</strong>
-            Positive=0, Negative=1 0 < 1 unsigned → positive > negative ✓
+          <div class="code-solution"><strong>1. Sign bit first (MSB):</strong>
+Positive=0, Negative=1
+0 < 1 unsigned → positive > negative ✓
 
-            <strong>2. Exponent next:</strong>
-            Larger exponent → larger number Compared correctly as unsigned ✓
+<strong>2. Exponent next:</strong>
+Larger exponent → larger number
+Compared correctly as unsigned ✓
 
-            <strong>3. Fraction last:</strong>
-            If exponents equal, larger fraction → larger Tie-breaker works as
-            unsigned ✓
-          </div>
+<strong>3. Fraction last:</strong>
+If exponents equal, larger fraction → larger
+Tie-breaker works as unsigned ✓</div>
           <div class="solution-step">
             <strong>Example:</strong>
           </div>
-          <div class="code-solution">
-            6.0: 0 10000010 01000... 3.5: 0 10000001 11000... As unsigned: 6.0
-            has larger exponent field 6.0 > 3.5 ✓
-          </div>
+          <div class="code-solution">6.0: 0 10000010 01000...
+3.5: 0 10000001 11000...
+
+As unsigned: 6.0 has larger exponent field
+6.0 > 3.5 ✓</div>
           <div class="answer-box">
             IEEE 754 designed for unsigned comparison<br />Sign-Exponent-Fraction
             order enables this

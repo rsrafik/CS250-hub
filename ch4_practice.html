@@ -128,6 +128,10 @@
         color: #c084fc;
         white-space: pre;
         overflow-x: auto;
+        white-space: pre-wrap;      /* preserves line breaks but allows wrapping */
+  overflow-x: hidden;         /* no horizontal scrollbar */
+  overflow-wrap: anywhere;    /* wraps long tokens if needed */
+  word-break: break-word;     /* fallback */
       }
 
       .solution {
@@ -177,6 +181,10 @@
         color: #10b981;
         white-space: pre;
         overflow-x: auto;
+        white-space: pre-wrap;      /* preserves line breaks but allows wrapping */
+  overflow-x: hidden;         /* no horizontal scrollbar */
+  overflow-wrap: anywhere;    /* wraps long tokens if needed */
+  word-break: break-word;     /* fallback */
       }
 
       .answer-box {
@@ -288,25 +296,32 @@
             <strong>State Elements:</strong> Contain internal storage, outputs
             depend on previous values
           </div>
-          <div class="code-solution">
-            Characteristics: • Have clock input • Written at clock edge •
-            Maintain values between cycles • Can be read anytime Examples: 1.
-            Program Counter (PC) - stores current instruction address 2.
-            Register File - stores 32 general-purpose registers 3. Instruction
-            Memory - stores program instructions 4. Data Memory - stores program
-            data
-          </div>
+          <div class="code-solution">Characteristics:
+• Have clock input
+• Written at clock edge
+• Maintain values between cycles
+• Can be read anytime
+
+Examples:
+1. Program Counter (PC) - stores current instruction address
+2. Register File - stores 32 general-purpose registers
+3. Instruction Memory - stores program instructions
+4. Data Memory - stores program data</div>
           <div class="solution-step">
             <strong>Combinational Elements:</strong> Output depends ONLY on
             current inputs
           </div>
-          <div class="code-solution">
-            Characteristics: • No internal storage • No clock needed • Same
-            input → same output • Instant response Examples: 1. ALU - performs
-            arithmetic/logic operations 2. Adders - increment PC, calculate
-            branch target 3. Multiplexors - select between inputs 4. Sign-Extend
-            Unit - extends immediate fields
-          </div>
+          <div class="code-solution">Characteristics:
+• No internal storage
+• No clock needed
+• Same input → same output
+• Instant response
+
+Examples:
+1. ALU - performs arithmetic/logic operations
+2. Adders - increment PC, calculate branch target
+3. Multiplexors - select between inputs
+4. Sign-Extend Unit - extends immediate fields</div>
           <div class="answer-box">
             State: Has memory (PC, registers, memories)<br />Combinational: Pure
             logic (ALU, muxes, adders)
@@ -335,22 +350,26 @@
             <strong>Fundamental Rule:</strong> No resource can be used more than
             once per clock cycle
           </div>
-          <div class="code-solution">
-            <strong>LDUR X1, [X2, #20] execution:</strong>
+          <div class="code-solution"><strong>LDUR X1, [X2, #20] execution:</strong>
 
-            IF stage: Fetch LDUR instruction from memory ↓ ID stage: Decode,
-            read X2 from register file ↓ EX stage: Calculate address (X2 + 20) ↓
-            MEM stage: Read data from memory ← PROBLEM! ↓ WB stage: Write data
-            to X1
-          </div>
+IF stage: Fetch LDUR instruction from memory
+    ↓
+ID stage: Decode, read X2 from register file
+    ↓
+EX stage: Calculate address (X2 + 20)
+    ↓
+MEM stage: Read data from memory ← PROBLEM!
+    ↓
+WB stage: Write data to X1</div>
           <div class="solution-step">
             <strong>Conflict in same clock cycle:</strong>
           </div>
-          <div class="code-solution">
-            Clock Cycle 4: • LDUR needs to READ data memory (MEM stage) • Next
-            instruction needs to READ instruction memory (IF stage) With single
-            memory → STRUCTURAL HAZARD Cannot do both reads simultaneously!
-          </div>
+          <div class="code-solution">Clock Cycle 4:
+• LDUR needs to READ data memory (MEM stage)
+• Next instruction needs to READ instruction memory (IF stage)
+
+With single memory → STRUCTURAL HAZARD
+Cannot do both reads simultaneously!</div>
           <div class="solution-step">
             <strong>Solution:</strong> Separate memories allow simultaneous
             access
@@ -378,28 +397,32 @@
         </button>
         <div class="solution" id="solution-3">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>1. IF (Instruction Fetch):</strong>
-            • Read ADD instruction from instruction memory • Use PC as address •
-            PC = PC + 4 • Store instruction in IF/ID register
+          <div class="code-solution"><strong>1. IF (Instruction Fetch):</strong>
+• Read ADD instruction from instruction memory
+• Use PC as address
+• PC = PC + 4
+• Store instruction in IF/ID register
 
-            <strong>2. ID (Instruction Decode):</strong>
-            • Decode opcode → identify as R-type ADD • Read registers X2 and X3
-            from register file • Generate control signals (RegWrite=1, ALUSrc=0,
-            etc.) • Store values in ID/EX register
+<strong>2. ID (Instruction Decode):</strong>
+• Decode opcode → identify as R-type ADD
+• Read registers X2 and X3 from register file
+• Generate control signals (RegWrite=1, ALUSrc=0, etc.)
+• Store values in ID/EX register
 
-            <strong>3. EX (Execute):</strong>
-            • ALU adds contents of X2 and X3 • ALUOp=10 (R-type), function field
-            → ADD operation • Result stored in EX/MEM register
+<strong>3. EX (Execute):</strong>
+• ALU adds contents of X2 and X3
+• ALUOp=10 (R-type), function field → ADD operation
+• Result stored in EX/MEM register
 
-            <strong>4. MEM (Memory):</strong>
-            • Nothing happens for ADD (no memory access) • Result passes through
-            to MEM/WB register • MemRead=0, MemWrite=0
+<strong>4. MEM (Memory):</strong>
+• Nothing happens for ADD (no memory access)
+• Result passes through to MEM/WB register
+• MemRead=0, MemWrite=0
 
-            <strong>5. WB (Write Back):</strong>
-            • Write ALU result to register X1 • MemtoReg=0 → select ALU result
-            (not memory) • RegWrite=1 → enable write to register file
-          </div>
+<strong>5. WB (Write Back):</strong>
+• Write ALU result to register X1
+• MemtoReg=0 → select ALU result (not memory)
+• RegWrite=1 → enable write to register file</div>
           <div class="answer-box">
             IF → ID → EX → MEM → WB<br />ADD uses all 5 stages, MEM stage does
             nothing
@@ -424,21 +447,25 @@
         </button>
         <div class="solution" id="solution-4">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            Clock Cycle: 1 2 3 4 5 6 7 ----+----+----+----+----+----+----+ ADD:
-            IF | ID | EX |MEM | WB | | | SUB: | IF | ID | EX |MEM | WB | | LDUR:
-            | | IF | ID | EX |MEM | WB | STUR: | | | IF | ID | EX |MEM |
-            Instructions complete WB at: ADD → Cycle 5 SUB → Cycle 6 LDUR →
-            Cycle 7 STUR → WB not needed (stores don't write registers)
-          </div>
+          <div class="code-solution">Clock Cycle:  1    2    3    4    5    6    7
+             ----+----+----+----+----+----+----+
+ADD:         IF | ID | EX |MEM | WB |    |    |
+SUB:            | IF | ID | EX |MEM | WB |    |
+LDUR:           |    | IF | ID | EX |MEM | WB |
+STUR:           |    |    | IF | ID | EX |MEM |
+
+Instructions complete WB at:
+ADD  → Cycle 5
+SUB  → Cycle 6
+LDUR → Cycle 7
+STUR → WB not needed (stores don't write registers)</div>
           <div class="solution-step">
             <strong>Analysis:</strong>
           </div>
-          <div class="code-solution">
-            • Total cycles = 7 (not 4×5=20 for sequential!) • Speedup = 20/7 ≈
-            2.86× • After initial 5-cycle latency, 1 instruction/cycle •
-            Throughput = 4 instructions / 7 cycles ≈ 0.57 IPC
-          </div>
+          <div class="code-solution">• Total cycles = 7 (not 4×5=20 for sequential!)
+• Speedup = 20/7 ≈ 2.86×
+• After initial 5-cycle latency, 1 instruction/cycle
+• Throughput = 4 instructions / 7 cycles ≈ 0.57 IPC</div>
           <div class="solution-step">
             Pipelining improves <strong>throughput</strong>, not individual
             instruction latency
@@ -473,39 +500,44 @@
         </button>
         <div class="solution" id="solution-5">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            Signal |Reg2Loc|ALUSrc|Mem2Reg|RegWr|MemRd|MemWr|Branch|ALUOp
-            -----------|-------|------|-------|-----|-----|-----|------|-----
-            ADD (R) | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 10 LDUR (D) | X | 1 | 1 | 1 |
-            1 | 0 | 0 | 00 STUR (D) | 1 | 1 | X | 0 | 0 | 1 | 0 | 00 CBZ (CB) |
-            1 | 0 | X | 0 | 0 | 0 | 1 | 01
-          </div>
+          <div class="code-solution">Signal     |Reg2Loc|ALUSrc|Mem2Reg|RegWr|MemRd|MemWr|Branch|ALUOp
+-----------|-------|------|-------|-----|-----|-----|------|-----
+ADD (R)    |   0   |  0   |   0   |  1  |  0  |  0  |  0   | 10
+LDUR (D)   |   X   |  1   |   1   |  1  |  1  |  0  |  0   | 00
+STUR (D)   |   1   |  1   |   X   |  0  |  0  |  1  |  0   | 00
+CBZ (CB)   |   1   |  0   |   X   |  0  |  0  |  0  |  1   | 01</div>
           <div class="solution-step">
             <strong>Explanation:</strong>
           </div>
-          <div class="code-solution">
-            <strong>ADD (R-type):</strong>
-            • Reg2Loc=0: Read register 2 from Rm field • ALUSrc=0: ALU uses
-            register data (not immediate) • MemtoReg=0: Write ALU result (not
-            memory) • RegWrite=1: Write to destination register • ALUOp=10:
-            R-type (check function field)
+          <div class="code-solution"><strong>ADD (R-type):</strong>
+• Reg2Loc=0: Read register 2 from Rm field
+• ALUSrc=0: ALU uses register data (not immediate)
+• MemtoReg=0: Write ALU result (not memory)
+• RegWrite=1: Write to destination register
+• ALUOp=10: R-type (check function field)
 
-            <strong>LDUR (Load):</strong>
-            • Reg2Loc=X: Don't care (only reads 1 register) • ALUSrc=1: ALU uses
-            immediate offset • MemtoReg=1: Write memory data to register •
-            RegWrite=1: Write to destination • MemRead=1: Read from memory •
-            ALUOp=00: ADD for address calculation
+<strong>LDUR (Load):</strong>
+• Reg2Loc=X: Don't care (only reads 1 register)
+• ALUSrc=1: ALU uses immediate offset
+• MemtoReg=1: Write memory data to register
+• RegWrite=1: Write to destination
+• MemRead=1: Read from memory
+• ALUOp=00: ADD for address calculation
 
-            <strong>STUR (Store):</strong>
-            • Reg2Loc=1: Read Rt (data to store) • ALUSrc=1: ALU uses immediate
-            offset • MemtoReg=X: Don't write register • RegWrite=0: No register
-            write • MemWrite=1: Write to memory • ALUOp=00: ADD for address
+<strong>STUR (Store):</strong>
+• Reg2Loc=1: Read Rt (data to store)
+• ALUSrc=1: ALU uses immediate offset
+• MemtoReg=X: Don't write register
+• RegWrite=0: No register write
+• MemWrite=1: Write to memory
+• ALUOp=00: ADD for address
 
-            <strong>CBZ (Branch):</strong>
-            • Reg2Loc=1: Read Rt to test • ALUSrc=0: ALU gets register (passes
-            through) • RegWrite=0: No register write • Branch=1: Conditional
-            branch • ALUOp=01: Pass input B (for zero test)
-          </div>
+<strong>CBZ (Branch):</strong>
+• Reg2Loc=1: Read Rt to test
+• ALUSrc=0: ALU gets register (passes through)
+• RegWrite=0: No register write
+• Branch=1: Conditional branch
+• ALUOp=01: Pass input B (for zero test)</div>
           <div class="answer-box">
             X = Don't care<br />Different instruction types need different
             control signals
@@ -530,28 +562,34 @@
           <div class="solution-step">
             <strong>PCSrc</strong> selects next PC: PC+4 or branch target
           </div>
-          <div class="code-solution">
-            PCSrc = Branch AND Zero Where: • Branch: Control signal (1 for CBZ
-            instruction) • Zero: ALU output (1 if register value is 0)
-          </div>
+          <div class="code-solution">PCSrc = Branch AND Zero
+
+Where:
+• Branch: Control signal (1 for CBZ instruction)
+• Zero: ALU output (1 if register value is 0)</div>
           <div class="solution-step">
             <strong>Why derived?</strong> Branch decision requires TWO
             conditions:
           </div>
-          <div class="code-solution">
-            1. Instruction IS a branch (opcode check) → Control unit sets
-            Branch=1 2. Branch condition IS met (register is zero) → ALU sets
-            Zero=1 Both must be true to take the branch!
-          </div>
+          <div class="code-solution">1. Instruction IS a branch (opcode check)
+   → Control unit sets Branch=1
+2. Branch condition IS met (register is zero)
+   → ALU sets Zero=1
+
+Both must be true to take the branch!</div>
           <div class="solution-step">
             <strong>Example:</strong>
           </div>
-          <div class="code-solution">
-            CBZ X5, label // X5 contains 42 Branch = 1 (it's a CBZ instruction)
-            Zero = 0 (X5 ≠ 0) PCSrc = 1 AND 0 = 0 → Don't take branch, PC = PC +
-            4 If X5 contained 0: Branch = 1 Zero = 1 PCSrc = 1 AND 1 = 1 → Take
-            branch, PC = branch target
-          </div>
+          <div class="code-solution">CBZ X5, label    // X5 contains 42
+
+Branch = 1 (it's a CBZ instruction)
+Zero = 0 (X5 ≠ 0)
+PCSrc = 1 AND 0 = 0 → Don't take branch, PC = PC + 4
+
+If X5 contained 0:
+Branch = 1
+Zero = 1
+PCSrc = 1 AND 1 = 1 → Take branch, PC = branch target</div>
           <div class="answer-box">
             PCSrc = Branch AND Zero<br />Needs both: (1) CBZ instruction AND (2)
             register is zero
@@ -579,31 +617,35 @@
         </button>
         <div class="solution" id="solution-7">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>Hazard 1: ADD → SUB (on X1)</strong>
-            ADD: WB at cycle 5 SUB: Needs X1 in EX at cycle 4 Forward from
-            EX/MEM to ALU input ✓
+          <div class="code-solution"><strong>Hazard 1: ADD → SUB (on X1)</strong>
+ADD: WB at cycle 5
+SUB: Needs X1 in EX at cycle 4
+Forward from EX/MEM to ALU input ✓
 
-            <strong>Hazard 2: ADD → AND (on X1)</strong>
-            ADD: WB at cycle 5 AND: Needs X1 in EX at cycle 5 Forward from
-            MEM/WB to ALU input ✓
+<strong>Hazard 2: ADD → AND (on X1)</strong>
+ADD: WB at cycle 5
+AND: Needs X1 in EX at cycle 5
+Forward from MEM/WB to ALU input ✓
 
-            <strong>Hazard 3: ADD → LDUR (on X1)</strong>
-            ADD: WB at cycle 5 LDUR: Needs X1 in EX at cycle 6 No hazard -
-            normal register file read ✓
+<strong>Hazard 3: ADD → LDUR (on X1)</strong>
+ADD: WB at cycle 5
+LDUR: Needs X1 in EX at cycle 6
+No hazard - normal register file read ✓
 
-            <strong>Hazard 4: LDUR → ORR (on X8)</strong>
-            LDUR: Data ready in MEM/WB at cycle 8 ORR: Needs X8 in EX at cycle 7
-            LOAD-USE HAZARD - MUST STALL! ✗
-          </div>
+<strong>Hazard 4: LDUR → ORR (on X8)</strong>
+LDUR: Data ready in MEM/WB at cycle 8
+ORR: Needs X8 in EX at cycle 7
+LOAD-USE HAZARD - MUST STALL! ✗</div>
           <div class="solution-step">
             <strong>Why can't forward LDUR → ORR?</strong>
           </div>
-          <div class="code-solution">
-            Timeline: Cycle 7: LDUR in MEM stage (data not loaded yet!) ORR in
-            EX stage (needs data NOW) Data doesn't exist yet - cannot forward!
-            Must insert 1-cycle bubble (stall)
-          </div>
+          <div class="code-solution">Timeline:
+Cycle 7:
+  LDUR in MEM stage (data not loaded yet!)
+  ORR in EX stage (needs data NOW)
+
+Data doesn't exist yet - cannot forward!
+Must insert 1-cycle bubble (stall)</div>
           <div class="answer-box">
             Hazards 1-3: Resolved by forwarding<br />Hazard 4 (Load-Use):
             Requires 1-cycle stall
@@ -625,32 +667,41 @@
         </button>
         <div class="solution" id="solution-8">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>EX Hazard (EX/MEM → ID/EX):</strong>
+          <div class="code-solution"><strong>EX Hazard (EX/MEM → ID/EX):</strong>
 
-            Forward to ALU input 1 if: EX/MEM.RegWrite = 1 AND EX/MEM.RegisterRd
-            ≠ X31 AND EX/MEM.RegisterRd = ID/EX.RegisterRn1 Forward to ALU input
-            2 if: EX/MEM.RegWrite = 1 AND EX/MEM.RegisterRd ≠ X31 AND
-            EX/MEM.RegisterRd = ID/EX.RegisterRm2
-          </div>
-          <div class="code-solution">
-            <strong>MEM Hazard (MEM/WB → ID/EX):</strong>
+Forward to ALU input 1 if:
+  EX/MEM.RegWrite = 1
+  AND EX/MEM.RegisterRd ≠ X31
+  AND EX/MEM.RegisterRd = ID/EX.RegisterRn1
 
-            Forward to ALU input 1 if: MEM/WB.RegWrite = 1 AND MEM/WB.RegisterRd
-            ≠ X31 AND NOT (EX/MEM hazard on same register) AND MEM/WB.RegisterRd
-            = ID/EX.RegisterRn1 Forward to ALU input 2 if: MEM/WB.RegWrite = 1
-            AND MEM/WB.RegisterRd ≠ X31 AND NOT (EX/MEM hazard on same register)
-            AND MEM/WB.RegisterRd = ID/EX.RegisterRm2
-          </div>
+Forward to ALU input 2 if:
+  EX/MEM.RegWrite = 1
+  AND EX/MEM.RegisterRd ≠ X31
+  AND EX/MEM.RegisterRd = ID/EX.RegisterRm2</div>
+          <div class="code-solution"><strong>MEM Hazard (MEM/WB → ID/EX):</strong>
+
+Forward to ALU input 1 if:
+  MEM/WB.RegWrite = 1
+  AND MEM/WB.RegisterRd ≠ X31
+  AND NOT (EX/MEM hazard on same register)
+  AND MEM/WB.RegisterRd = ID/EX.RegisterRn1
+
+Forward to ALU input 2 if:
+  MEM/WB.RegWrite = 1
+  AND MEM/WB.RegisterRd ≠ X31
+  AND NOT (EX/MEM hazard on same register)
+  AND MEM/WB.RegisterRd = ID/EX.RegisterRm2</div>
           <div class="solution-step">
             <strong>Priority:</strong> EX hazard takes precedence over MEM
             hazard
           </div>
-          <div class="code-solution">
-            Example: ADD X1, X2, X3 // Cycle 3 (EX/MEM) ADD X1, X4, X5 // Cycle
-            4 (MEM/WB) SUB X6, X1, X7 // Cycle 5 (ID/EX, needs X1) Both write
-            X1, but EX/MEM has newer value! Forward from EX/MEM, not MEM/WB
-          </div>
+          <div class="code-solution">Example:
+ADD X1, X2, X3    // Cycle 3 (EX/MEM)
+ADD X1, X4, X5    // Cycle 4 (MEM/WB)
+SUB X6, X1, X7    // Cycle 5 (ID/EX, needs X1)
+
+Both write X1, but EX/MEM has newer value!
+Forward from EX/MEM, not MEM/WB</div>
           <div class="solution-step">
             <strong>Why check RegisterRd ≠ X31?</strong> X31 is always zero,
             never written
@@ -682,28 +733,31 @@
             <strong>Control Hazard:</strong> Don't know which instruction to
             fetch next
           </div>
-          <div class="code-solution">
-            Problem occurs with branch instructions (CBZ, B): Cycle 1: CBZ X1,
-            label (IF stage) Cycle 2: ??? (Need to fetch next instruction) BUT
-            branch decision not until cycle 4 (MEM stage)! Which instruction to
-            fetch? • Sequential (PC + 4)? • Branch target (PC + offset)? Don't
-            know yet!
-          </div>
+          <div class="code-solution">Problem occurs with branch instructions (CBZ, B):
+
+Cycle 1: CBZ X1, label (IF stage)
+Cycle 2: ??? (Need to fetch next instruction)
+
+BUT branch decision not until cycle 4 (MEM stage)!
+
+Which instruction to fetch?
+• Sequential (PC + 4)?
+• Branch target (PC + offset)?
+
+Don't know yet!</div>
           <div class="solution-step">
             <strong>Why it happens:</strong> Pipeline must fetch every cycle
           </div>
-          <div class="code-solution">
-            Fundamental issue: • Instruction fetch happens in cycle 1 • Branch
-            decision happens in cycle 4 • 3-cycle gap where we don't know next
-            PC!
-          </div>
+          <div class="code-solution">Fundamental issue:
+• Instruction fetch happens in cycle 1
+• Branch decision happens in cycle 4
+• 3-cycle gap where we don't know next PC!</div>
           <div class="solution-step">
             <strong>Solutions:</strong>
           </div>
-          <div class="code-solution">
-            1. Stall: Wait 3 cycles (slow!) 2. Predict: Guess outcome, flush if
-            wrong 3. Delayed branch: Execute next instruction regardless
-          </div>
+          <div class="code-solution">1. Stall: Wait 3 cycles (slow!)
+2. Predict: Guess outcome, flush if wrong
+3. Delayed branch: Execute next instruction regardless</div>
           <div class="answer-box">
             Branch decision takes time<br />But must fetch next instruction
             immediately
@@ -728,30 +782,35 @@
         </button>
         <div class="solution" id="solution-10">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>1-Bit Predictor:</strong>
+          <div class="code-solution"><strong>1-Bit Predictor:</strong>
 
-            Loop: // ... loop body ... SUBI X20, X20, #1 CBNZ X20, Loop
-            Iterations: 1 2 3 4 5 6 7 8 9 10 Branch: T T T T T T T T T NT
-            Predict: NT T T T T T T T T T Correct? ✗ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✗ Accuracy:
-            8/10 = 80%
-          </div>
+Loop:
+  // ... loop body ...
+  SUBI X20, X20, #1
+  CBNZ X20, Loop
+
+Iterations:  1   2   3   4   5   6   7   8   9   10
+Branch:      T   T   T   T   T   T   T   T   T   NT
+Predict:    NT   T   T   T   T   T   T   T   T   T
+Correct?     ✗   ✓   ✓   ✓   ✓   ✓   ✓   ✓   ✓   ✗
+
+Accuracy: 8/10 = 80%</div>
           <div class="solution-step">
             <strong>Why 2 misses?</strong>
           </div>
-          <div class="code-solution">
-            • 1st iteration: Bit=0 (predict NT), actual=T → MISS Flip bit to 1 •
-            Iterations 2-9: Bit=1 (predict T), actual=T → HIT • Last iteration:
-            Bit=1 (predict T), actual=NT → MISS Flip bit to 0 for next loop
-            entry
-          </div>
-          <div class="code-solution">
-            <strong>2-Bit Predictor (initial state: Weakly NT):</strong>
+          <div class="code-solution">• 1st iteration: Bit=0 (predict NT), actual=T → MISS
+  Flip bit to 1
+• Iterations 2-9: Bit=1 (predict T), actual=T → HIT
+• Last iteration: Bit=1 (predict T), actual=NT → MISS
+  Flip bit to 0 for next loop entry</div>
+          <div class="code-solution"><strong>2-Bit Predictor (initial state: Weakly NT):</strong>
 
-            Iterations: 1 2 3 4 5 6 7 8 9 10 Branch: T T T T T T T T T NT
-            Predict: WNT WT ST ST ST ST ST ST ST WT Correct? ✗ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓
-            Accuracy: 9/10 = 90%
-          </div>
+Iterations:  1    2   3   4   5   6   7   8   9   10
+Branch:      T    T   T   T   T   T   T   T   T   NT
+Predict:    WNT  WT  ST  ST  ST  ST  ST  ST  ST  WT
+Correct?     ✗    ✓   ✓   ✓   ✓   ✓   ✓   ✓   ✓   ✓
+
+Accuracy: 9/10 = 90%</div>
           <div class="solution-step">
             States: Strongly NT → Weakly NT → Weakly T → Strongly T
           </div>
@@ -777,30 +836,30 @@
         </button>
         <div class="solution" id="solution-11">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>1. ELR (Exception Link Register) - 64 bits</strong>
+          <div class="code-solution"><strong>1. ELR (Exception Link Register) - 64 bits</strong>
 
-            Stores: Address of affected instruction Purpose: Allows OS to
-            restart execution after handling Value: PC + 4 (address of NEXT
-            instruction) Why PC+4? So we can resume AFTER the excepting
-            instruction
-          </div>
-          <div class="code-solution">
-            <strong>2. ESR (Exception Syndrome Register) - 32 bits</strong>
+Stores: Address of affected instruction
+Purpose: Allows OS to restart execution after handling
+Value: PC + 4 (address of NEXT instruction)
+Why PC+4? So we can resume AFTER the excepting instruction</div>
+          <div class="code-solution"><strong>2. ESR (Exception Syndrome Register) - 32 bits</strong>
 
-            Stores: Cause of the exception Purpose: Tells OS what type of
-            exception occurred Example values: • 8 = Undefined instruction • 10
-            = Arithmetic overflow/underflow • 12 = Hardware malfunction
-          </div>
+Stores: Cause of the exception
+Purpose: Tells OS what type of exception occurred
+
+Example values:
+• 8 = Undefined instruction
+• 10 = Arithmetic overflow/underflow
+• 12 = Hardware malfunction</div>
           <div class="solution-step">
             <strong>Exception handling sequence:</strong>
           </div>
-          <div class="code-solution">
-            1. Save PC to ELR 2. Record cause in ESR 3. Set PC to exception
-            handler (e.g., 0x1C090000) 4. Flush pipeline (zero control signals)
-            5. Handler examines ESR, takes action 6. Return using ELR (if
-            recoverable)
-          </div>
+          <div class="code-solution">1. Save PC to ELR
+2. Record cause in ESR
+3. Set PC to exception handler (e.g., 0x1C090000)
+4. Flush pipeline (zero control signals)
+5. Handler examines ESR, takes action
+6. Return using ELR (if recoverable)</div>
           <div class="answer-box">
             ELR: WHERE to resume (address)<br />ESR: WHY exception occurred
             (cause code)
@@ -822,31 +881,39 @@
         </button>
         <div class="solution" id="solution-12">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>Precise Exception:</strong> Associated with exact
-            instruction that caused it Properties: • All instructions BEFORE
-            completed • ALL instructions AFTER can be restarted • State is as if
-            executed sequentially • ELR points to exact PC
-          </div>
-          <div class="code-solution">
-            <strong>Imprecise Exception:</strong> Not associated with exact
-            instruction Properties: • Some later instructions may have completed
-            • Some earlier might not be done • Cannot restart cleanly • Harder
-            to debug, less deterministic
-          </div>
+          <div class="code-solution"><strong>Precise Exception:</strong> Associated with exact instruction that caused it
+
+Properties:
+• All instructions BEFORE completed
+• ALL instructions AFTER can be restarted
+• State is as if executed sequentially
+• ELR points to exact PC</div>
+          <div class="code-solution"><strong>Imprecise Exception:</strong> Not associated with exact instruction
+
+Properties:
+• Some later instructions may have completed
+• Some earlier might not be done
+• Cannot restart cleanly
+• Harder to debug, less deterministic</div>
           <div class="solution-step">
             <strong>Why precise is harder in pipelines:</strong>
           </div>
-          <div class="code-solution">
-            Clock 5 example: ADD X1, X2, X3 (WB stage) ✓ Done SUB X4, X1, X5
-            (MEM stage) ← Exception here! AND X6, X7, X8 (EX stage) ORR X9, X10,
-            X11 (ID stage) LDUR X12, [X13, #0] (IF stage) For precise exception:
-            • Must complete ADD (it's before SUB) • Must NOT complete AND, ORR,
-            LDUR (after SUB) • Must flush those 3 instructions • Save state so
-            SUB can be restarted Challenge: Multiple instructions in flight!
-            Need to track which is "earliest" exception Flush later instructions
-            without affecting earlier ones
-          </div>
+          <div class="code-solution">Clock 5 example:
+ADD X1, X2, X3       (WB stage)  ✓ Done
+SUB X4, X1, X5       (MEM stage) ← Exception here!
+AND X6, X7, X8       (EX stage)
+ORR X9, X10, X11     (ID stage)
+LDUR X12, [X13, #0]  (IF stage)
+
+For precise exception:
+• Must complete ADD (it's before SUB)
+• Must NOT complete AND, ORR, LDUR (after SUB)
+• Must flush those 3 instructions
+• Save state so SUB can be restarted
+
+Challenge: Multiple instructions in flight!
+Need to track which is "earliest" exception
+Flush later instructions without affecting earlier ones</div>
           <div class="solution-step">
             LEGv8 solution: Sort exceptions, interrupt earliest instruction
           </div>
@@ -874,35 +941,39 @@
         </button>
         <div class="solution" id="solution-13">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>Static Multiple Issue (VLIW):</strong>
+          <div class="code-solution"><strong>Static Multiple Issue (VLIW):</strong>
 
-            Decisions made: At compile time by compiler Issue packet: Fixed
-            format, wide instruction Hazards: Compiler inserts NOPs Scheduling:
-            Compiler reorders instructions Example: Intel Itanium • 128-bit
-            instruction bundles • 3 instructions per bundle • Compiler
-            guarantees no hazards
-          </div>
-          <div class="code-solution">
-            <strong>Dynamic Multiple Issue (Superscalar):</strong>
+Decisions made: At compile time by compiler
+Issue packet: Fixed format, wide instruction
+Hazards: Compiler inserts NOPs
+Scheduling: Compiler reorders instructions
 
-            Decisions made: At runtime by hardware Issue packet: Variable,
-            determined dynamically Hazards: Hardware detects and resolves
-            Scheduling: Hardware reorders (out-of-order) Examples: Intel Core
-            i7, AMD Ryzen, Apple M-series • 4-6 instructions per cycle •
-            Hardware checks dependencies • Dynamic branch prediction
-          </div>
+Example: Intel Itanium
+• 128-bit instruction bundles
+• 3 instructions per bundle
+• Compiler guarantees no hazards</div>
+          <div class="code-solution"><strong>Dynamic Multiple Issue (Superscalar):</strong>
+
+Decisions made: At runtime by hardware
+Issue packet: Variable, determined dynamically
+Hazards: Hardware detects and resolves
+Scheduling: Hardware reorders (out-of-order)
+
+Examples: Intel Core i7, AMD Ryzen, Apple M-series
+• 4-6 instructions per cycle
+• Hardware checks dependencies
+• Dynamic branch prediction</div>
           <div class="solution-step">
             <strong>Key Differences:</strong>
           </div>
-          <div class="code-solution">
-            Aspect | Static (VLIW) | Dynamic (Superscalar)
-            ----------------|----------------|--------------------- Who decides
-            | Compiler | Hardware When decides | Compile time | Runtime
-            Complexity | Simple HW | Complex HW Power | Lower | Higher
-            Performance | Predictable | Adapts to data Binary compat | Tied to
-            HW | Works on any impl
-          </div>
+          <div class="code-solution">Aspect          | Static (VLIW)  | Dynamic (Superscalar)
+----------------|----------------|---------------------
+Who decides     | Compiler       | Hardware
+When decides    | Compile time   | Runtime
+Complexity      | Simple HW      | Complex HW
+Power           | Lower          | Higher
+Performance     | Predictable    | Adapts to data
+Binary compat   | Tied to HW     | Works on any impl</div>
           <div class="answer-box">
             Static: Compiler does work (VLIW)<br />Dynamic: Hardware does work
             (Superscalar)
@@ -932,24 +1003,28 @@
             <strong>Original dependencies:</strong> Load-use hazard (LDUR →
             ADDI)
           </div>
-          <div class="code-solution">
-            <strong>Scheduled (2-issue: ALU | Load/Store):</strong>
+          <div class="code-solution"><strong>Scheduled (2-issue: ALU | Load/Store):</strong>
 
-            Cycle | ALU slot | Load/Store slot
-            ------|--------------------|----------------- 1 | Loop: nop | LDUR
-            X1, [X0, #0] 2 | ADDI X0, X0, #8 | nop 3 | ADDI X1, X1, #1 | nop 4 |
-            SUBI X2, X2, #1 | STUR X1, [X0, #-8] 5 | CBNZ X2, Loop | nop 5
-            cycles per iteration
-          </div>
+Cycle | ALU slot           | Load/Store slot
+------|--------------------|-----------------
+  1   | Loop: nop          | LDUR X1, [X0, #0]
+  2   | ADDI X0, X0, #8    | nop
+  3   | ADDI X1, X1, #1    | nop
+  4   | SUBI X2, X2, #1    | STUR X1, [X0, #-8]
+  5   | CBNZ X2, Loop      | nop
+
+5 cycles per iteration</div>
           <div class="solution-step">
             <strong>Optimizations applied:</strong>
           </div>
-          <div class="code-solution">
-            1. Move ADDI X0 before ADDI X1 → Separates load-use (avoid stall) 2.
-            Adjust STUR offset to #-8 → Because X0 already incremented 3. Pair
-            ALU with Load/Store when possible → Cycles 2 and 4 use both slots 4.
-            Fill empty slots with nop → Required by static issue
-          </div>
+          <div class="code-solution">1. Move ADDI X0 before ADDI X1
+   → Separates load-use (avoid stall)
+2. Adjust STUR offset to #-8
+   → Because X0 already incremented
+3. Pair ALU with Load/Store when possible
+   → Cycles 2 and 4 use both slots
+4. Fill empty slots with nop
+   → Required by static issue</div>
           <div class="solution-step">
             <strong>Could further improve with loop unrolling!</strong>
           </div>
@@ -979,25 +1054,39 @@
             <strong>ILP:</strong> Parallelism among instructions - executing
             multiple instructions simultaneously
           </div>
-          <div class="code-solution">
-            Goal: Execute >1 instruction per cycle Methods to increase ILP: •
-            Deeper pipelines (more overlap) • Multiple issue (issue >1/cycle) •
-            Out-of-order execution • Speculation
-          </div>
+          <div class="code-solution">Goal: Execute >1 instruction per cycle
+
+Methods to increase ILP:
+• Deeper pipelines (more overlap)
+• Multiple issue (issue >1/cycle)
+• Out-of-order execution
+• Speculation</div>
           <div class="solution-step">
             <strong>Primary Limitations:</strong>
           </div>
-          <div class="code-solution">
-            1. Data Dependences (True dependences) ADD X1, X2, X3 SUB X4, X1, X5
-            // MUST wait for X1 → Cannot execute simultaneously 2. Control
-            Dependences CBZ X1, label ADD X2, X3, X4 // Don't know if this
-            executes → Speculation can help 3. Name Dependences
-            (Antidependences) STUR X1, [X2, #0] LDUR X1, [X3, #8] // Reuses X1 →
-            Register renaming eliminates 4. Memory Hierarchy Stalls • Cache
-            misses • Limited ILP can't hide long stalls 5. Limited Hardware
-            Resources • Finite functional units • Register file ports • Reorder
-            buffer size
-          </div>
+          <div class="code-solution">1. Data Dependences (True dependences)
+   ADD X1, X2, X3
+   SUB X4, X1, X5    // MUST wait for X1
+   → Cannot execute simultaneously
+
+2. Control Dependences
+   CBZ X1, label
+   ADD X2, X3, X4    // Don't know if this executes
+   → Speculation can help
+
+3. Name Dependences (Antidependences)
+   STUR X1, [X2, #0]
+   LDUR X1, [X3, #8] // Reuses X1
+   → Register renaming eliminates
+
+4. Memory Hierarchy Stalls
+   • Cache misses
+   • Limited ILP can't hide long stalls
+
+5. Limited Hardware Resources
+   • Finite functional units
+   • Register file ports
+   • Reorder buffer size</div>
           <div class="answer-box">
             ILP = Instructions executing in parallel<br />Limited by:
             Dependencies, branches, memory, hardware
@@ -1023,41 +1112,46 @@
             <strong>Speculation:</strong> Guess outcome to execute ahead, verify
             later
           </div>
-          <div class="code-solution">
-            <strong>What can be speculated:</strong>
-            • Branch outcomes (taken/not taken) • Load addresses (doesn't alias
-            with store) • Instruction properties
+          <div class="code-solution"><strong>What can be speculated:</strong>
+• Branch outcomes (taken/not taken)
+• Load addresses (doesn't alias with store)
+• Instruction properties
 
-            <strong>Example - Branch Speculation:</strong>
-            CBZ X1, label ADD X2, X3, X4 ← Speculatively execute SUB X5, X6, X7
-            ← Speculatively execute label: ORR X8, X9, X10 Guess: Branch NOT
-            taken Execute ADD and SUB speculatively Buffer results (don't commit
-            yet)
-          </div>
+<strong>Example - Branch Speculation:</strong>
+CBZ X1, label
+ADD X2, X3, X4       ← Speculatively execute
+SUB X5, X6, X7       ← Speculatively execute
+label:
+ORR X8, X9, X10
+
+Guess: Branch NOT taken
+Execute ADD and SUB speculatively
+Buffer results (don't commit yet)</div>
           <div class="solution-step">
             <strong>If speculation CORRECT:</strong>
           </div>
-          <div class="code-solution">
-            1. Verify branch condition 2. Commit buffered results to registers
-            3. Continue execution normally Performance: Avoided stall!
-          </div>
+          <div class="code-solution">1. Verify branch condition
+2. Commit buffered results to registers
+3. Continue execution normally
+
+Performance: Avoided stall!</div>
           <div class="solution-step">
             <strong>If speculation WRONG:</strong>
           </div>
-          <div class="code-solution">
-            1. Detect misprediction 2. FLUSH pipeline (discard ADD, SUB) 3.
-            Discard buffered results 4. Fetch correct instruction (ORR) 5.
-            Restart from correct path Performance: Worse than if we'd waited!
-            Pipeline flushed + wrong work wasted
-          </div>
+          <div class="code-solution">1. Detect misprediction
+2. FLUSH pipeline (discard ADD, SUB)
+3. Discard buffered results
+4. Fetch correct instruction (ORR)
+5. Restart from correct path
+
+Performance: Worse than if we'd waited!
+Pipeline flushed + wrong work wasted</div>
           <div class="solution-step">
             <strong>Hardware Support:</strong>
           </div>
-          <div class="code-solution">
-            • Reorder buffer: Holds speculative results • Commit unit: Decides
-            when safe to commit • Exception handling: Ignore speculative
-            exceptions
-          </div>
+          <div class="code-solution">• Reorder buffer: Holds speculative results
+• Commit unit: Decides when safe to commit
+• Exception handling: Ignore speculative exceptions</div>
           <div class="answer-box">
             Correct speculation: Performance win<br />Wrong speculation: Flush +
             restart (penalty)
@@ -1081,37 +1175,42 @@
         </button>
         <div class="solution" id="solution-17">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>Out-of-Order Execution:</strong>
+          <div class="code-solution"><strong>Out-of-Order Execution:</strong>
 
-            Instructions execute when operands ready, not in program order
-            Example: LDUR X1, [X2, #0] ← Memory slow (100 cycles) ADD X3, X1, X4
-            ← Stuck waiting for X1 SUB X5, X6, X7 ← Ready NOW! Out-of-order:
-            Execute SUB before ADD Don't stall entire pipeline waiting for load!
-          </div>
-          <div class="code-solution">
-            <strong>Out-of-Order Issue:</strong>
+Instructions execute when operands ready, not in program order
 
-            Instructions issued to execution units in different order than
-            fetched Most superscalars are: • In-order issue • Out-of-order
-            execute • In-order commit
-          </div>
+Example:
+LDUR X1, [X2, #0]    ← Memory slow (100 cycles)
+ADD X3, X1, X4       ← Stuck waiting for X1
+SUB X5, X6, X7       ← Ready NOW!
+
+Out-of-order: Execute SUB before ADD
+Don't stall entire pipeline waiting for load!</div>
+          <div class="code-solution"><strong>Out-of-Order Issue:</strong>
+
+Instructions issued to execution units in different order than fetched
+
+Most superscalars are:
+• In-order issue
+• Out-of-order execute
+• In-order commit</div>
           <div class="solution-step">
             <strong>Key Difference:</strong>
           </div>
-          <div class="code-solution">
-            Issue: Sending instruction to functional unit Execute: Actually
-            performing the operation In-order issue, out-of-order execute: 1.
-            Fetch/decode in order 2. Send to reservation stations in order 3.
-            Execute from reservation when ready (OoO) 4. Commit results in order
-          </div>
+          <div class="code-solution">Issue: Sending instruction to functional unit
+Execute: Actually performing the operation
+
+In-order issue, out-of-order execute:
+1. Fetch/decode in order
+2. Send to reservation stations in order
+3. Execute from reservation when ready (OoO)
+4. Commit results in order</div>
           <div class="solution-step">
             <strong>Why in-order commit?</strong>
           </div>
-          <div class="code-solution">
-            • Preserve precise exceptions • Maintain sequential semantics •
-            Easier to debug/verify
-          </div>
+          <div class="code-solution">• Preserve precise exceptions
+• Maintain sequential semantics
+• Easier to debug/verify</div>
           <div class="answer-box">
             OoO Execution: Run when ready, not program order<br />In-order
             commit: Write results in program order
@@ -1133,49 +1232,71 @@
         </button>
         <div class="solution" id="solution-18">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>Reservation Stations:</strong>
+          <div class="code-solution"><strong>Reservation Stations:</strong>
 
-            Purpose: Hold instruction + operands at functional units Location:
-            One per functional unit (ALU, Load/Store, etc.) Contents: •
-            Operation (ADD, SUB, etc.) • Operand values (if available) • Operand
-            tags (if waiting for producer) • Destination register Function: 1.
-            Instruction dispatched to reservation station 2. Captures operands
-            from register file or bypass 3. If operand not ready, tag identifies
-            producer 4. When producer completes, result forwarded directly 5.
-            When all operands ready, execute 6. Result → Reorder buffer +
-            waiting stations
-          </div>
-          <div class="code-solution">
-            <strong>Reorder Buffer (ROB):</strong>
+Purpose: Hold instruction + operands at functional units
+Location: One per functional unit (ALU, Load/Store, etc.)
 
-            Purpose: Buffer results until safe to commit Location: Centralized,
-            shared by all units Contents (per entry): • Instruction type •
-            Destination register • Result value • Ready bit Function: 1.
-            Allocate ROB entry when instruction issued 2. Track in-order program
-            sequence 3. Execute out-of-order, write to ROB 4. Commit from ROB
-            head (oldest instruction) 5. When head ready, commit to register
-            file 6. Preserve precise exceptions
-          </div>
+Contents:
+• Operation (ADD, SUB, etc.)
+• Operand values (if available)
+• Operand tags (if waiting for producer)
+• Destination register
+
+Function:
+1. Instruction dispatched to reservation station
+2. Captures operands from register file or bypass
+3. If operand not ready, tag identifies producer
+4. When producer completes, result forwarded directly
+5. When all operands ready, execute
+6. Result → Reorder buffer + waiting stations</div>
+          <div class="code-solution"><strong>Reorder Buffer (ROB):</strong>
+
+Purpose: Buffer results until safe to commit
+Location: Centralized, shared by all units
+
+Contents (per entry):
+• Instruction type
+• Destination register
+• Result value
+• Ready bit
+
+Function:
+1. Allocate ROB entry when instruction issued
+2. Track in-order program sequence
+3. Execute out-of-order, write to ROB
+4. Commit from ROB head (oldest instruction)
+5. When head ready, commit to register file
+6. Preserve precise exceptions</div>
           <div class="solution-step">
             <strong>Together they provide:</strong>
           </div>
-          <div class="code-solution">
-            Reservation Stations: • Register renaming (eliminate WAW, WAR
-            hazards) • Operand forwarding • Out-of-order execution Reorder
-            Buffer: • In-order commit • Precise exceptions • Speculative
-            execution support • True register state
-          </div>
+          <div class="code-solution">Reservation Stations:
+• Register renaming (eliminate WAW, WAR hazards)
+• Operand forwarding
+• Out-of-order execution
+
+Reorder Buffer:
+• In-order commit
+• Precise exceptions
+• Speculative execution support
+• True register state</div>
           <div class="solution-step">
             <strong>Example:</strong>
           </div>
-          <div class="code-solution">
-            LDUR X1, [X2, #0] ROB1, RS_LoadStore ADD X3, X1, X4 ROB2, RS_ALU1
-            (waits for ROB1) SUB X5, X6, X7 ROB3, RS_ALU2 (ready!) Execution:
-            SUB executes first → ROB3 LDUR completes → ROB1 → forwards to
-            RS_ALU1 ADD executes → ROB2 Commit (in order): ROB1 (LDUR) → X1 ROB2
-            (ADD) → X3 ROB3 (SUB) → X5
-          </div>
+          <div class="code-solution">LDUR X1, [X2, #0]    ROB1, RS_LoadStore
+ADD X3, X1, X4       ROB2, RS_ALU1 (waits for ROB1)
+SUB X5, X6, X7       ROB3, RS_ALU2 (ready!)
+
+Execution:
+SUB executes first → ROB3
+LDUR completes → ROB1 → forwards to RS_ALU1
+ADD executes → ROB2
+
+Commit (in order):
+ROB1 (LDUR) → X1
+ROB2 (ADD) → X3
+ROB3 (SUB) → X5</div>
           <div class="answer-box">
             Reservation Stations: Hold & execute<br />Reorder Buffer: Commit in
             order
@@ -1204,36 +1325,36 @@
           <div class="solution-step">
             Total instructions = 4 × 100 = 400 instructions
           </div>
-          <div class="code-solution">
-            <strong>(a) Single-Cycle Non-Pipelined:</strong>
+          <div class="code-solution"><strong>(a) Single-Cycle Non-Pipelined:</strong>
 
-            Time per instruction = 500 ps Total time = 400 × 500 ps = 200,000 ps
-            = 200 ns CPI = 1 Throughput = 1 instruction per 500 ps
-          </div>
-          <div class="code-solution">
-            <strong>(b) 5-Stage Pipeline:</strong>
+Time per instruction = 500 ps
+Total time = 400 × 500 ps = 200,000 ps = 200 ns
+CPI = 1
+Throughput = 1 instruction per 500 ps</div>
+          <div class="code-solution"><strong>(b) 5-Stage Pipeline:</strong>
 
-            Clock cycle = 100 ps Total cycles = 5 (fill) + 400 - 1 (overlap) =
-            404 cycles Total time = 404 × 100 ps = 40,400 ps = 40.4 ns CPI =
-            404/400 = 1.01 (close to ideal 1.0) Speedup vs (a) = 200/40.4 =
-            4.95×
-          </div>
-          <div class="code-solution">
-            <strong>(c) 2-Issue Superscalar (perfect):</strong>
+Clock cycle = 100 ps
+Total cycles = 5 (fill) + 400 - 1 (overlap) = 404 cycles
+Total time = 404 × 100 ps = 40,400 ps = 40.4 ns
+CPI = 404/400 = 1.01 (close to ideal 1.0)
+Speedup vs (a) = 200/40.4 = 4.95×</div>
+          <div class="code-solution"><strong>(c) 2-Issue Superscalar (perfect):</strong>
 
-            Can issue 2 instructions/cycle Total cycles = 5 (fill) + 400/2 - 1 =
-            204 cycles Total time = 204 × 100 ps = 20,400 ps = 20.4 ns CPI =
-            204/400 = 0.51 IPC = 1.96 (close to ideal 2.0) Speedup vs (b) =
-            40.4/20.4 = 1.98× Speedup vs (a) = 200/20.4 = 9.8×
-          </div>
+Can issue 2 instructions/cycle
+Total cycles = 5 (fill) + 400/2 - 1 = 204 cycles
+Total time = 204 × 100 ps = 20,400 ps = 20.4 ns
+CPI = 204/400 = 0.51
+IPC = 1.96 (close to ideal 2.0)
+Speedup vs (b) = 40.4/20.4 = 1.98×
+Speedup vs (a) = 200/20.4 = 9.8×</div>
           <div class="solution-step">
             <strong>Summary:</strong>
           </div>
-          <div class="code-solution">
-            Architecture | Time | Speedup -----------------|---------|--------
-            Single-cycle | 200 ns | 1.0× 5-stage pipeline | 40.4 ns | 4.95×
-            2-issue super | 20.4 ns | 9.8×
-          </div>
+          <div class="code-solution">Architecture      | Time    | Speedup
+------------------|---------|--------
+Single-cycle      | 200 ns  | 1.0×
+5-stage pipeline  | 40.4 ns | 4.95×
+2-issue super     | 20.4 ns | 9.8×</div>
           <div class="answer-box">
             Pipelining: ~5× speedup<br />Superscalar: ~2× more over pipeline
           </div>
@@ -1254,52 +1375,55 @@
         </button>
         <div class="solution" id="solution-20">
           <div class="solution-header">✓ Solution</div>
-          <div class="code-solution">
-            <strong>1. Data Dependences (Fundamental Limit)</strong>
+          <div class="code-solution"><strong>1. Data Dependences (Fundamental Limit)</strong>
 
-            True dependences cannot be eliminated: ADD X1, X2, X3 SUB X4, X1, X5
-            ← MUST wait for X1 AND X6, X4, X7 ← MUST wait for X4 Chain of
-            dependencies = serial execution Limits parallelism to ~2-3 IPC on
-            average
-          </div>
-          <div class="code-solution">
-            <strong>2. Control Hazards (Branch Mispredictions)</strong>
+True dependences cannot be eliminated:
+ADD X1, X2, X3
+SUB X4, X1, X5    ← MUST wait for X1
+AND X6, X4, X7    ← MUST wait for X4
 
-            Branches every ~5 instructions Misprediction rate ~2-10% Penalty:
-            Flush 10-20 stage pipeline Impact: Wastes ~20-40% of work Can't
-            execute past unresolved branch safely
-          </div>
-          <div class="code-solution">
-            <strong>3. Memory Hierarchy Stalls</strong>
+Chain of dependencies = serial execution
+Limits parallelism to ~2-3 IPC on average</div>
+          <div class="code-solution"><strong>2. Control Hazards (Branch Mispredictions)</strong>
 
-            Cache miss rates: • L1: 1-5% miss → 10-20 cycle penalty • L2: 10-20%
-            of L1 misses → 100+ cycles • Main memory: 200-400 cycles Limited ILP
-            can't hide 200-cycle stall Memory bandwidth also limited
-          </div>
-          <div class="code-solution">
-            <strong>4. Limited Hardware Resources</strong>
+Branches every ~5 instructions
+Misprediction rate ~2-10%
+Penalty: Flush 10-20 stage pipeline
+Impact: Wastes ~20-40% of work
+Can't execute past unresolved branch safely</div>
+          <div class="code-solution"><strong>3. Memory Hierarchy Stalls</strong>
 
-            • Register file: Only so many read/write ports 6-issue needs 12
-            reads, 6 writes per cycle! • Functional units: 2-3 ALUs, 1-2
-            Load/Store • Reorder buffer: Finite size (128-256 entries) •
-            Reservation stations: Limited per unit
-          </div>
-          <div class="code-solution">
-            <strong>5. Difficulty Finding ILP</strong>
+Cache miss rates:
+• L1: 1-5% miss → 10-20 cycle penalty
+• L2: 10-20% of L1 misses → 100+ cycles
+• Main memory: 200-400 cycles
 
-            Hardware/compiler can only look ahead so far: • Compiler: ~100s of
-            instructions • Hardware: ~200 instruction window True ILP often
-            separated by 1000s of instructions Can't see that far ahead
-            efficiently
-          </div>
-          <div class="code-solution">
-            <strong>6. Power Wall</strong>
+Limited ILP can't hide 200-cycle stall
+Memory bandwidth also limited</div>
+          <div class="code-solution"><strong>4. Limited Hardware Resources</strong>
 
-            Out-of-order execution is power-hungry: • Complex scheduling logic •
-            Large buffers (ROB, RS) • Speculative execution wastes power Modern
-            trend: Simpler, more efficient cores Better performance-per-watt at
-            2-3 IPC than aggressive 4-6 IPC designs
-          </div>
+• Register file: Only so many read/write ports
+  6-issue needs 12 reads, 6 writes per cycle!
+• Functional units: 2-3 ALUs, 1-2 Load/Store
+• Reorder buffer: Finite size (128-256 entries)
+• Reservation stations: Limited per unit</div>
+          <div class="code-solution"><strong>5. Difficulty Finding ILP</strong>
+
+Hardware/compiler can only look ahead so far:
+• Compiler: ~100s of instructions
+• Hardware: ~200 instruction window
+
+True ILP often separated by 1000s of instructions
+Can't see that far ahead efficiently</div>
+          <div class="code-solution"><strong>6. Power Wall</strong>
+
+Out-of-order execution is power-hungry:
+• Complex scheduling logic
+• Large buffers (ROB, RS)
+• Speculative execution wastes power
+
+Modern trend: Simpler, more efficient cores
+Better performance-per-watt at 2-3 IPC than aggressive 4-6 IPC designs</div>
           <div class="answer-box">
             Reality check: Dependencies + branches + memory<br />+ power
             constraints limit real IPC to 2-3
