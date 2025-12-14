@@ -70,28 +70,43 @@
 
       .grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        /* >>>>>>>>>>>>>>>>>>>>>>>>> FIX 1: Auto-fit for automatic wrapping <<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
         gap: 15px;
         margin-bottom: 15px;
       }
 
-      /* Responsive: when it gets tight, reflow into fewer columns (wrap) */
+      /* Step down to two columns a bit earlier to avoid skinny cards */
+      /* This media query is now mostly redundant but can remain */
       @media (max-width: 1200px) {
+        /*
         .grid {
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          grid-template-columns: repeat(2, minmax(320px, 1fr));
+        }
+        */
+      }
+
+      /* Single-column on narrow screens; wide/full collapse */
+      @media (max-width: 820px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        /* >>>>>>>>>>>>>>>>>>>>>>>>> FIX 2: Override wide spans to 1 column <<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+        .performance-section,
+        .benchmark-section {
+          grid-column: span 1 !important;
         }
         .wide-section,
         .full-width {
           grid-column: span 1 !important;
         }
       }
-      @media (max-width: 720px) {
-        .grid {
-          grid-template-columns: 1fr;
-        }
-        .wide-section,
-        .full-width {
-          grid-column: span 1 !important;
+
+      /* Collapse internal two-column helpers on narrow screens */
+      @media (max-width: 1100px) {
+        .two-col,
+        .benchmark-grid {
+          grid-template-columns: 1fr !important;
         }
       }
 
@@ -331,10 +346,10 @@
       }
 
       /* ============================
-         ✅ FLIP CARD WITH BLANK BACK
-         - Entire card flips in 3D
-         - Back side is completely blank
-         ============================ */
+          ✅ FLIP CARD WITH BLANK BACK
+          - Entire card flips in 3D
+          - Back side is completely blank
+          ============================ */
       .quiz-flip {
         cursor: pointer;
         user-select: none;
@@ -409,7 +424,6 @@
       </div>
 
       <div class="grid">
-        <!-- Eight Great Ideas -->
         <div class="section quiz-flip">
           <div class="section-title">🎯 8 Great Ideas</div>
           <ul class="idea-list">
@@ -426,7 +440,6 @@
           </ul>
         </div>
 
-        <!-- Performance Metrics -->
         <div class="section performance-section quiz-flip">
           <div class="section-title">📊 Performance Metrics</div>
           <div class="two-col">
@@ -469,7 +482,6 @@
           </ul>
         </div>
 
-        <!-- Power Wall -->
         <div class="section power-section quiz-flip">
           <div class="section-title">⚡ Power Wall</div>
 
@@ -501,7 +513,6 @@
           </ul>
         </div>
 
-        <!-- CPI Details -->
         <div class="section quiz-flip">
           <div class="section-title">🔄 CPI Breakdown</div>
 
@@ -531,7 +542,6 @@
           </div>
         </div>
 
-        <!-- Amdahl's Law -->
         <div class="section quiz-flip">
           <div class="section-title">🎯 Amdahl's Law</div>
 
@@ -558,7 +568,6 @@
           </ul>
         </div>
 
-        <!-- Benchmarking -->
         <div class="section benchmark-section quiz-flip">
           <div class="section-title">📈 Benchmarking (SPEC)</div>
 
@@ -600,7 +609,6 @@
           </div>
         </div>
 
-        <!-- Fallacies & Pitfalls -->
         <div class="section fallacy-section quiz-flip">
           <div class="section-title">⚠️ Fallacies & Pitfalls</div>
 
@@ -635,7 +643,6 @@
         </div>
       </div>
 
-      <!-- Quick Reference Formulas -->
       <div class="footer-formulas">
         <div
           class="section-title"
